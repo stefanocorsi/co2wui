@@ -1,4 +1,7 @@
 from flask import Flask, render_template, current_app, url_for
+from flask import Response
+import requests
+import json
 
 __version__ = '2.4'
 
@@ -59,7 +62,26 @@ def create_app(configfile=None):
 
     @app.route('/')
     def index():
-        return render_template('layout.html')
+        return render_template('layout.html', action='dashboard')
+        
+    @app.route('/configuration/download-form')
+    def configuration_download_form():
+        return render_template('layout.html', action='configuration')
+		
+    @app.route('/configuration/download', methods=['POST'])
+    def configuration_download():
+        url = "http://localhost:8080/"
+        kw = {
+            'inputs': dict(output_file='conf.yaml', api_mode=True),
+            'outputs': ['conf', 'done'],
+            'select_output_kw': {'keys': ['conf']}
+        }
+        response = requests.post(url, json={'kwargs': kw})
+        obj = json.loads(response.text)
+
+
+
+        return Response(('').join(obj["return"]["conf"]), mimetype='text/yaml')
 
     return app
 
@@ -117,8 +139,8 @@ class ConditionalCDN(object):
     def get_resource_url(self, filename):
         if current_app.config[self.confvar]:
             return self.primary.get_resource_url(filename)
-        return self.fallback.get_resource_url(filename)	
-	
+        return self.fallback.get_resource_url(filename)
+
 def co2mpas_find_resource(filename, cdn, use_minified=None, local=True):
     """Resource finding function, also available in templates.
 
