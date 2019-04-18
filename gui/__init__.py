@@ -1,7 +1,10 @@
-from flask import Flask, render_template, current_app, url_for
+from flask import Flask, render_template, current_app, url_for, request
 from flask import Response
 import requests
 import json
+from tkinter import filedialog
+from tkinter.filedialog import askopenfilename
+from tkinter import Tk
 
 __version__ = '2.4'
 
@@ -66,8 +69,8 @@ def create_app(configfile=None):
         
     @app.route('/configuration/download-form')
     def configuration_download_form():
-        return render_template('layout.html', action='configuration')
-		
+        return render_template('layout.html', action='configuration_download')
+
     @app.route('/configuration/download', methods=['POST'])
     def configuration_download():
         url = "http://localhost:8080/"
@@ -78,11 +81,20 @@ def create_app(configfile=None):
         }
         response = requests.post(url, json={'kwargs': kw})
         obj = json.loads(response.text)
-
-
-
         return Response(('').join(obj["return"]["conf"]), mimetype='text/yaml')
-
+        
+    @app.route('/configuration/upload-form')
+    def configuration_upload_form():
+        return render_template('layout.html', action='configuration_upload')
+        
+    @app.route('/configuration/upload', methods=['POST'])
+    def configuration_upload():
+        print("Posted file: {}".format(request.files['file']))
+        file = request.files['file']
+        files = {'file': file.read()}
+        print(files)
+        return ""
+    
     return app
 
 class CDN(object):
