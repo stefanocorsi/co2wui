@@ -11,3 +11,8 @@ gui/__pycache__/
 
 # IDE
 .idea
+
+# Test log
+test/ui/geckodriver.log
+test/geckodriver.log
+geckodriver.log
