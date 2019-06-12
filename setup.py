@@ -6,6 +6,13 @@ setup(
     packages=['co2wui',],
     license='EUPL',
     long_description=open('README.md').read(),
+    install_requires=[
+        'co2mpas',
+        'Flask',
+        'requests',
+        'schedula',
+        'Werkzeug',
+    ],
     entry_points={
         'console_scripts': [
             'co2wui=co2wui:cli'
