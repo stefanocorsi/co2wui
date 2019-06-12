@@ -1,0 +1,14 @@
+/* Co2mpas help system */
+.co2-help {
+	color: rgb(60, 141, 188);
+	font-size: 0.7em;
+}
+
+.logo-lg img {
+	width: 85%;
+	padding-top: 5px;
+}
+
+h2 {
+	color: rgb(60, 141, 188);
+}
