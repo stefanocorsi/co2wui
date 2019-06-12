@@ -2,8 +2,7 @@ import webbrowser
 import threading
 import tempfile
 import schedula as sh
-from co2mpas import dsp as dsp
-from co2mpas._version import __version__
+from co2mpas import __version__
 import click
 from flask import Flask, render_template, current_app, url_for, request, send_file
 from flask import Response
