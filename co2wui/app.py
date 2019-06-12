@@ -4,9 +4,11 @@ import tempfile
 import schedula as sh
 from co2mpas import dsp as dsp
 from co2mpas._version import __version__
+import click
 from flask import Flask, render_template, current_app, url_for, request, send_file
 from flask import Response
 from flask import Flask,redirect
+from flask.cli import FlaskGroup
 from os import listdir
 from os.path import isfile, join
 import requests
@@ -151,6 +153,13 @@ def create_app(configfile=None):
         )
     
     return app
+
+
+@click.group(cls=FlaskGroup, create_app=create_app)
+def cli():
+    """Management script for the Wiki application."""
     
 if __name__ == '__main__':
     create_app().run(debug=True)
+
+    

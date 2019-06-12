@@ -1,9 +1,14 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
-    name='Co2wui',
+    name='co2wui',
     version='0.1dev',
     packages=['co2wui',],
     license='EUPL',
     long_description=open('README.rst').read(),
+    entry_points={
+        'console_scripts': [
+            'co2wui=co2wui:cli'
+        ],
+    },
 )
