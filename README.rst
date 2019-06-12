@@ -6,5 +6,5 @@ Perform a dev installation of co2mpas 4
 
 ## Running
 
-python cowui/guy.py
+python cowui/app.py
 
