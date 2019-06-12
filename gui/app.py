@@ -1,8 +1,9 @@
 import threading
+import tempfile
 import schedula as sh
 from co2mpas import dsp as dsp
 from co2mpas._version import __version__
-from flask import Flask, render_template, current_app, url_for, request
+from flask import Flask, render_template, current_app, url_for, request, send_file
 from flask import Response
 from flask import Flask,redirect
 from os import listdir
@@ -33,14 +34,40 @@ def create_app(configfile=None):
           }
         )
         
-    @app.route('/run/download-template')
-    def template_download_form():
+    @app.route('/run/download-template-form')
+    def download_template_form():
         return render_template('layout.html', action='template_download_form', 
           data = {
             'breadcrumb': ['Co2mpas', 'Download template'],
             'props': {'active': { 'run': 'active', 'doc': '', 'expert': ''} }            
           }
          )
+         
+    @app.route('/run/download-template')
+    def download_template():
+    
+      # Temp file name
+      of = next(tempfile._get_candidate_names())
+      
+      # Input parameters
+      inputs = {'output_file': of, 'template_type': 'input'}
+      
+      # Dispatcher
+      d = dsp.register()
+      ret = d.dispatch(inputs, ['template', 'done'])
+      
+      # Read from file
+      data = None
+      with open(of, 'rb') as xlsx:
+        data = xlsx.read()
+        
+      # Delete files
+      os.remove(of)
+         
+      # Output xls file
+      iofile = io.BytesIO(data)
+      iofile.seek(0)
+      return send_file(iofile, attachment_filename='co2mpas-input-template.xlsx', as_attachment=True)
         
     @app.route('/run/simulation-form')
     def simulation_form():      
