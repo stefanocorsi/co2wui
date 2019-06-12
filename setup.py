@@ -5,7 +5,7 @@ setup(
     version='0.1dev',
     packages=['co2wui',],
     license='EUPL',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     entry_points={
         'console_scripts': [
             'co2wui=co2wui:cli'
