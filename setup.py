@@ -15,5 +15,5 @@ setup(
             "wheel",
         ]
     },
-    entry_points={"console_scripts": ["co2wui=co2wui:cli"]},
+    entry_points={"console_scripts": ["co2wui=co2wui.app:cli"]},
 )
