@@ -12,6 +12,14 @@ gui/__pycache__/
 # IDE
 .idea
 
+## VisualStudioCode ###
+# From https://stackoverflow.com/questions/51876769/should-you-commit-vscode-symbols-file-to-source-control
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 # Test log
 test/ui/geckodriver.log
 test/geckodriver.log
