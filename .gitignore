@@ -16,3 +16,6 @@ gui/__pycache__/
 test/ui/geckodriver.log
 test/geckodriver.log
 geckodriver.log
+
+# Log file
+logfile.log
