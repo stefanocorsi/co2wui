@@ -181,6 +181,9 @@ def create_app(configfile=None):
 @click.group(cls=FlaskGroup, create_app=create_app)
 def cli():
     """Management script for the Wiki application."""
+    # FIXME: read port from cli/configs
+    # TODO: option for the user to skip opening browser
+    webbrowser.open("http:localhost:5000")
 
 
 if __name__ == "__main__":
