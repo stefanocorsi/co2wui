@@ -13,6 +13,12 @@ setup(
         'schedula',
         'Werkzeug',
     ],
+    extras={
+        'dev': [
+            'pip',
+            'wheel',
+        ]
+    },
     entry_points={
         'console_scripts': [
             'co2wui=co2wui:cli'
