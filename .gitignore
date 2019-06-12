@@ -19,3 +19,6 @@ geckodriver.log
 
 # Log file
 logfile.log
+
+# Typical names for virtualenvs.
+/*venv
