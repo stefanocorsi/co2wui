@@ -1,3 +1,4 @@
+import webbrowser
 import threading
 import tempfile
 import schedula as sh
