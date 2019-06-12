@@ -15,7 +15,9 @@ setup(
     ],
     extras={
         'dev': [
+            'black',       # for code-formatting
             'pip',
+            'pre-commit',  # for code-formatting 
             'wheel',
         ]
     },
