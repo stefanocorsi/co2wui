@@ -257,6 +257,19 @@ def create_app(configfile=None):
             },
         )
 
+    @app.route("/not-implemented")
+    def not_implemented():
+        return render_template(
+            "layout.html",
+            action="generic_message",
+            data={
+                "breadcrumb": ["Co2mpas", "Feature not implemented"],
+                "props": {"active": {"run": "", "doc": "", "expert": ""}},
+                "title": "Feature not implemented",
+                "message": "Please refer to future versions of the application or contact xxxxxxx@xxxxxx.europa.eu for information.",
+            },
+        )
+
     return app
 
 
