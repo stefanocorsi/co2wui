@@ -1,4 +1,5 @@
 import glob
+from stat import S_ISREG, S_ISDIR, ST_CTIME, ST_MODE
 from os import path
 import webbrowser
 import threading
@@ -17,6 +18,7 @@ import requests
 import json
 import io
 import os
+import time
 import os.path as osp
 from werkzeug import secure_filename
 import logging
@@ -27,6 +29,11 @@ def listdir_inputs(path):
     """
     return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, '*.xls*')))  
 
+def listdir_outputs(path):
+    """Only allow for excel files as output 
+    """
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, '*.xls*')))  
+    
 def create_app(configfile=None):
 
     log_file_path = path.join(path.dirname(path.abspath(__file__)), '../logging.conf')
@@ -106,9 +113,13 @@ def create_app(configfile=None):
         thread = threading.current_thread()
         files = ["input/" + f for f in listdir_inputs("input") if isfile(join("input", f))]
 
+        # Create output directory for this execution
+        output_folder = "output/" + str(thread.ident)
+        os.makedirs(output_folder or '.', exist_ok=True)
+        
         # Input parameters
         kwargs = {
-            "output_folder": "output",
+            "output_folder": output_folder,
             "only_summary": False,
             "hard_validation": False,
             "declaration_mode": False,
@@ -179,12 +190,26 @@ def create_app(configfile=None):
 
     @app.route("/run/view-results")
     def view_results():
+    
+        dirpath = r'output'
+        entries = (os.path.join(dirpath, fn) for fn in os.listdir(dirpath))
+        entries = ((os.stat(path), path) for path in entries)
+        entries = ((stat[ST_CTIME], path)
+          for stat, path in entries if S_ISDIR(stat[ST_MODE]))
+        
+        results = []
+        for cdate, path in sorted(entries):
+          dirname = os.path.basename(path)
+          output_files = [f for f in listdir_outputs("output/" + dirname) if isfile(join("output/" + dirname, f))]  
+          results.append({'datetime': time.ctime(cdate), 'name': dirname, 'files': output_files})
+        
         return render_template(
             "layout.html",
             action="view_results",
             data={
                 "breadcrumb": ["Co2mpas", "View results"],
                 "props": {"active": {"run": "active", "doc": "", "expert": ""}},
+                "results": reversed(results)
             },
         )
 
