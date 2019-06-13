@@ -51,3 +51,16 @@
     $('#file_browser').click();
   });
 </script>	
+
+
+<script>
+  $(function() {
+    $('#tamode').change(function() {
+			if ($(this).prop('checked')) {
+				$('#simulation-mode').text('Type approval mode');
+			} else {
+				$('#simulation-mode').text('Scientific mode');
+			}
+    })
+  })
+</script>
