@@ -8,6 +8,6 @@
 
 <script>
 setTimeout(function(){
-	window.location.reload();
+	$('#main-content').load('/run/progress?layout=ajax&id=' + {{data.thread_id}});
 }, 5000);
 </script>

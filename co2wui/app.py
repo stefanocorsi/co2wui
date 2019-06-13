@@ -130,31 +130,36 @@ def create_app(configfile=None):
 
     # Run
     @app.route("/run/simulation")
-    def simulation_run():
+    def run_simulation():
 
         thread = threading.Thread(target=run_process, args=())
         thread.daemon = False
         thread.start()
         id = thread.ident
-        return redirect("/run/progress?id=" + str(thread.ident), code=302)
+        return redirect("/run/progress?layout=layout&id=" + str(thread.ident), code=302)
 
     @app.route("/run/progress")
-    def simulation_progress():
+    def run_progress():
 
         done = True
+        
         thread_id = request.args.get("id")
+        layout = request.args.get("layout")
+        
         for thread in threading.enumerate():
             if (thread.ident == int(thread_id)) and thread.is_alive():
                 done = False
 
         page = "run_complete" if done else "run_progress"
         title = "Simulation complete" if done else "Simulation in progress..."
+        
         return render_template(
-            "layout.html",
+            "layout.html" if layout == 'layout' else 'ajax.html',
             action=page,
             data={
                 "breadcrumb": ["Co2mpas", title],
                 "props": {"active": {"run": "active", "doc": "", "expert": ""}},
+                "thread_id": thread_id                
             },
         )
 
