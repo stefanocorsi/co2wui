@@ -1,3 +1,4 @@
+import re
 import glob
 from stat import S_ISREG, S_ISDIR, ST_CTIME, ST_MODE
 from os import path
@@ -5,6 +6,7 @@ import webbrowser
 import threading
 import tempfile
 import schedula as sh
+import co2mpas_dice
 from co2mpas import dsp as dsp
 from co2mpas import __version__
 import click
@@ -24,19 +26,22 @@ from werkzeug import secure_filename
 import logging
 import logging.config
 
+
 def listdir_inputs(path):
     """Only allow for excel files as input 
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, '*.xls*')))  
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
+
 
 def listdir_outputs(path):
     """Only allow for excel files as output 
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, '*.xls*')))  
-    
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
+
+
 def create_app(configfile=None):
 
-    log_file_path = path.join(path.dirname(path.abspath(__file__)), '../logging.conf')
+    log_file_path = path.join(path.dirname(path.abspath(__file__)), "../logging.conf")
     logging.config.fileConfig(log_file_path)
     log = logging.getLogger(__name__)
 
@@ -97,7 +102,7 @@ def create_app(configfile=None):
 
     @app.route("/run/simulation-form")
     def simulation_form():
-        inputs = [f for f in listdir_inputs("input") if isfile(join("input", f))]        
+        inputs = [f for f in listdir_inputs("input") if isfile(join("input", f))]
         return render_template(
             "layout.html",
             action="simulation_form",
@@ -109,23 +114,43 @@ def create_app(configfile=None):
         )
 
     def run_process(args):
-    
+
         thread = threading.current_thread()
-        files = ["input/" + f for f in listdir_inputs("input") if isfile(join("input", f))]
+        files = [
+            "input/" + f for f in listdir_inputs("input") if isfile(join("input", f))
+        ]
 
         # Create output directory for this execution
         output_folder = "output/" + str(thread.ident)
-        os.makedirs(output_folder or '.', exist_ok=True)
-        
+        os.makedirs(output_folder or ".", exist_ok=True)
+
+        # Dedicated logging for this run
+        fileh = logging.FileHandler(
+            "output/" + str(thread.ident) + "/" + "logfile.txt", "a"
+        )
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
+        fileh.setFormatter(formatter)
+        log = logging.getLogger()
+        log.setLevel(logging.DEBUG)
+        for hdlr in log.handlers[:]:
+            log.removeHandler(hdlr)
+        log.addHandler(fileh)
+
         # Input parameters
         kwargs = {
             "output_folder": output_folder,
             "only_summary": False,
             "hard_validation": False,
             "declaration_mode": False,
+            "encryption_keys": "",
+            "sign_key": "",
+            "encryption_keys_passwords": "",
             "enable_selector": False,
-            "type_approval_mode": bool(args.get('tamode')),
+            "type_approval_mode": bool(args.get("tamode")),
         }
+
         inputs = dict(
             plot_workflow=False,
             host="127.0.0.1",
@@ -137,6 +162,8 @@ def create_app(configfile=None):
         # Dispatcher
         d = dsp.register()
         ret = d.dispatch(inputs, ["done", "run"])
+        f = open("output/" + str(thread.ident) + "/result.dat", "w+")
+        f.write(str(ret))
         return ""
 
     # Run
@@ -153,24 +180,34 @@ def create_app(configfile=None):
     def run_progress():
 
         done = True
-        
+
         thread_id = request.args.get("id")
         layout = request.args.get("layout")
-        
+
         for thread in threading.enumerate():
             if (thread.ident == int(thread_id)) and thread.is_alive():
                 done = False
 
         page = "run_complete" if done else "run_progress"
         title = "Simulation complete" if done else "Simulation in progress..."
-        
+
+        log = ""
+        loglines = []
+        with open("output/" + thread_id + "/" + "logfile.txt") as f:
+            loglines = f.readlines()
+
+        for logline in reversed(loglines):
+            if not re.search("- INFO -", logline):
+                log += logline
+
         return render_template(
-            "layout.html" if layout == 'layout' else 'ajax.html',
+            "layout.html" if layout == "layout" else "ajax.html",
             action=page,
             data={
                 "breadcrumb": ["Co2mpas", title],
                 "props": {"active": {"run": "active", "doc": "", "expert": ""}},
-                "thread_id": thread_id                
+                "thread_id": thread_id,
+                "log": log,
             },
         )
 
@@ -190,26 +227,33 @@ def create_app(configfile=None):
 
     @app.route("/run/view-results")
     def view_results():
-    
-        dirpath = r'output'
+
+        dirpath = r"output"
         entries = (os.path.join(dirpath, fn) for fn in os.listdir(dirpath))
         entries = ((os.stat(path), path) for path in entries)
-        entries = ((stat[ST_CTIME], path)
-          for stat, path in entries if S_ISDIR(stat[ST_MODE]))
-        
+        entries = (
+            (stat[ST_CTIME], path) for stat, path in entries if S_ISDIR(stat[ST_MODE])
+        )
+
         results = []
         for cdate, path in sorted(entries):
-          dirname = os.path.basename(path)
-          output_files = [f for f in listdir_outputs("output/" + dirname) if isfile(join("output/" + dirname, f))]  
-          results.append({'datetime': time.ctime(cdate), 'name': dirname, 'files': output_files})
-        
+            dirname = os.path.basename(path)
+            output_files = [
+                f
+                for f in listdir_outputs("output/" + dirname)
+                if isfile(join("output/" + dirname, f))
+            ]
+            results.append(
+                {"datetime": time.ctime(cdate), "name": dirname, "files": output_files}
+            )
+
         return render_template(
             "layout.html",
             action="view_results",
             data={
                 "breadcrumb": ["Co2mpas", "View results"],
                 "props": {"active": {"run": "active", "doc": "", "expert": ""}},
-                "results": reversed(results)
+                "results": reversed(results),
             },
         )
 
