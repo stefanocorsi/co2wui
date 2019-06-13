@@ -1,8 +1,10 @@
+import glob
 from os import path
 import webbrowser
 import threading
 import tempfile
 import schedula as sh
+from co2mpas import dsp as dsp
 from co2mpas import __version__
 import click
 from flask import Flask, render_template, current_app, url_for, request, send_file
@@ -20,6 +22,10 @@ from werkzeug import secure_filename
 import logging
 import logging.config
 
+def listdir_inputs(path):
+    """Only allow for excel files as input 
+    """
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, '*.xls*')))  
 
 def create_app(configfile=None):
 
@@ -84,7 +90,7 @@ def create_app(configfile=None):
 
     @app.route("/run/simulation-form")
     def simulation_form():
-        inputs = [f for f in listdir("input") if isfile(join("input", f))]
+        inputs = [f for f in listdir_inputs("input") if isfile(join("input", f))]        
         return render_template(
             "layout.html",
             action="simulation_form",
@@ -98,7 +104,7 @@ def create_app(configfile=None):
     def run_process():
 
         thread = threading.current_thread()
-        files = ["input/" + f for f in listdir("input") if isfile(join("input", f))]
+        files = ["input/" + f for f in listdir_inputs("input") if isfile(join("input", f))]
 
         # Input parameters
         kwargs = {
@@ -162,7 +168,7 @@ def create_app(configfile=None):
     @app.route("/run/delete-file", methods=["GET"])
     def delete_file():
         fn = request.args.get("fn")
-        inputs = [f for f in listdir("input") if isfile(join("input", f))]
+        inputs = [f for f in listdir_inputs("input") if isfile(join("input", f))]
         os.remove("input/" + inputs[int(fn) - 1])
         return redirect("/run/simulation-form", code=302)
 
