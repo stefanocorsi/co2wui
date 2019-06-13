@@ -108,8 +108,8 @@ def create_app(configfile=None):
             },
         )
 
-    def run_process():
-
+    def run_process(args):
+    
         thread = threading.current_thread()
         files = ["input/" + f for f in listdir_inputs("input") if isfile(join("input", f))]
 
@@ -124,7 +124,7 @@ def create_app(configfile=None):
             "hard_validation": False,
             "declaration_mode": False,
             "enable_selector": False,
-            "type_approval_mode": False,
+            "type_approval_mode": bool(args.get('tamode')),
         }
         inputs = dict(
             plot_workflow=False,
@@ -143,7 +143,7 @@ def create_app(configfile=None):
     @app.route("/run/simulation")
     def run_simulation():
 
-        thread = threading.Thread(target=run_process, args=())
+        thread = threading.Thread(target=run_process, args=(request.args,))
         thread.daemon = False
         thread.start()
         id = thread.ident

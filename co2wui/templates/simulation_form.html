@@ -86,18 +86,20 @@
 								</div>	
 								{% if data.inputs|length %}
 								<div class="box-footer">
-									<div class="row">										
-										<div class="col-xs-12 col-md-6">
-											<label class="pull-right">                    
-												Type approval mode
-												<input type="checkbox" data-toggle="toggle" checked>												
-											</label>
+									<form action="/run/simulation">
+										<div class="row">										
+											<div class="col-xs-12 col-md-6">
+												<label class="pull-right">                    
+													Type approval mode
+													<input id="tamode" name="tamode" type="checkbox" data-toggle="toggle" checked>												
+												</label>
+											</div>
+											<div class="col-xs-12 col-md-6">
+												<button type="submit" class="col-xs-12 col-md-12 btn btn-lg btn-success"><i class="fa fa-car"></i> Run simulation</button>
+											</div>
+											<p class="col-xs-12 col-md-12 pull-right" style="text-align: right;">Simulation will run in<span class="text-green">  Type approval mode</span> <i class="fa fa-question-circle co2-help"></i></p>
 										</div>
-										<div class="col-xs-12 col-md-6">
-											<a href="/run/simulation" class="col-xs-12 col-md-12 btn btn-lg btn-success"><i class="fa fa-car"></i> Run simulation</a>
-										</div>
-										<p class="col-xs-12 col-md-12 pull-right" style="text-align: right;">Simulation will run in<span class="text-green">  Type approval mode</span> <i class="fa fa-question-circle co2-help"></i></p>
-									</div>
+									</form>
 								</div>
 								{% endif %}
 								
