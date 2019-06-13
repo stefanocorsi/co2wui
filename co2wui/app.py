@@ -1,3 +1,4 @@
+from os import path
 import webbrowser
 import threading
 import tempfile
@@ -22,7 +23,8 @@ import logging.config
 
 def create_app(configfile=None):
 
-    logging.config.fileConfig("logging.conf")
+    log_file_path = path.join(path.dirname(path.abspath(__file__)), '../logging.conf')
+    logging.config.fileConfig(log_file_path)
     log = logging.getLogger(__name__)
 
     app = Flask(__name__)
