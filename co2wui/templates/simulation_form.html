@@ -18,8 +18,48 @@
 
 							<!-- Horizontal Form -->
 							<div class="box box-info">
-								<div class="box-header pull-right">
+								<div class="box-header pull-left">
 									<a href="/run/download-template">Haven't done it yet? <i class="fa fa-download fa-download"></i> Download Co<sub>2</sub>mpas input template?</a>
+								</div>
+								<div class="box-header pull-right">
+									<a href="#" onclick="toggle_options(); return false;"><i class="fa fa-cogs"></i> Advanced options</a>
+								</div>
+								<div id="advanced_options" class="row" style="display: none;">
+									<section class="col-lg-12">
+										<div class="box-body">
+											<div class="form-group" style="align: right;">      
+											
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_declaration_mode">
+														Use only declaration mode <i class="fa fa-question-circle co2-help"></i>
+													</label>													
+												</div>
+												
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_hard_validation">
+														Hard validation <i class="fa fa-question-circle co2-help"></i>
+													</label>													
+												</div>
+												
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_enable_selector">
+														Enable selector <i class="fa fa-question-circle co2-help"></i>
+													</label>													
+												</div>
+												
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_only_summary">
+														Only summary <i class="fa fa-question-circle co2-help"></i>
+													</label>
+													
+												</div>
+										</div>
+										</div>
+									</section>
 								</div>
 								<br>
 								
@@ -87,6 +127,10 @@
 								{% if data.inputs|length %}
 								<div class="box-footer">
 									<form action="/run/simulation">
+										<input type="hidden" name="declaration_mode" id="declaration_mode" value="">
+										<input type="hidden" name="hard_validation" id="hard_validation" value="">
+										<input type="hidden" name="enable_selector" id="enable_selector" value="">
+										<input type="hidden" name="only_summary" id="only_summary" value="">
 										<div class="row">										
 											<div class="col-xs-12 col-md-6">
 												<label class="pull-right">                    
