@@ -257,6 +257,39 @@ def create_app(configfile=None):
             },
         )
 
+    @app.route("/run/download-result/<runid>/<fnum>")
+    def download_result(runid, fnum):
+
+        files = list(listdir_outputs("output/" + runid))
+        rf = "output/" + runid + "/" + files[int(fnum) - 1]
+
+        # Read from file
+        data = None
+        with open(rf, "rb") as xlsx:
+            data = xlsx.read()
+
+        # Output xls file
+        iofile = io.BytesIO(data)
+        iofile.seek(0)
+        return send_file(
+            iofile, attachment_filename=files[int(fnum) - 1], as_attachment=True
+        )
+
+    @app.route("/run/download-log/<runid>")
+    def download_log(runid):
+
+        rf = "output/" + runid + "/logfile.txt"
+
+        # Read from file
+        data = None
+        with open(rf, "rb") as xlsx:
+            data = xlsx.read()
+
+        # Output xls file
+        iofile = io.BytesIO(data)
+        iofile.seek(0)
+        return send_file(iofile, attachment_filename="logfile.txt", as_attachment=True)
+
     @app.route("/not-implemented")
     def not_implemented():
         return render_template(

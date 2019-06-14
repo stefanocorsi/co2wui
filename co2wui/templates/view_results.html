@@ -1,4 +1,7 @@
-
+				<section class="col-lg-12 connectedSortable">      
+				
+					<h1>{{ data.breadcrumb[-1] }}</h1>
+					
 					<div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Your Co<sub>2</sub>mpas past results</h3>
@@ -11,7 +14,9 @@
                   <th style="width: 40px">Run</th>
                   <th style="width: 40px">Date</th>
                   <th style="width: 40px">Result</th>
+									<th style="width: 40px">Log</th>
                   <th style="width: 40px">Link</th>
+									<th style="width: 40px; text-align: center;">Select all &nbsp;<input type="checkbox" name="select-all"></th>
                 </tr>
 								{% for result in data.results %}
                 <tr>
@@ -21,24 +26,21 @@
                     {{result.datetime}}
                   </td>
                   <td class="text-success">Ok</td>
+									<td><a href="/run/download-log/{{result.name}}"><i class="fa fa-newspaper-o"></i> </a></td>
                   <td style="list-style-type:none;">
 											{% for file in result.files %}
-											<li><a href="#">{{file}}</a></li>									
+											<li><a href="/run/download-result/{{result.name}}/{{loop.index}}">{{file}}</a></li>									
 											{% endfor %}
 									</td>
+									<td style="text-align: center;"><input type="checkbox" name="select-{{result.name}}"></td>
                 </tr>
                 {% endfor %}
               </table>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer clearfix">
-              <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">&laquo;</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">&raquo;</a></li>
-              </ul>
-            </div>
+            </div>  
+						<div class="box-footer">
+							<button class="btn btn-sm btn-danger pull-right"><i class="glyphicon glyphicon-trash"></i> Delete selected</button>
+						</div>
           </div>
           <!-- /.box -->
+					
+				</section>
