@@ -1,0 +1,48 @@
+				<section class="col-lg-12 connectedSortable">      
+				
+					<h1>{{ data.breadcrumb[-1] }}</h1>
+					
+					<p>The log of your past simulations is shown here below. You can retrieve your previous simulation results by clicking the Links in the table.</p>
+					
+					<div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Your Co<sub>2</sub>mpas past results</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 10px">#</th>
+                  <th style="width: 40px">Run</th>
+                  <th style="width: 40px">Date</th>
+                  <th style="width: 40px">Result</th>
+									<th style="width: 40px">Log</th>
+                  <th style="width: 40px">Link</th>
+									<th style="width: 40px; text-align: center;">Select all &nbsp;<input type="checkbox" name="select-all"></th>
+                </tr>
+								{% for result in data.results %}
+                <tr>
+                  <td>{{loop.index}}.</td>
+                  <td>{{result.name}}</td>
+                  <td>
+                    {{result.datetime}}
+                  </td>
+                  <td class="text-success">Ok</td>
+									<td><a href="/run/download-log/{{result.name}}"><i class="fa fa-newspaper-o"></i> </a></td>
+                  <td style="list-style-type:none;">
+											{% for file in result.files %}
+											<li><a href="/run/download-result/{{result.name}}/{{loop.index}}">{{file}}</a></li>									
+											{% endfor %}
+									</td>
+									<td style="text-align: center;"><input type="checkbox" name="select-{{result.name}}"></td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>  
+						<div class="box-footer">
+							<button class="btn btn-sm btn-danger pull-right"><i class="glyphicon glyphicon-trash"></i> Delete selected</button>
+						</div>
+          </div>
+          <!-- /.box -->
+					
+				</section>

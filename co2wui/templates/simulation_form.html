@@ -1,0 +1,155 @@
+
+					<div class="row">				
+						<!-- Single col -->
+						<section class="col-lg-8 connectedSortable">
+							<div title="Choose an input file and click “confirm”. ">
+							
+							<h1>{{ data.breadcrumb[-1] }}</h1>
+							
+							<h2>Choose your Co<sub>2</sub>mpas input file(s) <i class="fa fa-question-circle co2-help"></i></h2>
+							<p>In this section, Co<sub>2</sub>mpas is executed. Begin to choose one or more files to use as input for your Co<sub>2</sub>mpas simulation. Press <strong>Run simulation</strong> to proceed.</p>
+							</div>
+								
+						</section>        
+					</div>
+				 
+					<div class="row">
+						<section class="col-lg-8 connectedSortable">
+
+							<!-- Horizontal Form -->
+							<div class="box box-info">
+								<div class="box-header pull-left">
+									<a href="/run/download-template">Haven't done it yet? <i class="fa fa-download fa-download"></i> Download Co<sub>2</sub>mpas input template?</a>
+								</div>
+								<div class="box-header pull-right">
+									<a href="#" onclick="toggle_options(); return false;"><i class="fa fa-cogs"></i> Advanced options</a>
+								</div>
+								<div id="advanced_options" class="row" style="display: none;">
+									<section class="col-lg-12">
+										<div class="box-body">
+											<div class="form-group" style="align: right;">      
+											
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_declaration_mode">
+														Use only declaration mode <i class="fa fa-question-circle co2-help"></i>
+													</label>													
+												</div>
+												
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_hard_validation">
+														Hard validation <i class="fa fa-question-circle co2-help"></i>
+													</label>													
+												</div>
+												
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_enable_selector">
+														Enable selector <i class="fa fa-question-circle co2-help"></i>
+													</label>													
+												</div>
+												
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" id="chk_only_summary">
+														Only summary <i class="fa fa-question-circle co2-help"></i>
+													</label>
+													
+												</div>
+										</div>
+										</div>
+									</section>
+								</div>
+								<br>
+								
+								<!-- /.box-header -->
+								<!-- form start -->
+								<div class="box-body">
+									<div class="box-body">               	
+										{% if not data.inputs|length %}
+										<div>
+											<p>No input files have been uploaded</p>											
+										</div>
+										{% else %}
+
+											<div class="box-header with-border">
+												<h3 class="box-title">Your files ready to be processed:</h3>
+											</div>
+											<!-- /.box-header -->
+											<div class="box-body">
+												<table class="table table-bordered">
+													<tbody><tr>
+														<th style="width: 10px">#</th>
+														<th>Filename</th>														
+														<th style="width: 40px">&nbsp;</th>
+													</tr>
+													{% for file in data.inputs %}
+													<tr>
+														<td>{{loop.index}}.</td>
+														<td>{{file}}</td>														
+														<td>
+															<form action="/run/delete-file" method="get">
+																<input type="hidden" name="fn" value="{{loop.index}}">
+																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+															</form>
+														</td>
+													</tr>										
+													{% endfor %}
+												</tbody></table>
+											</div>
+											<!-- /.box-body -->
+
+										{% endif %}
+									</div>									
+								</div>
+								
+								<!-- /.box-body -->
+								<div class="box-footer"> 
+									<!-- <a href="#" class="btn btn-primary pull-right">Confirm</a> -->
+									<div class="form-group col-md-5 pull-right">
+										<form action="/run/add-file" enctype="multipart/form-data" method="post">
+											<div>
+													<div class="input-group">
+															<input type="text" name="file" id="file_path" class="form-control" placeholder="Browse...">
+															<span class="input-group-btn">
+																	<button class="btn btn-default" type="button" id="file_browser">
+																	<i class="fa fa-plus"></i> Choose an input file</button>																	
+															</span>
+															
+													</div>
+													<input type="file" class="hidden" id="file" name="file">
+											</div>
+										</form>
+									</div>
+											
+								</div>	
+								{% if data.inputs|length %}
+								<div class="box-footer">
+									<form action="/run/simulation">
+										<input type="hidden" name="declaration_mode" id="declaration_mode" value="">
+										<input type="hidden" name="hard_validation" id="hard_validation" value="">
+										<input type="hidden" name="enable_selector" id="enable_selector" value="">
+										<input type="hidden" name="only_summary" id="only_summary" value="">
+										<div class="row">										
+											<div class="col-xs-12 col-md-6">
+												<label class="pull-right">                    
+													Type approval mode
+													<input id="tamode" name="tamode" type="checkbox" data-toggle="toggle">												
+												</label>
+											</div>
+											<div class="col-xs-12 col-md-6">
+												<button type="submit" class="col-xs-12 col-md-12 btn btn-lg btn-success"><i class="fa fa-car"></i> Run simulation</button>
+											</div>
+											<p class="col-xs-12 col-md-12 pull-right" style="text-align: right;">Simulation will run in <span id="simulation-mode" class="text-green">Scientific mode</span> <i class="fa fa-question-circle co2-help"></i></p>
+										</div>
+									</form>
+								</div>
+								{% endif %}
+								
+							</div>
+							<!-- /.box -->
+
+						</section>						
+					</div>
+					

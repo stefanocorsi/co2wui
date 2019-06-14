@@ -1,0 +1,73 @@
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+	
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header"><a href="/"><i class="fa fa-home"></i> <span>Home</span></a></li>
+        <li class="treeview {{data.props.active.run}}">
+          <a href="#">
+            <span>Run co<sub>2</sub>mpas</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-down pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/run/download-template-form"><i class="fa fa-download"></i> Download input template</a></li>
+            <li><a href="/run/simulation-form"><i class="fa fa-car"></i> Run simulation</a></li>
+            <li><a href="/run/view-results"><i class="fa fa-bars"></i> View results</a></li>
+          </ul>
+        </li>
+        <li onclick="location.href='/not-implemented';" class="active treeview">
+          <a href="#">
+            <span><i class="fa fa-refresh"></i> Synchronize data</span>
+            <span class="pull-left-container"></span>           
+          </a>          
+        </li>
+        <li onclick="location.href='/not-implemented';" class="active treeview">
+          <a href="#">
+            <span><i class="fa fa-download"></i>  Demo file</span>
+            <span class="pull-left-container"></span>            
+          </a>          
+        </li>
+        <li onclick="location.href='/not-implemented';" class="active treeview">
+          <a href="#">
+            <span><i class="fa fa-key"></i> Load keys</span>
+            <span class="pull-right-container"></span>
+          </a>          
+        </li>
+        
+        <li class="treeview {{data.props.active.expert}}">
+          <a href="#">
+            <span><i class="fa fa-plus"></i>  Expert functionalities</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-down pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/not-implemented"><i class="fa fa-download"></i> Show model graph</a></li>
+                <li><a href="/not-implemented"><i class="fa fa-download"></i> Download configuration</a></li>
+                <li><a href="/not-implemented"><i class="fa fa-upload"></i> Upload configuration</a></li>
+          </ul>
+        </li>       
+        
+        <li class="treeview {{data.props.active.docs}}">
+          <a href="#">
+            <span>Support & docs</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-down pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/not-implemented"><i class="fa fa-play"></i> Tutorials</a></li>
+            <li><a href="/not-implemented"><i class="fa fa-book"></i> Documentation</a></li>
+            <li><a href="/not-implemented"><i class="fa fa-question-circle"></i> Contact us</a></li>
+          </ul>
+        </li>
+      
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+		
+  </aside>

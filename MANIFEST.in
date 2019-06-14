@@ -1,0 +1,2 @@
+recursive-include co2wui/static *
+recursive-include co2wui/templates *.html

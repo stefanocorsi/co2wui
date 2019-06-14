@@ -1,0 +1,19 @@
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    
+		<!-- Content Header (Page header) -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+				{% for item in data.breadcrumb %}
+            <li class="breadcrumb-item"><a href="#"> {{ item }}</a></li>
+				{% endfor %}
+        </ol>
+    </nav>
+			<!-- Main content -->
+			<section id="main-content" class="content">
+
+			{% include action + ".html" -%}
+					
+			</section>	
+  </div>
+  <!-- /.content-wrapper -->

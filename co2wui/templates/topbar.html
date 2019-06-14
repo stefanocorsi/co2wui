@@ -1,0 +1,42 @@
+{% block header %}
+<header class="main-header">
+    <!-- Logo -->
+    <a href="/" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><img class="img-responsive" src="/static/images/co2mpas-banner.svg"></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><img class="img-responsive" src="/static/images/co2mpas-banner.svg"></span>
+    </a>
+    
+		<!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-inverse">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-left">
+            <li><a target=_blank href="https://github.com/JRCSTU/CO2MPAS-TA/">GitHub</a></li>
+            <li><a target=_blank href="https://dice.jrc.ec.europa.eu">DICE</a></li>
+            <li><a target=_blank href="https://github.com/dimitriskomnos/co2mpas/wiki/CO2MPAS-F.A.Q.">FAQ</a></li>
+        </ul>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <form class="navbar-form navbar-right">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control" placeholder="Search">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-info btn-flat">Go!</button>
+                    </span>
+              </div>
+          </form>
+					
+					
+
+        </div>
+      </div>
+    </nav>
+		
+  </header>
+ {%- endblock header %}

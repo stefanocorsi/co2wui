@@ -1,0 +1,20 @@
+<div class="row">	
+			
+	<section class="col-lg-12 connectedSortable" style="text-align: center;">
+		<i style="font-size: 128px" class="fa fa-spin fa-refresh"></i>
+	</section>
+	
+	<section class="col-lg-12">
+		<div class="form-group">
+			<label>Co2mpas log</label>
+			<textarea class="form-control" rows="15" placeholder="Waiting for data...">{{data.log}}</textarea>
+		</div>
+	</section>
+	
+</div>
+
+<script>
+setTimeout(function(){
+	$('#main-content').load('/run/progress?layout=ajax&id=' + {{data.thread_id}});
+}, 5000);
+</script>
