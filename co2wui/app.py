@@ -6,7 +6,7 @@ import webbrowser
 import threading
 import tempfile
 import schedula as sh
-import co2mpas_dice
+#import co2mpas_dice
 from co2mpas import dsp as dsp
 from co2mpas import __version__
 import click

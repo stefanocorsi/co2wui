@@ -91,7 +91,7 @@
 														<td>
 															<form action="/run/delete-file" method="get">
 																<input type="hidden" name="fn" value="{{loop.index}}">
-																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+																<button class="btn btn-sm btn-danger" id="delete_button"><i class="glyphicon glyphicon-trash"></i> Delete</button>
 															</form>
 														</td>
 													</tr>										
@@ -139,7 +139,7 @@
 												</label>
 											</div>
 											<div class="col-xs-12 col-md-6">
-												<button type="submit" class="col-xs-12 col-md-12 btn btn-lg btn-success"><i class="fa fa-car"></i> Run simulation</button>
+												<button type="submit" id="run_simulatiion" class="col-xs-12 col-md-12 btn btn-lg btn-success"><i class="fa fa-car"></i> Run simulation</button>
 											</div>
 											<p class="col-xs-12 col-md-12 pull-right" style="text-align: right;">Simulation will run in <span id="simulation-mode" class="text-green">Scientific mode</span> <i class="fa fa-question-circle co2-help"></i></p>
 										</div>
