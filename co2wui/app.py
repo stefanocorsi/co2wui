@@ -26,7 +26,6 @@ from werkzeug import secure_filename
 import logging
 import logging.config
 
-
 def listdir_inputs(path):
     """Only allow for excel files as input 
     """
@@ -289,6 +288,63 @@ def create_app(configfile=None):
         iofile = io.BytesIO(data)
         iofile.seek(0)
         return send_file(iofile, attachment_filename="logfile.txt", as_attachment=True)
+        
+    @app.route("/sync/template-form")
+    def sync_template_form():
+      return render_template(
+            "layout.html",
+            action="synchronisation_form",
+            data={
+                "breadcrumb": ["Co2mpas", "Data synchronisation"],
+                "props": {"active": {"run": "", "doc": "", "expert": ""}},
+                "title": "Data synchronisation"
+            },
+        )
+        
+    @app.route("/sync/template-download")
+    def sync_template_download():
+    
+        # Parameters from request
+        cycle_type = request.args.get("cycle")
+        gear_box_type = request.args.get("gearbox")
+        wltp_class = request.args.get("wltpclass")
+        
+        # Output temp file
+        output_file = next(tempfile._get_candidate_names()) + ".xlsx"
+        
+        # Generate template
+        import pandas as pd
+        from co2mpas.core.model.physical import dsp
+        theoretical = sh.selector(['times', 'velocities'], dsp(inputs=dict(
+            cycle_type=cycle_type.upper(), gear_box_type=gear_box_type,
+            wltp_class=wltp_class, downscale_factor=0
+        ), outputs=['times', 'velocities'], shrink=True))
+        base = dict.fromkeys((
+            'times', 'velocities', 'target gears', 'engine_speeds_out',
+            'engine_coolant_temperatures', 'co2_normalization_references',
+            'alternator_currents', 'battery_currents', 'target fuel_consumptions',
+            'target co2_emissions', 'target engine_powers_out'
+        ), [])
+        data = dict(theoretical=theoretical, dyno=base, obd=base)
+
+        with pd.ExcelWriter(output_file) as writer:
+            for k, v in data.items():
+                pd.DataFrame(v).to_excel(writer, k, index=False)
+        
+        # Read from generated file
+        data = None
+        with open(output_file, "rb") as xlsx:
+            data = xlsx.read()
+            
+        # Delete files
+        os.remove(output_file)
+            
+        # Output xls file
+        iofile = io.BytesIO(data)
+        iofile.seek(0)
+        return send_file(
+            iofile, attachment_filename='datasync.xlsx', as_attachment=True
+        )
 
     @app.route("/not-implemented")
     def not_implemented():

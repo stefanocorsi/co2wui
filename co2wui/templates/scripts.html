@@ -62,6 +62,18 @@
 </script>
 
 <script>
+	function toggle_wltp_class(el) {
+		
+		if (el.value == 'WLTP') {
+			$('#wltpclass-group').show();
+		} else {
+			$('#wltpclass-group').hide();
+		}
+		
+	}
+</script>
+
+<script>
 	$('#chk_only_summary').change(
 			function () {					
 					if ($('#chk_only_summary').is(':checked')) {
