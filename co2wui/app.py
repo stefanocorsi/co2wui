@@ -26,6 +26,8 @@ from werkzeug import secure_filename
 import logging
 import logging.config
 import syncing
+import zipfile
+import shutil
 
 def listdir_inputs(path):
     """Only allow for excel files as input 
@@ -451,6 +453,43 @@ def create_app(configfile=None):
         return send_file(
             iofile, attachment_filename="datasync.sync.xlsx", as_attachment=True
         )
+        
+    # Demo/download
+    @app.route('/demo/download')
+    def demo_download():
+    
+      # Temporary output folder  
+      of = next(tempfile._get_candidate_names())
+      
+      # Input parameters
+      inputs = {'output_folder': of}
+
+      # Dispatcher
+      d = dsp.register()
+      ret = d.dispatch(inputs, ['demo', 'done'])
+      
+      # List of demo files created
+      demofiles = [f for f in listdir(of) if isfile(join(of, f))]
+
+      # Create zip archive on the fly
+      zip_subdir = of
+      iofile = io.BytesIO()
+      zf = zipfile.ZipFile(iofile, mode='w', compression=zipfile.ZIP_DEFLATED)
+      
+      # Adds demo files to archive
+      for f in demofiles:
+        # Add file, at correct path
+        zf.write(os.path.abspath(of + '/' + f), f)
+      
+      # Close archive
+      zf.close()
+      
+      # Remove temporary files
+      shutil.rmtree(of)
+      
+      # Output zip file
+      iofile.seek(0)
+      return send_file(iofile, attachment_filename='co2mpas-demo.zip', as_attachment=True)
         
     @app.route("/plot/launched")
     def plot_launched():
