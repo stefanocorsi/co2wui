@@ -435,6 +435,23 @@ def create_app(configfile=None):
           
         return log
         
+    @app.route("/sync/download-result")
+    def sync_download_result():
+
+        resfile = "sync/output/datasync.sync.xlsx"
+
+        # Read from file
+        data = None
+        with open(resfile, "rb") as xlsx:
+            data = xlsx.read()
+
+        # Output xls file
+        iofile = io.BytesIO(data)
+        iofile.seek(0)
+        return send_file(
+            iofile, attachment_filename="datasync.sync.xlsx", as_attachment=True
+        )
+        
     @app.route("/plot/launched")
     def plot_launched():
       return render_template(
