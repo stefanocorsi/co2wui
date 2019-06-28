@@ -434,7 +434,24 @@ def create_app(configfile=None):
           log += logline
           
         return log
-
+        
+    @app.route("/plot/launched")
+    def plot_launched():
+      return render_template(
+          "content.html",
+          action="launch_plot",
+          data={
+              "breadcrumb": ["Co2mpas", "Plot launched"],
+              "props": {"active": {"run": "", "sync": "", "doc": "", "expert": "active"}},
+              "title": "Plot launched"
+          },
+      )
+        
+    @app.route("/plot/model-graph")
+    def plot_model_graph():
+      dsp(dict(plot_model=True, cache_folder='cache', host='127.0.0.1', port=4999), ['plot', 'done'])
+      return ''
+      
     @app.route("/not-implemented")
     def not_implemented():
         return render_template(

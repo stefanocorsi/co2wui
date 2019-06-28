@@ -122,3 +122,12 @@ function run_synchronisation() {
 		}
 	});
 }
+
+function launch_plot() {
+	$('#content-outer').load("/plot/launched", function () { $( window ).resize() })
+	$.ajax({
+		url: "/plot/model-graph",
+		method: "get",
+		context: document.body
+	})
+}
