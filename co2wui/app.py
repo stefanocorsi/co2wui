@@ -465,6 +465,18 @@ def create_app(configfile=None):
             },
         )
 
+    @app.route("/contact-us")
+    def contact_us():
+      return render_template(
+            "layout.html",
+            action="contact_us",
+            data={
+                "breadcrumb": ["Co2mpas", "Contact us"],
+                "props": {"active": {"run": "", "sync": "", "doc": "active", "expert": ""}},
+                "title": "Contact us",                
+            },
+        )
+        
     return app
 
 
