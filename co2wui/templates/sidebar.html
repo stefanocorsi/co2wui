@@ -19,11 +19,17 @@
             <li><a href="/run/view-results"><i class="fa fa-bars"></i> View results</a></li>
           </ul>
         </li>
-        <li onclick="location.href='/sync/template-form';" class="active treeview">
-          <a id="synchronize-data-link" href="/sync/template-form">
-            <span><i class="fa fa-refresh"></i> Synchronize data</span>
-            <span class="pull-left-container"></span>           
-          </a>          
+        <li class="treeview {{data.props.active.sync}}">
+					<a href="#">
+            <span>Synchronize data</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-down pull-right"></i>
+            </span>
+          </a>
+					<ul class="treeview-menu">
+            <li><a href="/sync/template-form"><i class="fa fa-download"></i> Download datasync template</a></li>
+            <li><a href="/sync/synchronisation-form"><i class="fa fa-refresh"></i> Synchronize data</a></li>            
+          </ul>              
         </li>
         <li onclick="location.href='/not-implemented';" class="active treeview">
           <a href="#">

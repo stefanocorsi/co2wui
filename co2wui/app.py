@@ -25,6 +25,7 @@ import os.path as osp
 from werkzeug import secure_filename
 import logging
 import logging.config
+import syncing
 
 def listdir_inputs(path):
     """Only allow for excel files as input 
@@ -54,7 +55,7 @@ def create_app(configfile=None):
             action="dashboard",
             data={
                 "breadcrumb": ["Co2mpas"],
-                "props": {"active": {"run": "", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
             },
         )
 
@@ -65,7 +66,7 @@ def create_app(configfile=None):
             action="template_download_form",
             data={
                 "breadcrumb": ["Co2mpas", "Download template"],
-                "props": {"active": {"run": "active", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
             },
         )
 
@@ -107,7 +108,7 @@ def create_app(configfile=None):
             action="simulation_form",
             data={
                 "breadcrumb": ["Co2mpas", "Run simulation"],
-                "props": {"active": {"run": "active", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
                 "inputs": inputs,
             },
         )
@@ -204,7 +205,7 @@ def create_app(configfile=None):
             action=page,
             data={
                 "breadcrumb": ["Co2mpas", title],
-                "props": {"active": {"run": "active", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
                 "thread_id": thread_id,
                 "log": log,
             },
@@ -251,7 +252,7 @@ def create_app(configfile=None):
             action="view_results",
             data={
                 "breadcrumb": ["Co2mpas", "View results"],
-                "props": {"active": {"run": "active", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
                 "results": reversed(results),
             },
         )
@@ -293,10 +294,10 @@ def create_app(configfile=None):
     def sync_template_form():
       return render_template(
             "layout.html",
-            action="synchronisation_form",
+            action="synchronisation_template_form",
             data={
                 "breadcrumb": ["Co2mpas", "Data synchronisation"],
-                "props": {"active": {"run": "", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": ""}},
                 "title": "Data synchronisation"
             },
         )
@@ -345,6 +346,94 @@ def create_app(configfile=None):
         return send_file(
             iofile, attachment_filename='datasync.xlsx', as_attachment=True
         )
+        
+    @app.route("/sync/synchronisation-form")
+    def synchronisation_form():
+        inputs = [f for f in listdir_inputs("sync/input") if isfile(join("sync/input", f))]
+        return render_template(
+            "layout.html",
+            action="synchronisation_form",
+            data={
+                "breadcrumb": ["Co2mpas", "Run synchronisation"],
+                "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": ""}},
+                "interpolation_methods": [
+                  "linear","nearest","zero","slinear","quadratic","cubic","pchip","akima","integral",
+                  "polynomial0","polynomial1","polynomial2","polynomial3",
+                  "polynomial4","spline5","spline7","spline9"
+                ],
+                "inputs": inputs,
+            },
+        )
+        
+    @app.route("/sync/add-sync-file", methods=["POST"])
+    def add_sync_file():
+        inputs = [f for f in listdir_inputs("sync") if isfile(join("sync", f))]
+       
+        for file in inputs:
+          os.remove("sync/input/" + file)
+        
+        f = request.files["file"]
+        f.save("sync/input/" + secure_filename(f.filename))
+        files = {"file": f.read()}
+        return redirect("/sync/synchronisation-form", code=302)
+        
+    @app.route("/sync/run-synchronisation", methods=["POST"])
+    def run_synchronisation():
+    
+        # Dedicated logging for this run
+        fileh = logging.FileHandler(
+            "sync/logfile.txt", "w"
+        )
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
+        fileh.setFormatter(formatter)
+        log = logging.getLogger()
+        log.setLevel(logging.DEBUG)
+        for hdlr in log.handlers[:]:
+            log.removeHandler(hdlr)
+        log.addHandler(fileh)
+    
+        # Input and output files
+        input_file = "sync/input/datasync.xlsx"
+        output_file = "sync/output/datasync.sync.xlsx"
+    
+        # Arguments
+        kwargs = {
+            "x_label": request.form.get("x_label") if request.form.get("x_label") else 'times',
+            "y_label": request.form.get("y_label") if request.form.get("y_label") else 'velocities',
+            "interpolation_method": request.form.get("interpolation_method"),
+            "header": request.form.get("header"),
+            "reference_name": request.form.get("reference_name") if request.form.get("reference_name") else 'theoretical',
+        }
+        kwargs = {k: v for k, v in kwargs.items() if v}
+        
+        try:
+        
+          # Dispatcher
+          _process = sh.SubDispatch(syncing.dsp, ['written'], output_type='value')
+          ret = _process(dict(input_fpath=input_file, output_fpath=output_file, **kwargs))   
+          return 'OK'
+          
+        except Exception as e:   
+          return 'KO'
+          
+    @app.route("/sync/delete-file", methods=["GET"])
+    def delete_sync_file():       
+        os.remove("sync/input/datasync.xlsx")
+        return redirect("/sync/synchronisation-form", code=302)
+        
+    @app.route("/sync/load-log", methods=["GET"])
+    def load_sync_log():       
+        log = ""
+        loglines = []
+        with open("sync/logfile.txt") as f:
+            loglines = f.readlines()              
+            
+        for logline in loglines:
+          log += logline
+          
+        return log
 
     @app.route("/not-implemented")
     def not_implemented():
@@ -353,7 +442,7 @@ def create_app(configfile=None):
             action="generic_message",
             data={
                 "breadcrumb": ["Co2mpas", "Feature not implemented"],
-                "props": {"active": {"run": "", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
                 "title": "Feature not implemented",
                 "message": "Please refer to future versions of the application or contact xxxxxxx@xxxxxx.europa.eu for information.",
             },

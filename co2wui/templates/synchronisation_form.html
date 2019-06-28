@@ -1,0 +1,178 @@
+
+					<div class="row">				
+						<!-- Single col -->
+						<section class="col-lg-8 connectedSortable">
+							<div title="Choose an input file and click “confirm”. ">
+							
+							<h1>{{ data.breadcrumb[-1] }}</h1>
+							
+							<h2>Upload your data synchronisation input file <i class="fa fa-question-circle co2-help"></i></h2>
+							</div>
+								
+						</section>        
+					</div>
+				 
+					<div class="row">
+						<section class="col-lg-8 connectedSortable">
+
+							<!-- Horizontal Form -->
+							<div class="box box-info">
+								<div id="options-link" class="box-header pull-right">
+									<a href="#" onclick="toggle_options(); return false;"><i class="fa fa-cogs"></i> Options</a>
+								</div>
+								
+								<!-- Options -->
+								<div id="advanced_options" class="row" style="display: none;">
+									<section class="col-lg-12">
+										<div class="box-body">
+											<div style="align: right;">      
+												
+													<div class="form-group" class="col-md-12">
+														<label class="col-sm-2 col-md-2 control-label">Reference data set name:</label>
+														<div class="col-sm-10 col-md-4">
+															<input type="text" class="form-control" id="option_reference_data_set" value="theoretical">
+														</div>
+														<div class="col-sm-0 col-md-6">&nbsp;</div>
+													</div>								
+													<br style="clear: both;">
+
+													<div class="form-group" class="col-md-6">
+														<label class="col-sm-2 col-md-2 control-label">x label:</label>
+														<div class="col-sm-10 col-md-4">
+															<input type="text" class="form-control" id="option_x_label" value="times">
+														</div>
+
+														<label class="col-sm-2 control-label">Y label:</label>
+														<div class="col-sm-10 col-md-4">
+															<input type="text" class="form-control" id="option_y_label" value="velocities">
+														</div>
+													</div>
+													<br style="clear: both;">
+																										
+													<div class="form-group" class="col-md-12" style="margin-top: 10px;">
+														<label class="col-sm-2 col-md-2 control-label">Interpolation method:</label>
+														<div class="col-sm-10 col-md-4">
+															<select class="form-control" id="option_interpolation_method">
+																<option value="">-- None --</option>
+																{% for method in data.interpolation_methods %}
+																<option value="{{method}}">{{method.capitalize()}}</option>			
+																{% endfor %}
+															</select>
+														</div>
+														<div class="col-sm-0 col-md-6">&nbsp;</div>
+													</div>								
+													<br style="clear: both;">
+													
+													<div class="form-group" class="col-md-12" style="margin-top: 10px;">
+														<label class="col-sm-2 col-md-2 control-label">Header row number:</label>
+														<div class="col-sm-10 col-md-4">
+															<input type="text" class="form-control" id="option_header_row_number" value="">
+														</div>
+														<div class="col-sm-0 col-md-6">&nbsp;</div>
+													</div>								
+													<br style="clear: both;">
+												
+											</div>
+											
+										</div>										
+									</section>
+								</div>
+								<br>
+								
+								<!-- /.box-header -->
+								<!-- form start -->
+								<div id="file-list" class="box-body">
+									<div class="box-body">               	
+										{% if not data.inputs|length %}
+										<div>
+											<p>No input files have been uploaded</p>											
+										</div>
+										{% else %}
+										<div class="box-header with-border">
+											<h3 class="box-title">Your file ready for data synchronisation:</h3>
+										</div>
+										<div class="box-body">
+											<table class="table table-bordered">
+													<tbody><tr>														
+														<th>Filename</th>														
+														<th style="width: 40px">&nbsp;</th>
+													</tr>													
+													<tr>														
+														<td>{{data.inputs[0]}}</td>														
+														<td>
+															<form action="/sync/delete-file" method="get">																
+																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+															</form>
+														</td>
+													</tr>																							
+												</tbody></table>
+										</div>
+										{% endif %}
+									</div>									
+								</div>
+								
+								<div id="sync-result" class="box-body" style="display: none;">
+									<div class="box-header">
+										<p><i class="fa fa-check fa-3" style="color: green;"></i> Synchronisation complete</p>
+										<p><strong>1</strong> file has been processed</p>
+										<p><a href="#">Download synchronised file <i class="fa fa-file-excel-o"></i></a>
+									</div>								
+								</div>
+								
+								<div id="result-toolbar" class="box-footer" style="display: none;"> 
+									<a class="pull-right" href="/sync/synchronisation-form"><i class="fa fa-repeat"></i> Synchronise another file</a>
+									
+									<section class="col-lg-12">
+										<div class="form-group">
+											<label>Synchronisation log</label>
+											<textarea id="logarea" class="form-control" rows="15" placeholder="Waiting for data..."></textarea>
+										</div>
+									</section>
+								</div>
+
+								{% if not data.inputs|length %}
+								<!-- /.box-body -->
+								<div id="file-chooser" class="box-footer"> 
+									<!-- <a href="#" class="btn btn-primary pull-right">Confirm</a> -->
+									<div class="form-group col-md-5 pull-right">
+										<form action="/sync/add-sync-file" enctype="multipart/form-data" method="post">
+											<div>
+													<div class="input-group">
+															<input type="text" name="file" id="file_path" class="form-control" placeholder="Browse...">
+															<span class="input-group-btn">
+																	<button class="btn btn-default" type="button" id="file_browser">
+																	<i class="fa fa-plus"></i> Choose an input file</button>																	
+															</span>
+															
+													</div>
+													<input type="file" class="hidden" id="file" name="file">
+											</div>
+										</form>
+									</div>											
+								</div>
+								{% endif %}
+								
+								{% if data.inputs|length %}
+								<div id="form-container" class="box-footer">
+									<form id="synchronise-form" action="/sync/run-synchronisation" method="post">
+										<input type="hidden" name="reference_data_set" id="reference_data_set" value="">
+										<input type="hidden" name="x_label" id="x_label" value="">
+										<input type="hidden" name="y_label" id="y_label" value="">
+										<input type="hidden" name="interpolation_method" id="interpolation_method" value="">
+										<input type="hidden" name="header_row_number" id="header_row_number" value="">
+										<div class="row">																					
+											<div class="col-xs-12 col-md-6 pull-right">
+												<button onclick="run_synchronisation(); return false;" id="synchronise-button" type="submit" class="col-xs-12 col-md-12 btn btn-lg btn-warning"><i class="fa fa-refresh"></i> Synchronise data</button>
+											</div>											
+										</div>
+									</form>
+								</div>
+								{% endif %}								
+								
+							</div>
+							<!-- /.box -->
+
+						</section>				
+						
+					</div>
+					
