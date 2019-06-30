@@ -119,16 +119,20 @@ def create_app(configfile=None):
 
         thread = threading.current_thread()
         files = [
-            "input/" + f for f in listdir_inputs("input") if isfile(join("input", f))
+            os.path.join("input", f) for f in listdir_inputs("input") if isfile(os.path.join("input", f))
         ]
 
         # Create output directory for this execution
-        output_folder = "output/" + str(thread.ident)
+        output_folder = os.path.join("output", str(thread.ident))
         os.makedirs(output_folder or ".", exist_ok=True)
 
         # Dedicated logging for this run
         fileh = logging.FileHandler(
-            "output/" + str(thread.ident) + "/" + "logfile.txt", "a"
+            os.path.join(
+              "output",
+              str(thread.ident),
+              "logfile.txt"
+            ), "a"
         )
         formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -164,7 +168,7 @@ def create_app(configfile=None):
         # Dispatcher
         d = dsp.register()
         ret = d.dispatch(inputs, ["done", "run"])
-        f = open("output/" + str(thread.ident) + "/result.dat", "w+")
+        f = open(os.path.join("output", str(thread.ident), "result.dat"), "w+")
         f.write(str(ret))
         return ""
 
@@ -195,7 +199,7 @@ def create_app(configfile=None):
 
         log = ""
         loglines = []
-        with open("output/" + thread_id + "/" + "logfile.txt") as f:
+        with open(os.path.join("output", thread_id, "logfile.txt")) as f:
             loglines = f.readlines()
 
         for logline in reversed(loglines):
@@ -216,7 +220,7 @@ def create_app(configfile=None):
     @app.route("/run/add-file", methods=["POST"])
     def add_file():
         f = request.files["file"]
-        f.save("input/" + secure_filename(f.filename))
+        f.save(os.path.join("input", secure_filename(f.filename)))
         files = {"file": f.read()}
         return redirect("/run/simulation-form", code=302)
 
@@ -224,7 +228,7 @@ def create_app(configfile=None):
     def delete_file():
         fn = request.args.get("fn")
         inputs = [f for f in listdir_inputs("input") if isfile(join("input", f))]
-        os.remove("input/" + inputs[int(fn) - 1])
+        os.remove(os.path.join("input", inputs[int(fn) - 1]))
         return redirect("/run/simulation-form", code=302)
 
     @app.route("/run/view-results")
@@ -242,8 +246,8 @@ def create_app(configfile=None):
             dirname = os.path.basename(path)
             output_files = [
                 f
-                for f in listdir_outputs("output/" + dirname)
-                if isfile(join("output/" + dirname, f))
+                for f in listdir_outputs(os.path.join("output", dirname))
+                if isfile(os.path.join("output", dirname, f))
             ]
             results.append(
                 {"datetime": time.ctime(cdate), "name": dirname, "files": output_files}
@@ -262,8 +266,8 @@ def create_app(configfile=None):
     @app.route("/run/download-result/<runid>/<fnum>")
     def download_result(runid, fnum):
 
-        files = list(listdir_outputs("output/" + runid))
-        rf = "output/" + runid + "/" + files[int(fnum) - 1]
+        files = list(listdir_outputs(os.path.join("output", runid)))
+        rf = os.path.join("output", runid, files[int(fnum) - 1])
 
         # Read from file
         data = None
@@ -280,7 +284,7 @@ def create_app(configfile=None):
     @app.route("/run/download-log/<runid>")
     def download_log(runid):
 
-        rf = "output/" + runid + "/logfile.txt"
+        rf = os.path.join("output", runid, "logfile.txt")
 
         # Read from file
         data = None
@@ -372,10 +376,10 @@ def create_app(configfile=None):
         inputs = [f for f in listdir_inputs("sync") if isfile(join("sync", f))]
        
         for file in inputs:
-          os.remove("sync/input/" + file)
+          os.remove(os.path.join("sync/input", file))
         
         f = request.files["file"]
-        f.save("sync/input/" + secure_filename(f.filename))
+        f.save(os.path.join("sync/input", secure_filename(f.filename)))
         files = {"file": f.read()}
         return redirect("/sync/synchronisation-form", code=302)
         
@@ -479,7 +483,7 @@ def create_app(configfile=None):
       # Adds demo files to archive
       for f in demofiles:
         # Add file, at correct path
-        zf.write(os.path.abspath(of + '/' + f), f)
+        zf.write(os.path.abspath(os.path.join(of, f)), f)
       
       # Close archive
       zf.close()
