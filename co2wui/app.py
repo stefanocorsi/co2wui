@@ -524,6 +524,34 @@ def create_app(configfile=None):
                 "message": "Please refer to future versions of the application or contact xxxxxxx@xxxxxx.europa.eu for information.",
             },
         )
+        
+    # Demo/download
+    @app.route('/conf/download')
+    def conf_download():
+    
+      # Conf file name
+      of = 'conf.yaml'
+           
+      # Input parameters
+      inputs = {'output_file': of}
+   
+      # Dispatcher
+      d = dsp.register()
+      ret = d.dispatch(inputs, ['conf', 'done'])
+      
+      # Read from file
+      data = None
+      with open(of, "rb") as conf_yaml:
+          data = conf_yaml.read()     
+
+      # Output xls file
+      iofile = io.BytesIO(data)
+      iofile.seek(0)
+      return send_file(
+          iofile,
+          attachment_filename="conf.yaml",
+          as_attachment=True,
+      )
 
     @app.route("/contact-us")
     def contact_us():
