@@ -558,9 +558,8 @@ def create_app(configfile=None):
             },
         )
         
-    # Demo/download
-    @app.route('/conf/download')
-    def conf_download():
+    @app.route('/conf/generate')
+    def conf_generate():
     
       # Conf file name
       of = 'conf.yaml'
@@ -571,6 +570,16 @@ def create_app(configfile=None):
       # Dispatcher
       d = dsp.register()
       ret = d.dispatch(inputs, ['conf', 'done'])
+      
+      return redirect("/conf/configuration-form", code=302)
+     
+        
+    # Demo/download
+    @app.route('/conf/download')
+    def conf_download():
+    
+      # Conf file name
+      of = 'conf.yaml'
       
       # Read from file
       data = None

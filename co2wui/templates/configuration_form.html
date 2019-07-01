@@ -16,7 +16,14 @@
 						<section class="col-lg-8 connectedSortable">
 
 							<!-- Horizontal Form -->
-							<div class="box box-info">					
+							<div class="box box-info">		
+
+								{% if not data.inputs|length %}
+								<div class="box-header pull-left">
+									Do you want to generate a blank configuration file? Click <a id="generate-link" href="/conf/generate">here</a>
+								</div>
+								<br style="clear: both;">
+								{% endif %}
 								
 								<!-- /.box-header -->
 								<!-- form start -->
@@ -31,16 +38,18 @@
 											<h3 class="box-title">Your configuration file:</h3>
 										</div>
 										<div class="box-body">
-											<table class="table table-bordered">
+											<table id="conf-table" class="table table-bordered">
 													<tbody><tr>														
-														<th>Filename</th>														
+														<th>Filename</th>
+														<th>&nbsp;</th>														
 														<th style="width: 40px">&nbsp;</th>
 													</tr>													
 													<tr>														
-														<td>{{data.inputs[0]}}</td>														
+														<td>{{data.inputs[0]}}</td>
+														<td><i class="fa fa-download"></i> <a href="/conf/download">Download</a></td>														
 														<td>
 															<form action="/conf/delete-file" method="get">																
-																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+																<button id="delete-button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
 															</form>
 														</td>
 													</tr>																							
