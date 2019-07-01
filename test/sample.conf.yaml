@@ -1,0 +1,784 @@
+EPS: 1.1920929e-07
+INF: 10000.0
+functions:
+  __constants__:
+    AlternatorStatusModel:
+      __constants__:
+        min_delta_soc: 8
+        min_delta_time_boundaries: 5
+        min_percentile_bers: 90
+    CMV:
+      __constants__:
+        ENABLE_OPT_LOOP: false
+    ENABLE_ALL_FUNCTIONS: false
+    FMEP_egr:
+      __constants__:
+        egr_fact_map:
+          ? !!python/tuple
+          - compression
+          - false
+          : 3
+          ? !!python/tuple
+          - compression
+          - true
+          : 4
+          ? !!python/tuple
+          - positive natural aspiration
+          - false
+          : 2
+          ? !!python/tuple
+          - positive turbo
+          - false
+          : 1
+    MGS:
+      __constants__:
+        DELTA_VEL: 0.1
+        MAX_VEL: 1000
+        MIN_VEL: 1
+        PREC_FLC: 0.9
+    StartStopModel:
+      __constants__:
+        plateau_acceleration: 0.2777777777777778
+        stop_velocity: 2.0
+    _filter_temperature_samples:
+      __constants__:
+        max_abs_dt_cold: 0.7
+    _rescaling_matrix:
+      __constants__:
+        a: 0.9902
+        b: 0.1699
+    _tech_mult_factors:
+      __constants__:
+        factors:
+          egr:
+            1:
+              a: 1.02
+              a2: 1.1
+              b: 1.1
+              c: 1.5
+            2:
+              a: 1.02
+              a2: 1.1
+              b: 1.1
+              c: 1.5
+            3:
+              a2: 1.1
+              b: 1.08
+              c: 1.15
+            4:
+              a2: 1.1
+              b: 1.08
+              c: 1.15
+          lb:
+            1:
+              a: 1.1
+              a2: 1.25
+              b: 0.72
+              c: 0.76
+              l2: 2.85
+          vva:
+            1:
+              a: 0.98
+              l: 0.92
+    _yield_on_start:
+      __constants__:
+        ACC: 0.05
+        VEL: 1.0
+    calculate_aerodynamic_drag_coefficient:
+      __constants__:
+        cw:
+          A: 0.34
+          B: 0.31
+          C: 0.29
+          D: 0.3
+          E: 0.3
+          F: 0.28
+          J: 0.38
+          M: 0.32
+          S: 0.29
+    calculate_aerodynamic_drag_coefficient_v1:
+      __constants__:
+        cw:
+          bestelwagen: 0.35
+          bus: 0.35
+          cabriolet: 0.28
+          "coup\xE9": 0.27
+          hatchback: 0.3
+          mpv: 0.3
+          pick-up: 0.4
+          sedan: 0.27
+          stationwagon: 0.28
+          suv/crossover: 0.35
+    calculate_co2_emissions:
+      __constants__:
+        cutoff_idle_ratio: 1.1
+    calculate_cold_start_speeds_delta:
+      __constants__:
+        MAX_COLD_START_SPEED_DELTA_PERCENTAGE: 1.0
+    calculate_engine_heat_capacity:
+      __constants__:
+        PARAMS:
+          heat_capacity:
+            body: 460.0
+            coolant: 3558.1
+            crankcase: 460.0
+            crankshaft: 490.0
+            cyl_head: 910.0
+            oil: 2090.0
+            pistons: 910.0
+          heated_mass_percentage:
+            body: 0.1
+            coolant: 0.04
+            crankcase: 0.18
+            crankshaft: 0.08
+            cyl_head: 0.09
+            oil: 0.055
+            pistons: 0.025
+    calculate_engine_mass:
+      __constants__:
+        PARAMS:
+          mass_coeff:
+            compression: 1.1
+            positive: 1.0
+          mass_reg_coeff: !!python/tuple
+          - 0.4208
+          - 60
+    calculate_engine_max_torque:
+      __constants__:
+        PARAMS:
+          compression: 1.1
+          positive: 1.25
+    calculate_engine_moment_inertia:
+      __constants__:
+        PARAMS:
+          compression: 2
+          positive: 1
+    calculate_engine_temperature_derivatives:
+      __constants__:
+        dx: 4
+        order: 7
+    calculate_equivalent_gear_box_heat_capacity:
+      __constants__:
+        PARAMS:
+          gear_box_mass_engine_ratio: 0.25
+          heat_capacity:
+            oil: 2090.0
+          thermal_management_factor: 0.5
+    calculate_f1:
+      __constants__:
+        qm: !!python/tuple
+        - 1.38045
+        - -35.8675
+    calculate_f2:
+      __constants__:
+        roof_box: 1.2
+    calculate_first_gear_box_ratio:
+      __constants__:
+        MAX_TORQUE_PERCENTAGE: 0.95
+        STARTING_SLOPE: 0.5
+    calculate_frontal_area:
+      __constants__:
+        projection_factor: 0.84
+    calculate_last_gear_box_ratio_v1:
+      __constants__:
+        DELTA_RATIO: 0.1
+        MAX_RATIO: 2
+        MIN_RATIO: 0.2
+    calculate_maximum_velocity:
+      __constants__:
+        DELTA_VEL: 1
+        MAX_VEL: 1000
+        MIN_VEL: 1
+        PREC_FLC: 0.9
+    calculate_maximum_velocity_v2:
+      __constants__:
+        DELTA_VEL: 1
+        MAX_VEL: 1000
+        MIN_VEL: 1
+    calculate_raw_frontal_area_v1:
+      __constants__:
+        formulas:
+          A: 'lambda vehicle_mass: (0.4041 * np.log(vehicle_mass) - 0.338)'
+          B: 'lambda vehicle_mass: (0.4041 * np.log(vehicle_mass) - 0.338)'
+          C: 'lambda vehicle_mass: (0.4041 * np.log(vehicle_mass) - 0.338)'
+          D: 'lambda vehicle_mass: (0.4041 * np.log(vehicle_mass) - 0.338)'
+          E: 'lambda vehicle_mass: (0.4041 * np.log(vehicle_mass) - 0.338)'
+          F: 'lambda vehicle_mass: (0.4041 * np.log(vehicle_mass) - 0.338)'
+          J: 'lambda vehicle_mass: 0.0007 * vehicle_mass + 1.8721'
+          M: 'lambda vehicle_mass: 0.0007 * vehicle_mass + 1.8721'
+          S: 'lambda vehicle_mass: (0.4041 * np.log(vehicle_mass) - 0.338)'
+    calculate_rolling_resistance_coeff:
+      __constants__:
+        coeff:
+          C1:
+            A: 0.005900000000000001
+            B: 0.0070999999999999995
+            C: 0.008400000000000001
+            D: 0.009800000000000001
+            E: 0.009800000000000001
+            F: 0.011300000000000001
+            G: 0.0129
+          C2:
+            A: 0.004900000000000001
+            B: 0.0060999999999999995
+            C: 0.0074
+            D: 0.0086
+            E: 0.0086
+            F: 0.0099
+            G: 0.0112
+          C3:
+            A: 0.0035
+            B: 0.0045
+            C: 0.0055
+            D: 0.0065
+            E: 0.0075
+            F: 0.0085
+            G: 0.0085
+    calculate_velocities:
+      __constants__:
+        dt_window: 5
+    calibrate_clutch_prediction_model:
+      __constants__:
+        prev_dt: 1
+    calibrate_co2_params:
+      __constants__:
+        enable_first_step: false
+        enable_second_step: false
+        enable_third_step: true
+    calibrate_cold_start_speed_model_v1:
+      __constants__:
+        PARAMS:
+          delta_speed_limits: !!python/tuple
+          - 0.05
+          - 0.2
+          first_seconds: 10.0
+          max_temperature: 30.0
+    correct_constant_velocity:
+      __constants__:
+        CON_VEL_DN_SHIFT: !!python/tuple
+        - 35.0
+        - 50.0
+        CON_VEL_UP_SHIFT: !!python/tuple
+        - 15.0
+        - 32.0
+        - 50.0
+        - 70.0
+        DV_DN_SHIFT: -1
+        DV_UP_SHIFT: -0.5
+        VEL_DN_WINDOW: 3.5
+        VEL_UP_WINDOW: 3.5
+    default_clutch_k_factor_curve:
+      __constants__:
+        LOCKUP_SPEED_RATIO: 0.0
+        STAND_STILL_TORQUE_RATIO: 1.0
+    default_clutch_window:
+      __constants__:
+        ENABLE: true
+        clutch_window: !!python/tuple
+        - -0.89230769
+        - 0.95384615
+    default_fuel_carbon_content:
+      __constants__:
+        CARBON_CONTENT:
+          LPG: 1.35
+          NG: 3.21
+          biodiesel: 2.81
+          diesel: 3.16
+          ethanol: 1.91
+          gasoline: 3.17
+          methanol: 1.37
+          propane: 2.99
+        ENABLE: false
+    default_fuel_density:
+      __constants__:
+        ENABLE: false
+        FUEL_DENSITY:
+          LPG: 699.6521739130435
+          NG: 713.6141906873614
+          biodiesel: 890.0
+          diesel: 832.0
+          ethanol: 794.0
+          gasoline: 745.0
+          methanol: 791.0
+          propane: 510.0
+    default_fuel_lower_heating_value:
+      __constants__:
+        ENABLE: false
+        LHV:
+          LPG: 46000.0
+          NG: 45100.0
+          biodiesel: 37900.0
+          diesel: 43100.0
+          ethanol: 26800.0
+          gasoline: 43200.0
+          methanol: 19800.0
+          propane: 49680.0
+    default_full_load_speeds_and_powers:
+      __constants__:
+        FULL_LOAD:
+          compression: !!python/tuple
+          - - 0.0
+            - 0.1
+            - 0.2
+            - 0.3
+            - 0.4
+            - 0.5
+            - 0.6
+            - 0.7
+            - 0.8
+            - 0.9
+            - 1.0
+            - 1.1
+            - 1.2
+          - - 0.1
+            - 0.278071182
+            - 0.427366185
+            - 0.572340499
+            - 0.683251935
+            - 0.772776746
+            - 0.846217049
+            - 0.906754984
+            - 0.94977083
+            - 0.981937981
+            - 1
+            - 0.937598144
+            - 0.85
+          positive: !!python/tuple
+          - - 0.0
+            - 0.1
+            - 0.2
+            - 0.3
+            - 0.4
+            - 0.5
+            - 0.6
+            - 0.7
+            - 0.8
+            - 0.9
+            - 1.0
+            - 1.1
+            - 1.2
+          - - 0.1
+            - 0.198238659
+            - 0.30313392
+            - 0.410104642
+            - 0.516920841
+            - 0.621300767
+            - 0.723313491
+            - 0.820780368
+            - 0.901750158
+            - 0.962968496
+            - 0.995867804
+            - 0.953356174
+            - 0.85
+    default_initial_state_of_charge:
+      __constants__:
+        initial_state_of_charge:
+          NEDC: 99
+          WLTP: 90
+    default_ki_multiplicative:
+      __constants__:
+        ki_multiplicative:
+          false: 1.0
+          true: 1.05
+    default_specific_gear_shifting:
+      __constants__:
+        SPECIFIC_GEAR_SHIFTING: ALL
+    default_start_stop_activation_time:
+      __constants__:
+        ENABLE: false
+        threshold: 30
+    default_tc_k_factor_curve:
+      __constants__:
+        LOCKUP_SPEED_RATIO: 0.87
+        STAND_STILL_TORQUE_RATIO: 1.9
+    define_fmep_model:
+      __constants__:
+        acr_full_bmep_curve_percentage: 0.45
+        acr_max_mean_piston_speeds_percentage: 0.6
+        egr_full_bmep_curve_percentage: 0.5
+        egr_max_mean_piston_speeds_percentage: 0.5
+        lb_full_bmep_curve_percentage: 0.4
+        lb_max_mean_piston_speeds_percentage: 0.6
+    define_fuel_type_and_is_hybrid:
+      __constants__:
+        fuel_type:
+          1: gasoline
+          2: methanol
+          3: ethanol
+          4: diesel
+          5: LPG
+          6: NG
+          7: propane
+          8: null
+          9: gasoline
+          10: methanol
+          11: ethanol
+          12: LPG
+          13: NG
+          14: propane
+          15: null
+          16: gasoline
+          17: gasoline
+          18: ethanol
+          19: diesel
+          20: null
+          21: gasoline
+          22: null
+          23: diesel
+        is_hybrid:
+          1: false
+          2: false
+          3: false
+          4: false
+          5: false
+          6: false
+          7: false
+          8: true
+          9: false
+          10: false
+          11: false
+          12: false
+          13: false
+          14: false
+          15: true
+          16: true
+          17: true
+          18: true
+          19: true
+          20: true
+          21: true
+          22: true
+          23: false
+    define_idle_fuel_consumption_model:
+      __constants__:
+        ENABLE: false
+    define_idle_model_detector:
+      __constants__:
+        EPS: 100.0
+    define_initial_co2_emission_model_params_guess:
+      __constants__:
+        CO2_PARAMS:
+          compression:
+          - !!python/tuple
+            - a
+            - min: 0.0
+              value: 0.391197
+          - !!python/tuple
+            - b
+            - value: 0.028604
+          - !!python/tuple
+            - c
+            - value: -0.00196
+          - !!python/tuple
+            - a2
+            - max: 0.0
+              value: -0.0012
+          - !!python/tuple
+            - b2
+            - max: 1
+              min: -1
+              value: 0
+              vary: false
+          - !!python/tuple
+            - l
+            - max: 0.0
+              value: -1.55291
+          - !!python/tuple
+            - l2
+            - max: 0.0
+              value: -0.0076
+          - !!python/tuple
+            - t1
+            - min: 0.0
+              value: 3.5
+          - !!python/tuple
+            - dt
+            - min: 0.0
+              value: 1.0
+          - !!python/tuple
+            - t0
+            - expr: t1 + dt
+              value: 4.5
+          positive natural aspiration:
+          - !!python/tuple
+            - a
+            - min: 0.0
+              value: 0.4851
+          - !!python/tuple
+            - b
+            - value: 0.01193
+          - !!python/tuple
+            - c
+            - value: -0.00065
+          - !!python/tuple
+            - a2
+            - max: 0.0
+              value: -0.00385
+          - !!python/tuple
+            - b2
+            - max: 1
+              min: -1
+              value: 0
+              vary: false
+          - !!python/tuple
+            - l
+            - max: 0.0
+              value: -2.39882
+          - !!python/tuple
+            - l2
+            - max: 0.0
+              value: -0.00286
+          - !!python/tuple
+            - t1
+            - min: 0.0
+              value: 3.5
+          - !!python/tuple
+            - dt
+            - min: 0.0
+              value: 1.0
+          - !!python/tuple
+            - t0
+            - expr: t1 + dt
+              value: 4.5
+          positive turbo:
+          - !!python/tuple
+            - a
+            - min: 0.0
+              value: 0.468678
+          - !!python/tuple
+            - b
+            - value: 0.011859
+          - !!python/tuple
+            - c
+            - value: -0.00069
+          - !!python/tuple
+            - a2
+            - max: 0.0
+              value: -0.00266
+          - !!python/tuple
+            - b2
+            - max: 1
+              min: -1
+              value: 0
+              vary: false
+          - !!python/tuple
+            - l
+            - max: 0.0
+              value: -2.14063
+          - !!python/tuple
+            - l2
+            - max: 0.0
+              value: -0.0025
+          - !!python/tuple
+            - t1
+            - min: 0.0
+              value: 3.5
+          - !!python/tuple
+            - dt
+            - min: 0.0
+              value: 1.0
+          - !!python/tuple
+            - t0
+            - expr: t1 + dt
+              value: 4.5
+    design_gear_box_ratios:
+      __constants__:
+        f_tuning:
+        - 1
+        - 1.01
+        - 1.02
+        - 1.03
+        - 1.04
+        - 1.05
+        - 1.06
+        - 1.07
+        - 1.08
+        - 1.09
+        - 1.1
+        f_two:
+        - 1
+        - 1.01
+        - 1.02
+        - 1.03
+        - 1.04
+        - 1.05
+        - 1.06
+        - 1.07
+        - 1.08
+        - 1.09
+        - 1.1
+        - 1.11
+        - 1.12
+        - 1.13
+        - 1.14
+        - 1.15
+        - 1.16
+        - 1.17
+        - 1.18
+        - 1.19
+        - 1.2
+    get_gear_box_efficiency_constants:
+      __constants__:
+        PARAMS:
+          false:
+            gbp00:
+              m: -0.0043233434399999994
+              q:
+                cold: -0.695884329
+                hot: -0.29823614099999995
+            gbp01:
+              q:
+                cold: 0.9793688500000001
+                hot: 0.9895177500000001
+            gbp10:
+              m: -2.4525999999999996e-06
+              q:
+                cold: -0.00012958919999999998
+                hot: -5.15957e-05
+          true:
+            gbp00:
+              m: -0.0043233434399999994
+              q:
+                cold: -0.695884329
+                hot: -0.29823614099999995
+            gbp01:
+              q:
+                cold: 0.96921995
+                hot: 0.9793688500000001
+            gbp10:
+              m: -2.4525999999999996e-06
+              q:
+                cold: -0.0005171569
+                hot: -0.0001547871
+    identify_charging_statuses:
+      __constants__:
+        time_window: 4
+    identify_co2_emissions:
+      __constants__:
+        enable_first_step: true
+        enable_second_step: true
+        enable_third_step: false
+        n_perturbations: 100
+        xatol: 0.0001
+    identify_idle_engine_speed_std:
+      __constants__:
+        MAX_STD_PERC: 0.3
+        MIN_STD: 100.0
+    restrict_bounds:
+      __constants__:
+        CO2_PARAMS_LIMIT_MULTIPLIERS:
+          a: &id001 !!python/tuple
+          - 0.8
+          - 1.2
+          a2: &id002 !!python/tuple
+          - 1.2
+          - 0.8
+          b: *id001
+          c: *id002
+          l: *id002
+          l2: !!python/tuple
+          - 1.2
+          - 0.0
+          t0: &id003 !!python/tuple
+          - 0.5
+          - 1.5
+          t1: *id003
+          trg: !!python/tuple
+          - 0.9
+          - 1.1
+    select_default_n_dyno_axes:
+      __constants__:
+        DYNO_AXES:
+          NEDC:
+            2: 1
+            4: 1
+          WLTP:
+            2: 1
+            4: 2
+    select_phases_integration_times:
+      __constants__:
+        INTEGRATION_TIMES:
+          NEDC: !!python/tuple
+          - 0.0
+          - 780.0
+          - 1180.0
+          WLTP: !!python/tuple
+          - 0.0
+          - 590.0
+          - 1023.0
+          - 1478.0
+          - 1800.0
+    select_prediction_data:
+      __constants__:
+        theoretical: true
+values:
+  __constants__:
+    active_cylinder_ratios: !!python/tuple
+    - 1.0
+    air_temperature: 20
+    alternator_efficiency: 0.67
+    alternator_off_threshold: -1.0
+    alternator_start_window_width: 4.0
+    angle_slope: 0.0
+    atmospheric_pressure: 101.325
+    auxiliaries_power_loss: 0.0213
+    auxiliaries_torque_loss: !!python/tuple
+    - 0.175
+    - 0.2021
+    calibration_tc_speed_threshold: 100.0
+    cargo_mass: 0
+    change_gear_window_width: 4.0
+    co2_params: {}
+    correct_f0: false
+    delta_time_engine_starter: 1.0
+    downscale_factor_threshold: 0.01
+    enable_phases_willans: false
+    enable_willans: false
+    engine_has_cylinder_deactivation: false
+    engine_has_variable_valve_actuation: false
+    engine_is_turbo: true
+    engine_n_cylinders: 4
+    final_drive_efficiency: 1.0
+    final_drive_ratio: 1.0
+    fuel_mass: 25
+    fuel_saving_at_strategy: true
+    gear_box_temperature_references: !!python/tuple
+    - 40.0
+    - 80.0
+    has_energy_recuperation: true
+    has_gear_box_thermal_management: false
+    has_lean_burn: false
+    has_periodically_regenerating_systems: false
+    has_roof_box: false
+    has_selective_catalytic_reduction: false
+    has_start_stop: true
+    idle_engine_speed_std: 100.0
+    initial_temperature_NEDC: 25.0
+    initial_temperature_WLTP: 23.0
+    is_cycle_hot: false
+    is_hybrid: false
+    k1: 1
+    k2: 2
+    k5: 2
+    ki_additive: 0
+    lock_up_tc_limits: !!python/tuple
+    - 48.0
+    - 0.3
+    max_clutch_window_width: 2.0
+    max_time_NEDC: 1180.0
+    max_time_WLTP: 1800.0
+    max_velocity_full_load_correction: 100.0
+    min_engine_on_speed: 10.0
+    min_time_engine_on_after_start: 4.0
+    n_passengers: 1
+    n_wheel_drive: 2
+    passenger_mass: 75
+    plateau_acceleration: 0.10000011920929
+    start_stop_activation_time: 30
+    stop_velocity: 1.00000011920929
+    time_cold_hot_transition: 300.0
+    time_sample_frequency: 1.0
+    tyre_class: C1
+    tyre_dynamic_rolling_coefficient: 0.9713375796178343
+    use_dt_gear_shifting: false
+    wltp_base_model: {}
