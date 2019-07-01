@@ -142,3 +142,6 @@ geckodriver.log
 
 # Log file
 logfile.log
+
+# Config file
+conf.yaml
