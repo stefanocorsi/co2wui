@@ -39,7 +39,11 @@ def listdir_outputs(path):
     """Only allow for excel files as output 
     """
     return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
-
+    
+def listdir_conf(path):
+    """Only allow for conf.yaml files 
+    """
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml")))    
 
 def create_app(configfile=None):
 
@@ -512,6 +516,35 @@ def create_app(configfile=None):
       dsp(dict(plot_model=True, cache_folder='cache', host='127.0.0.1', port=4999), ['plot', 'done'])
       return ''
       
+    @app.route("/conf/configuration-form")
+    def configuration_form():
+      files = [f for f in listdir_conf(".") if isfile(join(".", f))]
+      return render_template(
+            "layout.html",
+            action="configuration_form",
+            data={
+                "breadcrumb": ["Co2mpas", "Co2mpas configuration file"],
+                "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": "active"}},
+                "title": "Configuration form",
+                "inputs": files,
+            },
+        )
+        
+    @app.route("/conf/add-conf-file", methods=["POST"])
+    def add_conf_file():
+        if os.path.exists("conf.yaml"):
+          os.remove("conf.yaml")
+        
+        f = request.files["file"]
+        f.save('conf.yaml')
+        return redirect("/conf/configuration-form", code=302)
+        
+    @app.route("/conf/delete-file", methods=["GET"])
+    def delete_conf_file():       
+        os.remove("conf.yaml")
+        return redirect("/conf/configuration-form", code=302)
+        
+      
     @app.route("/not-implemented")
     def not_implemented():
         return render_template(
@@ -570,7 +603,7 @@ def create_app(configfile=None):
 
 @click.group(cls=FlaskGroup, create_app=create_app)
 def cli():
-    """Management script for the Wiki application."""
+    """Management script for the Co2gui application."""
     # FIXME: read port from cli/configs
     # TODO: option for the user to skip opening browser
     webbrowser.open("http:localhost:5000")

@@ -1,0 +1,81 @@
+
+					<div class="row">				
+						<!-- Single col -->
+						<section class="col-lg-8 connectedSortable">
+							<div title="Choose an input file and click “confirm”. ">
+							
+							<h1>{{ data.breadcrumb[-1] }}</h1>
+							
+							<h2>Upload and download your Co2mpas configuration file <i class="fa fa-question-circle co2-help"></i></h2>
+							</div>
+								
+						</section>        
+					</div>
+				 
+					<div class="row">
+						<section class="col-lg-8 connectedSortable">
+
+							<!-- Horizontal Form -->
+							<div class="box box-info">					
+								
+								<!-- /.box-header -->
+								<!-- form start -->
+								<div id="file-list" class="box-body">
+									<div class="box-body">               	
+										{% if not data.inputs|length %}
+										<div>
+											<p>No configuration files have been uploaded</p>											
+										</div>
+										{% else %}
+										<div class="box-header with-border">
+											<h3 class="box-title">Your configuration file:</h3>
+										</div>
+										<div class="box-body">
+											<table class="table table-bordered">
+													<tbody><tr>														
+														<th>Filename</th>														
+														<th style="width: 40px">&nbsp;</th>
+													</tr>													
+													<tr>														
+														<td>{{data.inputs[0]}}</td>														
+														<td>
+															<form action="/conf/delete-file" method="get">																
+																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+															</form>
+														</td>
+													</tr>																							
+												</tbody></table>
+										</div>
+										{% endif %}
+									</div>									
+								</div>																											
+
+								{% if not data.inputs|length %}
+								<!-- /.box-body -->
+								<div id="file-chooser" class="box-footer"> 
+									<!-- <a href="#" class="btn btn-primary pull-right">Confirm</a> -->
+									<div class="form-group col-md-5 pull-right">
+										<form action="/conf/add-conf-file" enctype="multipart/form-data" method="post">
+											<div>
+													<div class="input-group">
+															<input type="text" name="file" id="file_path" class="form-control" placeholder="Browse...">
+															<span class="input-group-btn">
+																	<button class="btn btn-default" type="button" id="file_browser">
+																	<i class="fa fa-plus"></i> Choose a configuration file</button>																	
+															</span>
+															
+													</div>
+													<input type="file" class="hidden" id="file" name="file">
+											</div>
+										</form>
+									</div>											
+								</div>
+								{% endif %}															
+								
+							</div>
+							<!-- /.box -->
+
+						</section>				
+						
+					</div>
+					
