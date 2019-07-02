@@ -20,3 +20,11 @@ h2 {
 .logo-lg {
 	width: 150px;
 }
+
+.color-ok {
+	color: green;
+}
+
+.color-ko {
+	color: red;
+}

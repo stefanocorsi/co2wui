@@ -1,8 +1,18 @@
 <div class="row">	
 			
 	<section class="col-lg-12 connectedSortable" style="text-align: center;">
-		<i style="font-size: 128px" class="fa fa-check"></i>
+		{% if data.result == 'OK' %}
+		<i style="font-size: 128px" class="fa fa-check color-ok"></i>
+		{% else %}
+		<i style="font-size: 128px" class="fa fa-exclamation-triangle color-ko"></i>
+		{% endif %}
 	</section>
+	
+	{% if not data.result == 'KO' %}
+	<section class="col-lg-12">
+		{% include "summary.html" -%}
+	</section>
+	{% endif %}
 	
 	<section class="col-lg-12">
 		<div class="form-group">

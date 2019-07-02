@@ -234,6 +234,9 @@ def create_app(configfile=None):
 
         page = "run_complete" if done else "run_progress"
         title = "Simulation complete" if done else "Simulation in progress..."
+        
+        summary = get_summary(thread_id)    
+        result = 'KO' if (summary is None or len(summary[0].keys()) <= 2) else 'OK'        
 
         log = ""
         loglines = []
@@ -252,6 +255,8 @@ def create_app(configfile=None):
                 "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
                 "thread_id": thread_id,
                 "log": log,
+                "result": result,
+                "summary": summary[0] if summary is not None else None
             },
         )
 
