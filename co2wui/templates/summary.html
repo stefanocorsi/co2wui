@@ -1,0 +1,37 @@
+	
+								<!-- /.box-header -->
+								<div class="box-body">
+									<div class="box-body">               	
+
+										<div class="box-header with-border">
+											<h3 class="box-title">{{title}}:</h3>
+										</div>
+										<!-- /.box-header -->
+										<div class="box-body">
+											<table class="table table-bordered table-striped">
+												<tbody><tr>													
+													<th>Cycle</th>		
+													<th>Phase</th>
+													<th>Type</th>
+													<th>Type</th>													
+													<th>Value</th>
+												</tr>
+												{% for key in data.summary.keys() %}		
+													{% if loop.index > 2 %}
+												<tr>													
+													<td>{{key[0]}}</td>
+													<td>{{key[1]}}</td>
+													<td>{{key[2]}}</td>
+													<td>{{key[3]}}</td>
+													<td>
+															{{data.summary[key]}}
+													</td>
+												</tr>
+													{% endif %}
+												{% endfor %}
+											</tbody></table>
+										</div>
+										<!-- /.box-body -->
+										
+									</div>									
+								</div>

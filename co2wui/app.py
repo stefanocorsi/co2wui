@@ -28,6 +28,7 @@ import logging.config
 import syncing
 import zipfile
 import shutil
+import pickle
 
 def listdir_inputs(path):
     """Only allow for excel files as input 
@@ -44,6 +45,20 @@ def listdir_conf(path):
     """Only allow for conf.yaml files 
     """
     return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml")))    
+    
+def get_summary(runid):
+    """Read a summary saved file and returns it as a dict
+    """
+    summary = None
+    if os.path.exists(os.path.join("output", runid, 'result.dat')):    
+          
+      with open(os.path.join("output", runid, 'result.dat'), 'rb') as summary_file:
+        try:
+          summary = pickle.load(summary_file)
+        except:
+          return None
+          
+    return summary
 
 def create_app(configfile=None):
 
@@ -172,9 +187,28 @@ def create_app(configfile=None):
         # Dispatcher
         d = dsp.register()
         ret = d.dispatch(inputs, ["done", "run"])
-        f = open(os.path.join("output", str(thread.ident), "result.dat"), "w+")
-        f.write(str(ret))
+        with open(os.path.join("output", str(thread.ident), "result.dat"), 'wb') as summary_file:
+           pickle.dump(ret['summary'], summary_file)
         return ""
+        
+    @app.route("/run/view-summary/<runid>")
+    def view_summary(runid):
+        """Show a modal dialog with a execution's summary formatted in a table
+        """
+    
+        summary = get_summary(runid)
+    
+        if summary is not None:           
+          return render_template(
+            "ajax.html",
+            action="summary",
+            title="Summary of your Co2mpas execution",
+            data={
+                "summary": summary[0],            
+            },
+          )
+        else:        
+          return ''
 
     # Run
     @app.route("/run/simulation")

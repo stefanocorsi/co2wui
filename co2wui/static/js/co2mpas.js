@@ -131,3 +131,9 @@ function launch_plot() {
 		context: document.body
 	})
 }
+
+function load_summary(result_name) {
+	$('.modal-dialog').css("width", "85%");
+	$('#modal-content').load('/run/view-summary/' + result_name);
+	$('#modal-default').modal('show');
+}
