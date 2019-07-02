@@ -78,12 +78,17 @@ def create_app(configfile=None):
 
     @app.route("/")
     def index():
+
+        nohints = False
+        if 'nohints' in request.cookies:
+          nohints = True
         return render_template(
             "layout.html",
             action="dashboard",
             data={
                 "breadcrumb": ["Co2mpas"],
                 "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
+                "nohints": nohints
             },
         )
 

@@ -18,6 +18,10 @@
   {% include "sidebar.html" -%}
 	
 	{% include "modal.html" -%}
+	
+	{% if not data.nohints and action == 'dashboard' %}
+		{% include "modal-hints.html" -%}
+	{% endif %}
 
 	<span id="content-outer">
   
@@ -31,6 +35,18 @@
 <!-- ./wrapper -->
 
 {% include "scripts.html" -%}
+
+{% if not data.nohints and action == 'dashboard' %}
+<script>
+	$('#modal-hints').on('hide.bs.modal', function () {
+		if ($('#do-not-show').prop('checked')) {			
+			Cookies.set('nohints', 'valid', { expires: 9999, path: "/" }); // need to set the path to fix a FF bug
+		}
+	});
+	$('#modal-hints').modal('show');
+</script>		
+{% endif %}
+
 
 </body>
 </html>
