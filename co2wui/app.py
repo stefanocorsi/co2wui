@@ -223,15 +223,14 @@ def create_app(configfile=None):
     @app.route("/run/progress")
     def run_progress():
 
-        done = True
+        done = False
 
         thread_id = request.args.get("id")
         layout = request.args.get("layout")
-
-        for thread in threading.enumerate():
-            if (thread.ident == int(thread_id)) and thread.is_alive():
-                done = False
-
+        
+        if os.path.exists(os.path.join("output", thread_id, "result.dat")):
+            done = True
+        
         page = "run_complete" if done else "run_progress"
         title = "Simulation complete" if done else "Simulation in progress..."
         
