@@ -29,7 +29,13 @@ import syncing
 import zipfile
 import shutil
 import pickle
-
+from babel import Locale
+import gettext
+_ = gettext.gettext
+from jinja2 import Environment, PackageLoader
+from babel.support import Translations
+from flask_babel import Babel
+ 
 def listdir_inputs(path):
     """Only allow for excel files as input 
     """
@@ -67,6 +73,7 @@ def create_app(configfile=None):
     log = logging.getLogger(__name__)
 
     app = Flask(__name__)
+    babel = Babel(app)
     CO2MPAS_VERSION = "3"
 
     @app.route("/")
@@ -86,7 +93,7 @@ def create_app(configfile=None):
             "layout.html",
             action="template_download_form",
             data={
-                "breadcrumb": ["Co2mpas", "Download template"],
+                "breadcrumb": ["Co2mpas", _("Download template")],
                 "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
             },
         )
@@ -128,7 +135,7 @@ def create_app(configfile=None):
             "layout.html",
             action="simulation_form",
             data={
-                "breadcrumb": ["Co2mpas", "Run simulation"],
+                "breadcrumb": ["Co2mpas", _("Run simulation")],
                 "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
                 "inputs": inputs,
             },
@@ -202,7 +209,7 @@ def create_app(configfile=None):
           return render_template(
             "ajax.html",
             action="summary",
-            title="Summary of your Co2mpas execution",
+            title=_("Summary of your Co2mpas execution"),
             data={
                 "summary": summary[0],            
             },
@@ -232,7 +239,7 @@ def create_app(configfile=None):
             done = True
         
         page = "run_complete" if done else "run_progress"
-        title = "Simulation complete" if done else "Simulation in progress..."
+        title = _("Simulation complete") if done else _("Simulation in progress...")
         
         summary = get_summary(thread_id)    
         result = 'KO' if (summary is None or len(summary[0].keys()) <= 2) else 'OK'        
@@ -299,7 +306,7 @@ def create_app(configfile=None):
             "layout.html",
             action="view_results",
             data={
-                "breadcrumb": ["Co2mpas", "View results"],
+                "breadcrumb": ["Co2mpas", _("View results")],
                 "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
                 "results": reversed(results),
             },
@@ -344,7 +351,7 @@ def create_app(configfile=None):
             "layout.html",
             action="synchronisation_template_form",
             data={
-                "breadcrumb": ["Co2mpas", "Data synchronisation"],
+                "breadcrumb": ["Co2mpas", _("Data synchronisation")],
                 "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": ""}},
                 "title": "Data synchronisation"
             },
@@ -402,7 +409,7 @@ def create_app(configfile=None):
             "layout.html",
             action="synchronisation_form",
             data={
-                "breadcrumb": ["Co2mpas", "Run synchronisation"],
+                "breadcrumb": ["Co2mpas", _("Run synchronisation")],
                 "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": ""}},
                 "interpolation_methods": [
                   "linear","nearest","zero","slinear","quadratic","cubic","pchip","akima","integral",
@@ -561,7 +568,7 @@ def create_app(configfile=None):
             "layout.html",
             action="configuration_form",
             data={
-                "breadcrumb": ["Co2mpas", "Co2mpas configuration file"],
+                "breadcrumb": ["Co2mpas", _("Co2mpas configuration file")],
                 "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": "active"}},
                 "title": "Configuration form",
                 "inputs": files,
@@ -589,7 +596,7 @@ def create_app(configfile=None):
             "layout.html",
             action="generic_message",
             data={
-                "breadcrumb": ["Co2mpas", "Feature not implemented"],
+                "breadcrumb": ["Co2mpas", _("Feature not implemented")],
                 "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
                 "title": "Feature not implemented",
                 "message": "Please refer to future versions of the application or contact xxxxxxx@xxxxxx.europa.eu for information.",
