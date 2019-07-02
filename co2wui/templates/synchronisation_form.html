@@ -6,7 +6,7 @@
 							
 							<h1>{{ data.breadcrumb[-1] }}</h1>
 							
-							<h2>Upload your data synchronisation input file <i class="fa fa-question-circle co2-help"></i></h2>
+							<h2>{{ _("Upload your data synchronisation input file") }} <i class="fa fa-question-circle co2-help"></i></h2>
 							</div>
 								
 						</section>        
@@ -18,7 +18,7 @@
 							<!-- Horizontal Form -->
 							<div class="box box-info">
 								<div id="options-link" class="box-header pull-right">
-									<a href="#" onclick="toggle_options(); return false;"><i class="fa fa-cogs"></i> Options</a>
+									<a href="#" onclick="toggle_options(); return false;"><i class="fa fa-cogs"></i> {{ _("Options") }}</a>
 								</div>
 								
 								<!-- Options -->
@@ -28,7 +28,7 @@
 											<div style="align: right;">      
 												
 													<div class="form-group" class="col-md-12">
-														<label class="col-sm-2 col-md-2 control-label">Reference data set name:</label>
+														<label class="col-sm-2 col-md-2 control-label">{{ _("Reference data set name") }}:</label>
 														<div class="col-sm-10 col-md-4">
 															<input type="text" class="form-control" id="option_reference_data_set" value="theoretical">
 														</div>
@@ -50,10 +50,10 @@
 													<br style="clear: both;">
 																										
 													<div class="form-group" class="col-md-12" style="margin-top: 10px;">
-														<label class="col-sm-2 col-md-2 control-label">Interpolation method:</label>
+														<label class="col-sm-2 col-md-2 control-label">{{ _("Interpolation method") }}:</label>
 														<div class="col-sm-10 col-md-4">
 															<select class="form-control" id="option_interpolation_method">
-																<option value="">-- None --</option>
+																<option value="">-- {{ _("None") }} --</option>
 																{% for method in data.interpolation_methods %}
 																<option value="{{method}}">{{method.capitalize()}}</option>			
 																{% endfor %}
@@ -64,7 +64,7 @@
 													<br style="clear: both;">
 													
 													<div class="form-group" class="col-md-12" style="margin-top: 10px;">
-														<label class="col-sm-2 col-md-2 control-label">Header row number:</label>
+														<label class="col-sm-2 col-md-2 control-label">{{ _("Header row number") }}:</label>
 														<div class="col-sm-10 col-md-4">
 															<input type="text" class="form-control" id="option_header_row_number" value="">
 														</div>
@@ -85,23 +85,23 @@
 									<div class="box-body">               	
 										{% if not data.inputs|length %}
 										<div>
-											<p>No input files have been uploaded</p>											
+											<p>{{ _("No input files have been uploaded") }}</p>											
 										</div>
 										{% else %}
 										<div class="box-header with-border">
-											<h3 class="box-title">Your file ready for data synchronisation:</h3>
+											<h3 class="box-title">{{ _("Your file ready for data synchronisation") }}:</h3>
 										</div>
 										<div class="box-body">
 											<table class="table table-bordered">
 													<tbody><tr>														
-														<th>Filename</th>														
+														<th>{{ _("Filename") }}</th>														
 														<th style="width: 40px">&nbsp;</th>
 													</tr>													
 													<tr>														
 														<td>{{data.inputs[0]}}</td>														
 														<td>
 															<form action="/sync/delete-file" method="get">																
-																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
 															</form>
 														</td>
 													</tr>																							
@@ -113,19 +113,19 @@
 								
 								<div id="sync-result" class="box-body" style="display: none;">
 									<div class="box-header">
-										<p><i class="fa fa-check fa-3" style="color: green;"></i> Synchronisation complete</p>
-										<p><strong>1</strong> file has been processed</p>
-										<p><a href="/sync/download-result">Download synchronised file <i class="fa fa-file-excel-o"></i></a>
+										<p><i class="fa fa-check fa-3" style="color: green;"></i> {{ _("Synchronisation complete") }}</p>
+										<p><strong>1</strong> {{ _("file has been processed") }}</p>
+										<p><a href="/sync/download-result">{{ _("Download synchronised file") }} <i class="fa fa-file-excel-o"></i></a>
 									</div>								
 								</div>
 								
 								<div id="result-toolbar" class="box-footer" style="display: none;"> 
-									<a class="pull-right" href="/sync/synchronisation-form"><i class="fa fa-repeat"></i> Synchronise another file</a>
+									<a class="pull-right" href="/sync/synchronisation-form"><i class="fa fa-repeat"></i> {{ _("Synchronise another file") }}</a>
 									
 									<section class="col-lg-12">
 										<div class="form-group">
-											<label>Synchronisation log</label>
-											<textarea id="logarea" class="form-control" rows="15" placeholder="Waiting for data..."></textarea>
+											<label>{{ _("Synchronisation log") }}</label>
+											<textarea id="logarea" class="form-control" rows="15" placeholder="{{ _('Waiting for data...') }}"></textarea>
 										</div>
 									</section>
 								</div>
@@ -141,7 +141,7 @@
 															<input type="text" name="file" id="file_path" class="form-control" placeholder="Browse...">
 															<span class="input-group-btn">
 																	<button class="btn btn-default" type="button" id="file_browser">
-																	<i class="fa fa-plus"></i> Choose an input file</button>																	
+																	<i class="fa fa-plus"></i> {{ _("Choose an input file") }}</button>																	
 															</span>
 															
 													</div>

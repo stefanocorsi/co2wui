@@ -6,7 +6,7 @@
 			<section class="col-lg-8 connectedSortable">
 				<div title="Synchronization should be performed if time-series signals are time-shifted and/or with different sampling rates. To synchronise and re-sample time series, syncing is used.">
 					<h1>{{ data.breadcrumb[-1] }}</h1>
-					<h2>Download a Co<sub>2</sub>mpas datasync template <i class="fa fa-question-circle co2-help"></i></h2>
+					<h2>{{ _("Download a Co<sub>2</sub>mpas datasync template") }} <i class="fa fa-question-circle co2-help"></i></h2>
 				</div>
 				
 				<p>Synchronization should be performed if time-series signals are time-shifted and/or with different sampling rates.</p>                    
@@ -21,14 +21,14 @@
 					<!-- Horizontal Form -->
           <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Download datasync template</h3>
+              <h3 class="box-title">{{ _("Download datasync template") }}</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
             <form class="form-horizontal" action="/sync/template-download">
               <div class="box-body">
 								<div class="form-group">
-                  <label for="inputEmail3" class="col-sm-2 control-label">Select cycle:</label>
+                  <label for="inputEmail3" class="col-sm-2 control-label">{{ _("Select cycle") }}:</label>
                   <div class="col-sm-10">
                    <select class="form-control" onchange="toggle_wltp_class(this);" name="cycle" id="cycle">
 											<option value="wltp">WLTP</option>
@@ -37,7 +37,7 @@
                   </div>
                 </div>
 								<div class="form-group" id="wltpclass-group">
-                  <label for="inputEmail3" class="col-sm-2 control-label">Select wltp class:</label>
+                  <label for="inputEmail3" class="col-sm-2 control-label">{{ _("Select wltp class") }}:</label>
                   <div class="col-sm-10">
                    <select class="form-control" name="wltpclass" id="wltpclass">
 											<option value="class1">Class 1</option>
@@ -48,7 +48,7 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="inputEmail3" class="col-sm-2 control-label">Select gear box type:</label>
+                  <label for="inputEmail3" class="col-sm-2 control-label">{{ _("Select gear box type") }}:</label>
                   <div class="col-sm-10">
                    <select class="form-control" name="gearbox" id="gearbox">
 											<option value="automatic">Automatic</option>
@@ -59,7 +59,7 @@
               </div>
               <!-- /.box-body -->
               <div class="box-footer">               
-                <button id="download-button" type="submit" class="btn btn-info pull-right"><i class="fa fa-download"></i>  Download</button>
+                <button id="download-button" type="submit" class="btn btn-info pull-right"><i class="fa fa-download"></i>  {{ _("Download") }}</button>
               </div>
               <!-- /.box-footer -->
             </form>

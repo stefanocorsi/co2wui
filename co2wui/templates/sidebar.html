@@ -5,18 +5,18 @@
     <section class="sidebar">
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header"><a href="/"><i class="fa fa-home"></i> <span>Home</span></a></li>
+        <li class="header"><a href="/"><i class="fa fa-home"></i> <span>{{ _("Home") }}</span></a></li>
         <li class="treeview {{data.props.active.run}}">
           <a href="#">
-            <span>Run co<sub>2</sub>mpas</span>
+            <span>{{ _("Run co<sub>2</sub>mpas") }}</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-down pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/run/download-template-form"><i class="fa fa-download"></i> Download input template</a></li>
-            <li><a href="/run/simulation-form"><i class="fa fa-car"></i> Run simulation</a></li>
-            <li><a href="/run/view-results"><i class="fa fa-bars"></i> View results</a></li>
+            <li><a href="/run/download-template-form"><i class="fa fa-download"></i> {{ _("Download input template") }}</a></li>
+            <li><a href="/run/simulation-form"><i class="fa fa-car"></i> {{ _("Run simulation") }}</a></li>
+            <li><a href="/run/view-results"><i class="fa fa-bars"></i> {{ _("View results") }}</a></li>
           </ul>
         </li>
         <li class="treeview {{data.props.active.sync}}">
@@ -27,47 +27,47 @@
             </span>
           </a>
 					<ul class="treeview-menu">
-            <li><a href="/sync/template-form"><i class="fa fa-download"></i> Download datasync template</a></li>
-            <li><a href="/sync/synchronisation-form"><i class="fa fa-refresh"></i> Synchronize data</a></li>            
+            <li><a href="/sync/template-form"><i class="fa fa-download"></i> {{ _("Download datasync template") }}</a></li>
+            <li><a href="/sync/synchronisation-form"><i class="fa fa-refresh"></i> {{ _("Synchronize data") }}</a></li>            
           </ul>              
         </li>
         <li onclick="location.href='/demo/download';" class="active treeview">
           <a href="#">
-            <span><i class="fa fa-download"></i>  Demo file</span>
+            <span><i class="fa fa-download"></i> {{ _("Demo file") }}</span>
             <span class="pull-left-container"></span>            
           </a>          
         </li>
         <li onclick="location.href='/not-implemented';" class="active treeview">
           <a href="#">
-            <span><i class="fa fa-key"></i> Load keys</span>
+            <span><i class="fa fa-key"></i> {{ _("Load keys") }}</span>
             <span class="pull-right-container"></span>
           </a>          
         </li>
         
         <li class="treeview {{data.props.active.expert}}">
           <a href="#">
-            <span><i class="fa fa-plus"></i>  Expert functionalities</span>
+            <span><i class="fa fa-plus"></i> {{ _("Expert functionalities") }}</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-down pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#" onclick="launch_plot(); return false;"><i class="fa fa-download"></i> Show model graph</a></li>
-            <li><a href="/conf/configuration-form"><i class="fa fa-upload"></i> Co2mpas configuration</a></li>
+            <li><a href="#" onclick="launch_plot(); return false;"><i class="fa fa-download"></i> {{ _("Show model graph") }}</a></li>
+            <li><a href="/conf/configuration-form"><i class="fa fa-upload"></i> {{ _("Co2mpas configuration") }}</a></li>
           </ul>
         </li>       
         
         <li class="treeview {{data.props.active.doc}}">
           <a href="#">
-            <span>Support & docs</span>
+            <span>{{ _("Support & docs") }}</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-down pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/not-implemented"><i class="fa fa-play"></i> Tutorials</a></li>
-            <li><a href="/not-implemented"><i class="fa fa-book"></i> Documentation</a></li>
-            <li><a href="/contact-us"><i class="fa fa-question-circle"></i> Contact us</a></li>
+            <li><a href="/not-implemented"><i class="fa fa-play"></i> {{ _("Tutorials") }}</a></li>
+            <li><a href="/not-implemented"><i class="fa fa-book"></i> {{ _("Documentation") }}</a></li>
+            <li><a href="/contact-us"><i class="fa fa-question-circle"></i> {{ _("Contact us") }}</a></li>
           </ul>
         </li>
       
