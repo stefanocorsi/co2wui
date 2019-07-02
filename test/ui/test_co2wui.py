@@ -101,7 +101,7 @@ class TestCo2mpasWui(unittest.TestCase):
         print("Starting upload config file test")
         driver.get("http://localhost:5000/conf/configuration-form")
         
-        elem = driver.find_element_by_id("file-input")
+        elem = driver.find_element_by_id("file")
         elem.send_keys(os.path.join(os.getcwd(), "test", "sample.conf.yaml"))
 
         elem = driver.find_element_by_id("conf-file-form").submit()
