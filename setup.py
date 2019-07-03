@@ -19,6 +19,7 @@ setup(
         "Documentation": "https://co2mpas.io/",
         "Sources": "https://github.com/JRCSTU/co2wui",
     },
+    python_requires=">=3.5",
     install_requires=[
         "co2mpas",
         "Flask",
