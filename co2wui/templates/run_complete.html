@@ -8,8 +8,44 @@
 		{% endif %}
 	</section>
 	
+		
 	{% if not data.result == 'KO' %}
 	<section class="col-lg-12">
+		
+		<div id="sync-result" class="box-body">
+			<div class="box-header">
+				<p><i class="fa fa-check fa-3" style="color: green;"></i> {{ _("Simulation complete") }}</p>
+				<p><strong>X</strong> {{ _("file(s) has/have been processed") }}</p>
+				
+				<div class="box-body">
+					<table class="table table-bordered">
+						<tr>
+							<th style="width: 10px">#</th>
+							<th style="width: 40px">{{ _("Run") }}</th>
+							<th style="width: 40px">{{ _("Result") }}</th>
+							<th style="width: 40px">{{ _("Summary") }}</th>
+							<th style="width: 40px">{{ _("Log") }}</th>
+							<th style="width: 40px">{{ _("Link") }}</th>							
+						</tr>
+						{% for result in data.results %}
+						<tr>
+							<td>{{loop.index}}.</td>
+							<td>{{result.name}}</td>
+							<td class="text-success">Ok</td>
+							<td class="text-success"><a href="#" onclick="load_summary('{{result.name}}'); return false;"><i class="fa fa-eye"></i> {{ _("View") }} </a></td>
+							<td><a href="/run/download-log/{{result.name}}"><i class="fa fa-newspaper-o"></i> </a></td>
+							<td style="list-style-type:none;">
+									{% for file in result.files %}
+									<li><a href="/run/download-result/{{result.name}}/{{loop.index}}">{{file}}</a></li>									
+									{% endfor %}
+							</td>							
+						</tr>
+						{% endfor %}
+					</table>
+				</div>
+			</div>								
+		</div>
+		
 		{% include "summary.html" -%}
 	</section>
 	{% endif %}

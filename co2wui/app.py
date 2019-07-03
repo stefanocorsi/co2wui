@@ -298,6 +298,15 @@ def create_app(configfile=None):
             if not re.search("- INFO -", logline):
                 log += logline
 
+        results = []
+        if not (summary is None or len(summary[0].keys()) <= 2):
+            output_files = [
+                f
+                for f in listdir_outputs(os.path.join("output", thread_id))
+                if isfile(os.path.join("output", thread_id, f))
+            ]
+            results.append({"name": thread_id, "files": output_files})
+
         return render_template(
             "layout.html" if layout == "layout" else "ajax.html",
             action=page,
@@ -310,6 +319,7 @@ def create_app(configfile=None):
                 "log": log,
                 "result": result,
                 "summary": summary[0] if summary is not None else None,
+                "results": results if results is not None else None,
             },
         )
 
