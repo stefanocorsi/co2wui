@@ -1,0 +1,24 @@
+home:
+    welcome: CO2MPAS is a simulation tool, developed  by the European Commission's Joint Research Centre for supporting EU Regulations 1152 and 1153/2017 introduced by Directorate General for Climate Action (DG CLIMA). 
+             It is a backward-looking longitudinal-dynamics CO2 and fuel-consumption simulator for light-duty M1 & N1 vehicles (cars and vans), specially crafted to estimate the CO2 emissions of vehicles over the NEDC testing procedure based on the emissions and vehicle operation data measured over the WLTP test procedure during vehicle type-approval. CO2MPAS is open source and licensed under the European Union Public Licence.
+    hints: 
+        run co2mpas: In this section, CO2MPAS is executed. 
+                Begin to choose one or more files to use as input for your CO2MPAS simulation. 
+                Press Confirm to proceed.
+run:
+    download template: In this section, it is possible to retrieve the latest CO2MPAS input template, by pressing the <b>download</b> button.
+    run co2mpas: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
+             galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
+             the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the 
+             release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
+             like Aldus PageMaker including versions of Lorem Ipsum.
+sync:
+    synchronise data: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                 Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
+                 galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
+                 the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the 
+                 release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
+                 like Aldus PageMaker including versions of Lorem Ipsum.
+                
+    

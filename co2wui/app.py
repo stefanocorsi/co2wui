@@ -35,6 +35,7 @@ _ = gettext.gettext
 from jinja2 import Environment, PackageLoader
 from babel.support import Translations
 from flask_babel import Babel
+import yaml
  
 def listdir_inputs(path):
     """Only allow for excel files as input 
@@ -75,6 +76,9 @@ def create_app(configfile=None):
     app = Flask(__name__)
     babel = Babel(app)
     CO2MPAS_VERSION = "3"
+ 
+    with open("locale/texts-en.yaml", 'r') as stream:
+      co2wui_texts = yaml.safe_load(stream)
 
     @app.route("/")
     def index():
@@ -88,7 +92,8 @@ def create_app(configfile=None):
             data={
                 "breadcrumb": ["Co2mpas"],
                 "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
-                "nohints": nohints
+                "nohints": nohints,
+                "texts": co2wui_texts
             },
         )
 
@@ -99,7 +104,8 @@ def create_app(configfile=None):
             action="template_download_form",
             data={
                 "breadcrumb": ["Co2mpas", _("Download template")],
-                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
+                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},              
+                "texts": co2wui_texts
             },
         )
 

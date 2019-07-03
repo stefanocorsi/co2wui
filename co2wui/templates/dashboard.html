@@ -4,9 +4,7 @@
 						<div title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua">
 							<h2>{{ _("Welcome to Co<sub>2</sub>mpas") }} <i class="fa fa-question-circle co2-help"></i></h2>
 						</div>
-						<p>CO2MPAS is a simulation tool, developed  by the European Commission's Joint Research Centre for supporting EU Regulations 1152 and 1153/2017 introduced by Directorate General for Climate Action (DG CLIMA).</p> 
-						<p>It is a backward-looking longitudinal-dynamics CO2 and fuel-consumption simulator for light-duty M1 & N1 vehicles (cars and vans), specially crafted to estimate the CO2 emissions of vehicles over the NEDC testing procedure based on the emissions and vehicle operation data measured over the WLTP test procedure during vehicle type-approval.</p>
-						<p>CO2MPAS if open source and licensed under the European Union Public Licence.</p>						
+						<p>{{ data.texts["home"]["welcome"] | safe }}</p> 						
 						<img src="/static/images/co2mpas-banner.svg" class="img-responsive" style="max-width: 600px;"></img>
 					</div>
 					
@@ -32,12 +30,7 @@
 							<h2>{{ _("Run Co<sub>2</sub>mpas") }} <i data-toggle="tooltip" data-placement="right" title="{{ data.texts['home']['hints']['run co2mpas'] | safe }}" class="fa fa-question-circle co2-help"></i></h2>
 						</div>
 						<i class="fa fa-car fa-5x pull-left"></i>
-						<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-						Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-						galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
-						the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the 
-						release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-						like Aldus PageMaker including versions of Lorem Ipsum.</p>
+						<p>{{ data.texts["run"]["run co2mpas"] | safe }}</p>
 													
 						<div class="text-left">            
 							<a id="run-button" href="/run/simulation-form" class="btn btn-lg btn-success"><i class="fa fa-car fa-lg"></i> Run simulation</a>								
@@ -53,12 +46,7 @@
 							<h2>{{ _("Synchronize data") }} <i class="fa fa-question-circle co2-help"></i></h2>
 						</div>
 						<i class="fa fa-refresh fa-5x pull-left"></i>
-						<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-						Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-						galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
-						the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the 
-						release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-						like Aldus PageMaker including versions of Lorem Ipsum.</p>
+						<p>{{ data.texts["sync"]["synchronise data"] | safe }}</p>
 						
 						<div class="text-left">            
 								<form action="/sync/template-form">
