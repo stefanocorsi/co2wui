@@ -6,7 +6,17 @@ setup(
     packages=["co2wui"],
     license="EUPL",
     long_description=open("README.md").read(),
-    install_requires=["co2mpas", "Flask", "requests", "schedula", "Werkzeug"],
+    install_requires=[
+        "co2mpas",
+        "Flask",
+        "Flask-Babel",
+        "requests",
+        "schedula",
+        "Werkzeug",
+        "click",
+        "ruamel.yaml",
+        "syncing",
+    ],
     extras={
         "dev": [
             "black",  # for code-formatting
