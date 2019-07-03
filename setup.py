@@ -42,6 +42,7 @@ setup(
         ],
     },
     entry_points={"console_scripts": ["co2wui=co2wui.app:cli"]},
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
