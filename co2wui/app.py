@@ -51,7 +51,22 @@ def listdir_outputs(path):
 def listdir_conf(path):
     """Only allow for conf.yaml files 
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml")))    
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml")))
+    
+def listdir_enc_keys(path):
+    """Only allow for conf.yaml files 
+    """
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "dice.co2mpas.keys")))
+    
+def listdir_key_pass(path):
+    """Only allow for conf.yaml files 
+    """
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "secret.passwords")))
+    
+def listdir_key_sign(path):
+    """Only allow for conf.yaml files 
+    """
+    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "sign.co2mpas.key")))
     
 def get_summary(runid):
     """Read a summary saved file and returns it as a dict
@@ -600,7 +615,59 @@ def create_app(configfile=None):
         os.remove("conf.yaml")
         return redirect("/conf/configuration-form", code=302)
         
+    @app.route("/keys/keys-form")
+    def keys_form():        
+        
+        enc_keys = [f for f in listdir_enc_keys("keys") if isfile(join("keys", f))]
+        key_pass = [f for f in listdir_key_pass("keys") if isfile(join("keys", f))]
+        key_sign = [f for f in listdir_key_sign("keys") if isfile(join("keys", f))]
+        
+        return render_template(
+            "layout.html",
+            action="keys_form",
+            data={
+                "breadcrumb": ["Co2mpas", _("Load keys")],
+                "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
+                "enc_keys": enc_keys,
+                "key_pass": key_pass,
+                "key_sign": key_sign,
+                "texts": co2wui_texts           
+            },
+        )        
+    
+    @app.route("/keys/add-key-file", methods=["POST"])
+    def add_key_file():
       
+        upload_type = request.form.get("upload_type")
+        filenames = {
+          "enc_keys": "dice.co2mpas.keys",
+          "key_pass": "secret.passwords",
+          "key_sign": "sign.co2mpas.key"
+        }
+            
+        filename = filenames.get(upload_type)
+        if os.path.exists(filename):
+          os.remove(filename)
+        
+        f = request.files["file"]
+        f.save(os.path.join("keys", filename))
+        return redirect("/keys/keys-form", code=302)
+        
+    @app.route("/keys/delete-file", methods=["GET"])
+    def delete_key_file():        
+    
+        upload_type = request.args.get("upload_type")
+        filenames = {
+          "enc_keys": "dice.co2mpas.keys",
+          "key_pass": "secret.passwords",
+          "key_sign": "sign.co2mpas.key"
+        }     
+        filename = filenames.get(upload_type)
+            
+        os.remove(os.path.join("keys", filename))
+        return redirect("/keys/keys-form", code=302)
+    
+        
     @app.route("/not-implemented")
     def not_implemented():
         return render_template(

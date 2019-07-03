@@ -1,0 +1,211 @@
+
+			<!-- Main row -->
+			<div class="row">
+				
+				<!-- Single col -->
+				<section class="col-lg-8 connectedSortable">
+          <div title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua">
+					<h2>{{ _("Load keys") }} <i class="fa fa-question-circle co2-help"></i></h2>
+          </div>
+					
+					<p>{{ data.texts["keys"]["load keys"] | safe }}</p>
+										 
+				</section>
+				
+			</div>
+			
+			<!-- Load encryption keys -->
+			<div class="row">
+			
+				<section class="col-lg-8 connectedSortable">
+
+						<!-- Horizontal Form -->
+						<div class="box box-info">												
+								
+							<div class="box-header with-border">
+								<h3 class="box-title">{{ _("Encryption keys") }}</h3>
+							</div>							
+							
+							<div id="file-list" class="box-body">
+								<div class="box-body">               	
+									{% if not data.enc_keys|length %}
+									<div>
+										<p>{{ _("No enryption key file has been uploaded") }}</p>											
+									</div>
+									{% else %}
+									<div class="box-header with-border">
+										<h3 class="box-title">{{ _("Your encryption key file") }}:</h3>
+									</div>
+									<div class="box-body">
+										<table class="table table-bordered">
+												<tbody><tr>														
+													<th>{{ _("Filename") }}</th>														
+													<th style="width: 40px">&nbsp;</th>
+												</tr>													
+												<tr>														
+													<td>{{data.enc_keys[0]}}</td>														
+													<td>
+														<form action="/keys/delete-file" method="get">
+															<input type="hidden" name="upload_type" value="enc_keys">
+															<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
+														</form>
+													</td>
+												</tr>																							
+											</tbody></table>
+									</div>
+									{% endif %}
+								</div>									
+							</div>
+							
+							{% if not data.enc_keys|length %}
+							<!-- form start -->													
+							<form action="/keys/add-key-file" enctype="multipart/form-data" method="post">			
+								<div class="box-body">
+									<p>{{ _("Load encryption keys for TA mode.") }}</p>
+                  <div class="form-group col-md-5">
+										<div>
+											<div class="input-group">
+												<input type="text" name="file" id="file_path_enc_keys" class="form-control" placeholder="Browse...">
+												<span class="input-group-btn">
+														<button class="btn btn-default" type="button" id="file_browser_enc_keys">
+														<i class="fa fa-plus"></i> {{ _("Select a key file") }}</button>																	
+												</span>													
+											</div>
+											<input type="hidden" name="upload_type" value="enc_keys">
+											<input type="file" class="hidden" id="file_enc_keys" name="file">
+										</div>														
+                  </div>									
+								</div>
+							</form>
+							{% endif %}
+							
+							<div id="file-list" class="box-body">
+								<div class="box-body">               	
+									{% if not data.key_pass|length %}
+									<div>
+										<p>{{ _("No key password file has been uploaded") }}</p>											
+									</div>
+									{% else %}
+									<div class="box-header with-border">
+										<h3 class="box-title">{{ _("Your key password file") }}:</h3>
+									</div>
+									<div class="box-body">
+										<table class="table table-bordered">
+												<tbody><tr>														
+													<th>{{ _("Filename") }}</th>														
+													<th style="width: 40px">&nbsp;</th>
+												</tr>													
+												<tr>														
+													<td>{{data.key_pass[0]}}</td>														
+													<td>
+														<form action="/keys/delete-file" method="get">
+															<input type="hidden" name="upload_type" value="key_pass">
+															<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
+														</form>
+													</td>
+												</tr>																							
+											</tbody></table>
+									</div>
+									{% endif %}
+								</div>									
+							</div>
+								
+							{% if not data.key_pass|length %}
+							<form action="/keys/add-key-file" enctype="multipart/form-data" method="post">							
+								<div class="box-body">
+									<p>{{ _("Load key passwords for TA mode.") }}</p>
+                  <div class="form-group col-md-5">
+										<div>
+											<div class="input-group">
+												<input type="text" name="file" id="file_path_key_pass" class="form-control" placeholder="Browse...">
+												<span class="input-group-btn">
+														<button class="btn btn-default" type="button" id="file_browser_key_pass">
+														<i class="fa fa-plus"></i> {{ _("Select a password file") }}</button>																	
+												</span>													
+											</div>
+											<input type="hidden" name="upload_type" value="key_pass">
+											<input type="file" class="hidden" id="file_key_pass" name="file">
+										</div>														
+                  </div>									
+								</div>
+							</form>
+							{% endif %}
+							
+						</div>
+						<!-- /.box -->
+					
+				</section>
+				
+			</div>
+			
+			<!-- Load signature keys -->
+			<div class="row">
+			
+				<section class="col-lg-8 connectedSortable">
+
+						<!-- Horizontal Form -->
+						<div class="box box-info">
+							<div class="box-header with-border">
+								<h3 class="box-title">{{ _("Signature key") }}</h3>
+							</div>
+							
+							<div id="file-list" class="box-body">
+								<div class="box-body">               	
+									{% if not data.key_sign|length %}
+									<div>
+										<p>{{ _("No key signature file has been uploaded") }}</p>											
+									</div>
+									{% else %}
+									<div class="box-header with-border">
+										<h3 class="box-title">{{ _("Your key signature file") }}:</h3>
+									</div>
+									<div class="box-body">
+										<table class="table table-bordered">
+												<tbody><tr>														
+													<th>{{ _("Filename") }}</th>														
+													<th style="width: 40px">&nbsp;</th>
+												</tr>													
+												<tr>														
+													<td>{{data.key_sign[0]}}</td>														
+													<td>
+														<form action="/keys/delete-file" method="get">
+															<input type="hidden" name="upload_type" value="key_sign">
+															<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
+														</form>
+													</td>
+												</tr>																							
+											</tbody></table>
+									</div>
+									{% endif %}
+								</div>									
+							</div>
+							
+							<!-- form start -->
+							{% if not data.key_sign|length %}
+							<form action="/keys/add-key-file" enctype="multipart/form-data" method="post">							
+								<div class="box-body">
+									<p>{{ _("Load signature key for TA mode") }}</p>
+                  <div class="form-group col-md-5">
+										<div>
+											<div class="input-group">
+												<input type="text" name="file" id="file_path_key_sign" class="form-control" placeholder="Browse...">
+												<span class="input-group-btn">
+														<button class="btn btn-default" type="button" id="file_browser_key_sign">
+														<i class="fa fa-plus"></i> {{ _("Select a key signature file") }}</button>																	
+												</span>													
+											</div>
+											<input type="hidden" name="upload_type" value="key_sign">
+											<input type="file" class="hidden" id="file_key_sign" name="file">
+										</div>														
+                  </div>									
+								</div>
+							</form>
+							{% endif %}
+														
+						</div>
+						<!-- /.box -->
+					
+				</section>
+				
+			</div>
+			

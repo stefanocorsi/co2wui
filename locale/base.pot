@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-07-02 22:24+0200\n"
+"POT-Creation-Date: 2019-07-03 11:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,44 +17,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: co2wui/app.py:96
+#: co2wui/app.py:121
 msgid "Download template"
 msgstr ""
 
-#: co2wui/app.py:138 co2wui/templates/sidebar.html:18
+#: co2wui/app.py:164 co2wui/templates/sidebar.html:18
 #: co2wui/templates/simulation_form.html:142
 msgid "Run simulation"
 msgstr ""
 
-#: co2wui/app.py:212
+#: co2wui/app.py:238
 msgid "Summary of your Co2mpas execution"
 msgstr ""
 
-#: co2wui/app.py:242
+#: co2wui/app.py:268
 msgid "Simulation complete"
 msgstr ""
 
-#: co2wui/app.py:242
+#: co2wui/app.py:268
 msgid "Simulation in progress..."
 msgstr ""
 
-#: co2wui/app.py:309 co2wui/templates/sidebar.html:19
+#: co2wui/app.py:335 co2wui/templates/sidebar.html:19
 msgid "View results"
 msgstr ""
 
-#: co2wui/app.py:354
+#: co2wui/app.py:380
 msgid "Data synchronisation"
 msgstr ""
 
-#: co2wui/app.py:412
+#: co2wui/app.py:438
 msgid "Run synchronisation"
 msgstr ""
 
-#: co2wui/app.py:571
+#: co2wui/app.py:597
 msgid "Co2mpas configuration file"
 msgstr ""
 
-#: co2wui/app.py:599
+#: co2wui/app.py:629 co2wui/templates/keys_form.html:8
+#: co2wui/templates/sidebar.html:42
+msgid "Load keys"
+msgstr ""
+
+#: co2wui/app.py:677
 msgid "Feature not implemented"
 msgstr ""
 
@@ -79,7 +84,8 @@ msgid "Your configuration file"
 msgstr ""
 
 #: co2wui/templates/configuration_form.html:43
-#: co2wui/templates/simulation_form.html:84
+#: co2wui/templates/keys_form.html:42 co2wui/templates/keys_form.html:95
+#: co2wui/templates/keys_form.html:165 co2wui/templates/simulation_form.html:84
 #: co2wui/templates/synchronisation_form.html:97
 msgid "Filename"
 msgstr ""
@@ -91,7 +97,8 @@ msgid "Download"
 msgstr ""
 
 #: co2wui/templates/configuration_form.html:52
-#: co2wui/templates/simulation_form.html:94
+#: co2wui/templates/keys_form.html:50 co2wui/templates/keys_form.html:103
+#: co2wui/templates/keys_form.html:173 co2wui/templates/simulation_form.html:94
 #: co2wui/templates/synchronisation_form.html:104
 msgid "Delete"
 msgstr ""
@@ -108,16 +115,72 @@ msgstr ""
 msgid "Welcome to Co<sub>2</sub>mpas"
 msgstr ""
 
-#: co2wui/templates/dashboard.html:14
+#: co2wui/templates/dashboard.html:12
 msgid "News & updates"
 msgstr ""
 
-#: co2wui/templates/dashboard.html:32
+#: co2wui/templates/dashboard.html:30
 msgid "Run Co<sub>2</sub>mpas"
 msgstr ""
 
-#: co2wui/templates/dashboard.html:53 co2wui/templates/sidebar.html:31
+#: co2wui/templates/dashboard.html:46 co2wui/templates/sidebar.html:31
 msgid "Synchronize data"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:26
+msgid "Encryption keys"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:33
+msgid "No enryption key file has been uploaded"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:37
+msgid "Your encryption key file"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:64
+msgid "Load encryption keys for TA mode."
+msgstr ""
+
+#: co2wui/templates/keys_form.html:71
+msgid "Select a key file"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:86
+msgid "No key password file has been uploaded"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:90
+msgid "Your key password file"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:116
+msgid "Load key passwords for TA mode."
+msgstr ""
+
+#: co2wui/templates/keys_form.html:123
+msgid "Select a password file"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:149
+msgid "Signature key"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:156
+msgid "No key signature file has been uploaded"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:160
+msgid "Your key signature file"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:187
+msgid "Load signature key for TA mode"
+msgstr ""
+
+#: co2wui/templates/keys_form.html:194
+msgid "Select a key signature file"
 msgstr ""
 
 #: co2wui/templates/launch_plot.html:8
@@ -154,10 +217,6 @@ msgstr ""
 
 #: co2wui/templates/sidebar.html:36
 msgid "Demo file"
-msgstr ""
-
-#: co2wui/templates/sidebar.html:42
-msgid "Load keys"
 msgstr ""
 
 #: co2wui/templates/sidebar.html:49

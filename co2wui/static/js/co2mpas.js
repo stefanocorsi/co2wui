@@ -1,4 +1,6 @@
 /* File upload functions */
+
+/* Generic file uploader */
 $('#file_browser').click(function(e){		
 	e.preventDefault();		
 	$('#file').click();		
@@ -9,6 +11,45 @@ $('#file').change(function(){
 });		
 $('#file_path').click(function(){		
 	$('#file_browser').click();
+});
+
+/* Encryption keys */
+$('#file_browser_enc_keys').click(function(e){		
+	e.preventDefault();		
+	$('#file_enc_keys').click();		
+});		
+$('#file_enc_keys').change(function(){		
+	$('#file_path_enc_keys').val($(this).val());
+	this.form.submit();
+});		
+$('#file_path_enc_keys').click(function(){		
+	$('#file_browser_enc_keys').click();
+});
+
+/* Key passwords */
+$('#file_browser_key_pass').click(function(e){		
+	e.preventDefault();		
+	$('#file_key_pass').click();		
+});		
+$('#file_key_pass').change(function(){		
+	$('#file_path_key_pass').val($(this).val());
+	this.form.submit();
+});		
+$('#file_path_key_pass').click(function(){		
+	$('#file_browser_key_pass').click();
+});
+
+/* Signatures */
+$('#file_browser_key_sign').click(function(e){		
+	e.preventDefault();		
+	$('#file_key_sign').click();		
+});		
+$('#file_key_sign').change(function(){		
+	$('#file_path_key_sign').val($(this).val());
+	this.form.submit();
+});		
+$('#file_path_key_sign').click(function(){		
+	$('#file_browser_key_sign').click();
 });
 
 /* Change between type approval mode and scientific mode */

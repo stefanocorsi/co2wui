@@ -21,4 +21,5 @@ sync:
                  release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
                  like Aldus PageMaker including versions of Lorem Ipsum.
                 
-    
+keys:
+    load keys: "For TA and TS use only: upload the provided key files to encrypt the output of the CO2MPAS simulation and send it to the DICE3 server, as EU regulation XXX."
