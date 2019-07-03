@@ -9,17 +9,9 @@ run:
     download template: In this section, it is possible to retrieve the latest CO2MPAS input template, by pressing the <b>download</b> button.
     run co2mpas: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-             galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
-             the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the 
-             release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-             like Aldus PageMaker including versions of Lorem Ipsum.
+            
 sync:
-    synchronise data: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                 Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-                 galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
-                 the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the 
-                 release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-                 like Aldus PageMaker including versions of Lorem Ipsum.
+    synchronise data: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used.
                 
 keys:
     load keys: "For TA and TS use only: upload the provided key files to encrypt the output of the CO2MPAS simulation and send it to the DICE3 server, as EU regulation XXX."
