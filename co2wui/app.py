@@ -9,14 +9,10 @@ import logging.config
 import os
 from os import path
 from os import listdir
-from os.path import isfile, join
-import json
-import io
-import time
-import zipfile
-import shutil
-import pickle
-import gettext
+from os import path as osp
+from stat import S_ISDIR, S_ISREG, ST_CTIME, ST_MODE
+
+import click
 import requests
 import schedula as sh
 import syncing
@@ -45,29 +41,26 @@ _ = gettext.gettext
 def listdir_inputs(path):
     """Only allow for excel files as input
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
+    return map(lambda x: os.path.basename(x), glob.glob(osp.join(path, "*.xls*")))
 
 
 def listdir_outputs(path):
     """Only allow for excel files as output
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
+    return map(lambda x: os.path.basename(x), glob.glob(osp.join(path, "*.xls*")))
 
 
 def listdir_conf(path):
     """Only allow for conf.yaml files
     """
-    return map(
-        lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml"))
-    )
+    return map(lambda x: os.path.basename(x), glob.glob(osp.join(path, "conf.yaml")))
 
 
 def listdir_enc_keys(path):
     """Only allow for conf.yaml files
     """
     return map(
-        lambda x: os.path.basename(x),
-        glob.glob(os.path.join(path, "dice.co2mpas.keys")),
+        lambda x: os.path.basename(x), glob.glob(osp.join(path, "dice.co2mpas.keys"))
     )
 
 
@@ -75,7 +68,7 @@ def listdir_key_pass(path):
     """Only allow for conf.yaml files
     """
     return map(
-        lambda x: os.path.basename(x), glob.glob(os.path.join(path, "secret.passwords"))
+        lambda x: os.path.basename(x), glob.glob(osp.join(path, "secret.passwords"))
     )
 
 
@@ -83,7 +76,7 @@ def listdir_key_sign(path):
     """Only allow for conf.yaml files
     """
     return map(
-        lambda x: os.path.basename(x), glob.glob(os.path.join(path, "sign.co2mpas.key"))
+        lambda x: os.path.basename(x), glob.glob(osp.join(path, "sign.co2mpas.key"))
     )
 
 
@@ -91,9 +84,9 @@ def get_summary(runid):
     """Read a summary saved file and returns it as a dict
     """
     summary = None
-    if os.path.exists(os.path.join("output", runid, "result.dat")):
+    if os.path.exists(osp.join("output", runid, "result.dat")):
 
-        with open(os.path.join("output", runid, "result.dat"), "rb") as summary_file:
+        with open(osp.join("output", runid, "result.dat"), "rb") as summary_file:
             try:
                 summary = pickle.load(summary_file)
             except:
@@ -121,7 +114,7 @@ def humanised(summary):
 
 def create_app(configfile=None):
 
-    log_file_path = path.join(path.dirname(path.abspath(__file__)), "../logging.conf")
+    log_file_path = osp.join(osp.dirname(osp.abspath(__file__)), "../logging.conf")
     logging.config.fileConfig(log_file_path)
     log = logging.getLogger(__name__)
 
@@ -197,7 +190,9 @@ def create_app(configfile=None):
 
     @app.route("/run/simulation-form")
     def simulation_form():
-        inputs = [f for f in listdir_inputs("input") if isfile(join("input", f))]
+        inputs = [
+            f for f in listdir_inputs("input") if osp.isfile(osp.join("input", f))
+        ]
         return render_template(
             "layout.html",
             action="simulation_form",
@@ -214,18 +209,18 @@ def create_app(configfile=None):
 
         thread = threading.current_thread()
         files = [
-            os.path.join("input", f)
+            osp.join("input", f)
             for f in listdir_inputs("input")
-            if isfile(os.path.join("input", f))
+            if osp.isfile(osp.join("input", f))
         ]
 
         # Create output directory for this execution
-        output_folder = os.path.join("output", str(thread.ident))
+        output_folder = osp.join("output", str(thread.ident))
         os.makedirs(output_folder or ".", exist_ok=True)
 
         # Dedicated logging for this run
         fileh = logging.FileHandler(
-            os.path.join("output", str(thread.ident), "logfile.txt"), "a"
+            osp.join("output", str(thread.ident), "logfile.txt"), "a"
         )
         formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -266,7 +261,7 @@ def create_app(configfile=None):
         d = dsp.register()
         ret = d.dispatch(inputs, ["done", "run"])
         with open(
-            os.path.join("output", str(thread.ident), "result.dat"), "wb"
+            osp.join("output", str(thread.ident), "result.dat"), "wb"
         ) as summary_file:
             pickle.dump(ret["summary"], summary_file)
         return ""
@@ -306,7 +301,7 @@ def create_app(configfile=None):
         thread_id = request.args.get("id")
         layout = request.args.get("layout")
 
-        if os.path.exists(os.path.join("output", thread_id, "result.dat")):
+        if os.path.exists(osp.join("output", thread_id, "result.dat")):
             done = True
 
         page = "run_complete" if done else "run_progress"
@@ -317,7 +312,7 @@ def create_app(configfile=None):
 
         log = ""
         loglines = []
-        with open(os.path.join("output", thread_id, "logfile.txt")) as f:
+        with open(osp.join("output", thread_id, "logfile.txt")) as f:
             loglines = f.readlines()
 
         for logline in reversed(loglines):
@@ -352,22 +347,22 @@ def create_app(configfile=None):
     @app.route("/run/add-file", methods=["POST"])
     def add_file():
         f = request.files["file"]
-        f.save(os.path.join("input", secure_filename(f.filename)))
+        f.save(osp.join("input", secure_filename(f.filename)))
         files = {"file": f.read()}
         return redirect("/run/simulation-form", code=302)
 
     @app.route("/run/delete-file", methods=["GET"])
     def delete_file():
         fn = request.args.get("fn")
-        inputs = [f for f in listdir_inputs("input") if isfile(join("input", f))]
-        os.remove(os.path.join("input", inputs[int(fn) - 1]))
+        inputs = [f for f in listdir_inputs("input") if osp.isfile(join("input", f))]
+        os.remove(osp.join("input", inputs[int(fn) - 1]))
         return redirect("/run/simulation-form", code=302)
 
     @app.route("/run/view-results")
     def view_results():
 
         dirpath = r"output"
-        entries = (os.path.join(dirpath, fn) for fn in os.listdir(dirpath))
+        entries = (osp.join(dirpath, fn) for fn in os.listdir(dirpath))
         entries = ((os.stat(path), path) for path in entries)
         entries = (
             (stat[ST_CTIME], path) for stat, path in entries if S_ISDIR(stat[ST_MODE])
@@ -378,8 +373,8 @@ def create_app(configfile=None):
             dirname = os.path.basename(path)
             output_files = [
                 f
-                for f in listdir_outputs(os.path.join("output", dirname))
-                if isfile(os.path.join("output", dirname, f))
+                for f in listdir_outputs(osp.join("output", dirname))
+                if osp.isfile(osp.join("output", dirname, f))
             ]
             results.append(
                 {"datetime": time.ctime(cdate), "name": dirname, "files": output_files}
@@ -400,8 +395,8 @@ def create_app(configfile=None):
     @app.route("/run/download-result/<runid>/<fnum>")
     def download_result(runid, fnum):
 
-        files = list(listdir_outputs(os.path.join("output", runid)))
-        rf = os.path.join("output", runid, files[int(fnum) - 1])
+        files = list(listdir_outputs(osp.join("output", runid)))
+        rf = osp.join("output", runid, files[int(fnum) - 1])
 
         # Read from file
         data = None
@@ -418,7 +413,7 @@ def create_app(configfile=None):
     @app.route("/run/download-log/<runid>")
     def download_log(runid):
 
-        rf = os.path.join("output", runid, "logfile.txt")
+        rf = osp.join("output", runid, "logfile.txt")
 
         # Read from file
         data = None
@@ -512,7 +507,7 @@ def create_app(configfile=None):
     @app.route("/sync/synchronisation-form")
     def synchronisation_form():
         inputs = [
-            f for f in listdir_inputs("sync/input") if isfile(join("sync/input", f))
+            f for f in listdir_inputs("sync/input") if osp.isfile(join("sync/input", f))
         ]
         return render_template(
             "layout.html",
@@ -547,13 +542,13 @@ def create_app(configfile=None):
 
     @app.route("/sync/add-sync-file", methods=["POST"])
     def add_sync_file():
-        inputs = [f for f in listdir_inputs("sync") if isfile(join("sync", f))]
+        inputs = [f for f in listdir_inputs("sync") if osp.isfile(join("sync", f))]
 
         for file in inputs:
-            os.remove(os.path.join("sync/input", file))
+            os.remove(osp.join("sync/input", file))
 
         f = request.files["file"]
-        f.save(os.path.join("sync/input", secure_filename(f.filename)))
+        f.save(osp.join("sync/input", secure_filename(f.filename)))
         files = {"file": f.read()}
         return redirect("/sync/synchronisation-form", code=302)
 
@@ -653,7 +648,7 @@ def create_app(configfile=None):
         ret = d.dispatch(inputs, ["demo", "done"])
 
         # List of demo files created
-        demofiles = [f for f in listdir(of) if isfile(join(of, f))]
+        demofiles = [f for f in listdir(of) if osp.isfile(join(of, f))]
 
         # Create zip archive on the fly
         zip_subdir = of
@@ -663,7 +658,7 @@ def create_app(configfile=None):
         # Adds demo files to archive
         for f in demofiles:
             # Add file, at correct path
-            zf.write(os.path.abspath(os.path.join(of, f)), f)
+            zf.write(os.path.abspath(osp.join(of, f)), f)
 
         # Close archive
         zf.close()
@@ -701,7 +696,7 @@ def create_app(configfile=None):
 
     @app.route("/conf/configuration-form")
     def configuration_form():
-        files = [f for f in listdir_conf(".") if isfile(join(".", f))]
+        files = [f for f in listdir_conf(".") if osp.isfile(join(".", f))]
         return render_template(
             "layout.html",
             action="configuration_form",
@@ -737,9 +732,9 @@ def create_app(configfile=None):
     @app.route("/keys/keys-form")
     def keys_form():
 
-        enc_keys = [f for f in listdir_enc_keys("keys") if isfile(join("keys", f))]
-        key_pass = [f for f in listdir_key_pass("keys") if isfile(join("keys", f))]
-        key_sign = [f for f in listdir_key_sign("keys") if isfile(join("keys", f))]
+        enc_keys = [f for f in listdir_enc_keys("keys") if osp.isfile(join("keys", f))]
+        key_pass = [f for f in listdir_key_pass("keys") if osp.isfile(join("keys", f))]
+        key_sign = [f for f in listdir_key_sign("keys") if osp.isfile(join("keys", f))]
 
         return render_template(
             "layout.html",
@@ -769,7 +764,7 @@ def create_app(configfile=None):
             os.remove(filename)
 
         f = request.files["file"]
-        f.save(os.path.join("keys", filename))
+        f.save(osp.join("keys", filename))
         return redirect("/keys/keys-form", code=302)
 
     @app.route("/keys/delete-file", methods=["GET"])
@@ -783,7 +778,7 @@ def create_app(configfile=None):
         }
         filename = filenames.get(upload_type)
 
-        os.remove(os.path.join("keys", filename))
+        os.remove(osp.join("keys", filename))
         return redirect("/keys/keys-form", code=302)
 
     @app.route("/not-implemented")
