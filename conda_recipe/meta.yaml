@@ -1,0 +1,64 @@
+{% set name = "co2wui" %}
+{% set version = "0.0.1.dev0" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  path: ..
+
+build:
+  number: 0
+  noarch: python
+  entry_points:
+    - co2wui = co2wui.app:cli
+
+requirements:
+  host:
+    - python >=3.5
+    - co2mpas
+    #- co2mpas_dice
+    - Flask
+    - Flask-Babel
+    - requests
+    - schedula
+    - Werkzeug
+    - click
+    - ruamel.yaml
+    - syncing
+  run:
+    - python >=3.5
+    - co2mpas
+    #- co2mpas_dice
+    - Flask
+    - Flask-Babel
+    - requests
+    - schedula
+    - Werkzeug
+    - click
+    - ruamel.yaml
+    - syncing
+
+test:
+  imports:
+    - co2wui.app
+  commands:
+    - co2wui --help
+  requires:
+    - pytest
+    - pytest-runner
+    - selenium
+
+about:
+  home: https://co2mpas.io/
+  license: European Union Public Licence 1.1 (EUPL 1.1)
+  license_family: OTHER
+  license_file: ../LICENSE.txt
+  summary: the WebUI for co2mpas
+  doc_url: https://co2mpas.io/
+  dev_url: https://github.com/JRCSTU/CO2MPAS-TA
+
+extra:
+  recipe-maintainers:
+    - ankostis
