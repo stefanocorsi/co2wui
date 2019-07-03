@@ -1,0 +1,379 @@
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-07-02 22:24+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: co2wui/app.py:96
+msgid "Download template"
+msgstr ""
+
+#: co2wui/app.py:138 co2wui/templates/sidebar.html:18
+#: co2wui/templates/simulation_form.html:142
+msgid "Run simulation"
+msgstr ""
+
+#: co2wui/app.py:212
+msgid "Summary of your Co2mpas execution"
+msgstr ""
+
+#: co2wui/app.py:242
+msgid "Simulation complete"
+msgstr ""
+
+#: co2wui/app.py:242
+msgid "Simulation in progress..."
+msgstr ""
+
+#: co2wui/app.py:309 co2wui/templates/sidebar.html:19
+msgid "View results"
+msgstr ""
+
+#: co2wui/app.py:354
+msgid "Data synchronisation"
+msgstr ""
+
+#: co2wui/app.py:412
+msgid "Run synchronisation"
+msgstr ""
+
+#: co2wui/app.py:571
+msgid "Co2mpas configuration file"
+msgstr ""
+
+#: co2wui/app.py:599
+msgid "Feature not implemented"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:9
+msgid "Upload and download your Co2mpas configuration file"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:23
+msgid "Do you want to generate a blank configuration file? Click"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:23
+msgid "here"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:34
+msgid "No configuration files have been uploaded"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:38
+msgid "Your configuration file"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:43
+#: co2wui/templates/simulation_form.html:84
+#: co2wui/templates/synchronisation_form.html:97
+msgid "Filename"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:49
+#: co2wui/templates/synchronisation_template_form.html:62
+#: co2wui/templates/template_download_form.html:32
+msgid "Download"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:52
+#: co2wui/templates/simulation_form.html:94
+#: co2wui/templates/synchronisation_form.html:104
+msgid "Delete"
+msgstr ""
+
+#: co2wui/templates/configuration_form.html:73
+msgid "Choose a configuration file"
+msgstr ""
+
+#: co2wui/templates/contact_us.html:8
+msgid "Report a bug"
+msgstr ""
+
+#: co2wui/templates/dashboard.html:5
+msgid "Welcome to Co<sub>2</sub>mpas"
+msgstr ""
+
+#: co2wui/templates/dashboard.html:14
+msgid "News & updates"
+msgstr ""
+
+#: co2wui/templates/dashboard.html:32
+msgid "Run Co<sub>2</sub>mpas"
+msgstr ""
+
+#: co2wui/templates/dashboard.html:53 co2wui/templates/sidebar.html:31
+msgid "Synchronize data"
+msgstr ""
+
+#: co2wui/templates/launch_plot.html:8
+msgid "Plot launched..."
+msgstr ""
+
+#: co2wui/templates/launch_plot.html:11
+msgid ""
+"Please wait a few seconds... the model plot will appear in a separate "
+"browser tab or window."
+msgstr ""
+
+#: co2wui/templates/run_complete.html:20 co2wui/templates/run_progress.html:10
+#: co2wui/templates/synchronisation_form.html:128
+msgid "Waiting for data..."
+msgstr ""
+
+#: co2wui/templates/sidebar.html:8
+msgid "Home"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:11
+msgid "Run co<sub>2</sub>mpas"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:17
+msgid "Download input template"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:30
+#: co2wui/templates/synchronisation_template_form.html:24
+msgid "Download datasync template"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:36
+msgid "Demo file"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:42
+msgid "Load keys"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:49
+msgid "Expert functionalities"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:55
+msgid "Show model graph"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:56
+msgid "Co2mpas configuration"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:62
+msgid "Support & docs"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:68
+msgid "Tutorials"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:69
+msgid "Documentation"
+msgstr ""
+
+#: co2wui/templates/sidebar.html:70
+msgid "Contact us"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:9
+msgid "Choose your Co<sub>2</sub>mpas input file(s)"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:22
+msgid "Haven't done it yet?"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:22
+msgid "Download Co<sub>2</sub>mpas input template?"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:25
+msgid "Advanced options"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:35
+msgid "Use only declaration mode"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:42
+msgid "Hard validation"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:49
+msgid "Enable selector"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:56
+msgid "Only summary"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:77
+msgid "Your files ready to be processed"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:117
+#: co2wui/templates/synchronisation_form.html:144
+msgid "Choose an input file"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:137
+msgid "Type approval mode"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:144
+msgid "Simulation will run in"
+msgstr ""
+
+#: co2wui/templates/simulation_form.html:144
+msgid "Scientific mode"
+msgstr ""
+
+#: co2wui/templates/summary.html:13
+msgid "Cycle"
+msgstr ""
+
+#: co2wui/templates/summary.html:14
+msgid "Phase"
+msgstr ""
+
+#: co2wui/templates/summary.html:15 co2wui/templates/summary.html:16
+msgid "Type"
+msgstr ""
+
+#: co2wui/templates/summary.html:17
+msgid "Value"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:9
+msgid "Upload your data synchronisation input file"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:21
+msgid "Options"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:31
+msgid "Reference data set name"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:53
+msgid "Interpolation method"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:56
+msgid "None"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:67
+msgid "Header row number"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:88
+msgid "No input files have been uploaded"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:92
+msgid "Your file ready for data synchronisation"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:116
+msgid "Synchronisation complete"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:117
+msgid "file has been processed"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:118
+msgid "Download synchronised file"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:123
+msgid "Synchronise another file"
+msgstr ""
+
+#: co2wui/templates/synchronisation_form.html:127
+msgid "Synchronisation log"
+msgstr ""
+
+#: co2wui/templates/synchronisation_template_form.html:9
+msgid "Download a Co<sub>2</sub>mpas datasync template"
+msgstr ""
+
+#: co2wui/templates/synchronisation_template_form.html:31
+msgid "Select cycle"
+msgstr ""
+
+#: co2wui/templates/synchronisation_template_form.html:40
+msgid "Select wltp class"
+msgstr ""
+
+#: co2wui/templates/synchronisation_template_form.html:51
+msgid "Select gear box type"
+msgstr ""
+
+#: co2wui/templates/template_download_form.html:11
+msgid "Download an empty input template file"
+msgstr ""
+
+#: co2wui/templates/template_download_form.html:26
+msgid "Download input template file"
+msgstr ""
+
+#: co2wui/templates/topbar.html:15
+msgid "Toggle navigation"
+msgstr ""
+
+#: co2wui/templates/topbar.html:32
+msgid "Go!"
+msgstr ""
+
+#: co2wui/templates/view_results.html:16
+msgid "Run"
+msgstr ""
+
+#: co2wui/templates/view_results.html:17
+msgid "Date"
+msgstr ""
+
+#: co2wui/templates/view_results.html:18
+msgid "Result"
+msgstr ""
+
+#: co2wui/templates/view_results.html:19
+msgid "Summary"
+msgstr ""
+
+#: co2wui/templates/view_results.html:20
+msgid "Log"
+msgstr ""
+
+#: co2wui/templates/view_results.html:21
+msgid "Link"
+msgstr ""
+
+#: co2wui/templates/view_results.html:22
+msgid "Select all"
+msgstr ""
+
+#: co2wui/templates/view_results.html:32
+msgid "View"
+msgstr ""
+
+#: co2wui/templates/view_results.html:45
+msgid "Delete selected"
+msgstr ""
+
