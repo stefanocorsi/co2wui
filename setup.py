@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="co2wui",
-    version="0.1dev",
+    version="0.0.1.dev0",
     packages=["co2wui"],
     license="EUPL",
     long_description=open("README.md").read(),
