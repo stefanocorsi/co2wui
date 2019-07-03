@@ -31,12 +31,14 @@ import shutil
 import pickle
 from babel import Locale
 import gettext
+
 _ = gettext.gettext
 from jinja2 import Environment, PackageLoader
 from babel.support import Translations
 from flask_babel import Babel
 import yaml
- 
+
+
 def listdir_inputs(path):
     """Only allow for excel files as input 
     """
@@ -47,40 +49,55 @@ def listdir_outputs(path):
     """Only allow for excel files as output 
     """
     return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
-    
+
+
 def listdir_conf(path):
     """Only allow for conf.yaml files 
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml")))
-    
+    return map(
+        lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml"))
+    )
+
+
 def listdir_enc_keys(path):
     """Only allow for conf.yaml files 
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "dice.co2mpas.keys")))
-    
+    return map(
+        lambda x: os.path.basename(x),
+        glob.glob(os.path.join(path, "dice.co2mpas.keys")),
+    )
+
+
 def listdir_key_pass(path):
     """Only allow for conf.yaml files 
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "secret.passwords")))
-    
+    return map(
+        lambda x: os.path.basename(x), glob.glob(os.path.join(path, "secret.passwords"))
+    )
+
+
 def listdir_key_sign(path):
     """Only allow for conf.yaml files 
     """
-    return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "sign.co2mpas.key")))
-    
+    return map(
+        lambda x: os.path.basename(x), glob.glob(os.path.join(path, "sign.co2mpas.key"))
+    )
+
+
 def get_summary(runid):
     """Read a summary saved file and returns it as a dict
     """
     summary = None
-    if os.path.exists(os.path.join("output", runid, 'result.dat')):    
-          
-      with open(os.path.join("output", runid, 'result.dat'), 'rb') as summary_file:
-        try:
-          summary = pickle.load(summary_file)
-        except:
-          return None
-          
+    if os.path.exists(os.path.join("output", runid, "result.dat")):
+
+        with open(os.path.join("output", runid, "result.dat"), "rb") as summary_file:
+            try:
+                summary = pickle.load(summary_file)
+            except:
+                return None
+
     return summary
+
 
 def create_app(configfile=None):
 
@@ -91,16 +108,16 @@ def create_app(configfile=None):
     app = Flask(__name__)
     babel = Babel(app)
     CO2MPAS_VERSION = "3"
- 
-    with open("locale/texts-en.yaml", 'r') as stream:
-      co2wui_texts = yaml.safe_load(stream)
+
+    with open("locale/texts-en.yaml", "r") as stream:
+        co2wui_texts = yaml.safe_load(stream)
 
     @app.route("/")
     def index():
 
         nohints = False
-        if 'nohints' in request.cookies:
-          nohints = True
+        if "nohints" in request.cookies:
+            nohints = True
         return render_template(
             "layout.html",
             action="dashboard",
@@ -108,7 +125,7 @@ def create_app(configfile=None):
                 "breadcrumb": ["Co2mpas"],
                 "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
                 "nohints": nohints,
-                "texts": co2wui_texts
+                "texts": co2wui_texts,
             },
         )
 
@@ -119,8 +136,10 @@ def create_app(configfile=None):
             action="template_download_form",
             data={
                 "breadcrumb": ["Co2mpas", _("Download template")],
-                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},              
-                "texts": co2wui_texts
+                "props": {
+                    "active": {"run": "active", "sync": "", "doc": "", "expert": ""}
+                },
+                "texts": co2wui_texts,
             },
         )
 
@@ -162,7 +181,9 @@ def create_app(configfile=None):
             action="simulation_form",
             data={
                 "breadcrumb": ["Co2mpas", _("Run simulation")],
-                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
+                "props": {
+                    "active": {"run": "active", "sync": "", "doc": "", "expert": ""}
+                },
                 "inputs": inputs,
             },
         )
@@ -171,7 +192,9 @@ def create_app(configfile=None):
 
         thread = threading.current_thread()
         files = [
-            os.path.join("input", f) for f in listdir_inputs("input") if isfile(os.path.join("input", f))
+            os.path.join("input", f)
+            for f in listdir_inputs("input")
+            if isfile(os.path.join("input", f))
         ]
 
         # Create output directory for this execution
@@ -180,11 +203,7 @@ def create_app(configfile=None):
 
         # Dedicated logging for this run
         fileh = logging.FileHandler(
-            os.path.join(
-              "output",
-              str(thread.ident),
-              "logfile.txt"
-            ), "a"
+            os.path.join("output", str(thread.ident), "logfile.txt"), "a"
         )
         formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -220,28 +239,28 @@ def create_app(configfile=None):
         # Dispatcher
         d = dsp.register()
         ret = d.dispatch(inputs, ["done", "run"])
-        with open(os.path.join("output", str(thread.ident), "result.dat"), 'wb') as summary_file:
-           pickle.dump(ret['summary'], summary_file)
+        with open(
+            os.path.join("output", str(thread.ident), "result.dat"), "wb"
+        ) as summary_file:
+            pickle.dump(ret["summary"], summary_file)
         return ""
-        
+
     @app.route("/run/view-summary/<runid>")
     def view_summary(runid):
         """Show a modal dialog with a execution's summary formatted in a table
         """
-    
+
         summary = get_summary(runid)
-    
-        if summary is not None:           
-          return render_template(
-            "ajax.html",
-            action="summary",
-            title=_("Summary of your Co2mpas execution"),
-            data={
-                "summary": summary[0],            
-            },
-          )
-        else:        
-          return ''
+
+        if summary is not None:
+            return render_template(
+                "ajax.html",
+                action="summary",
+                title=_("Summary of your Co2mpas execution"),
+                data={"summary": summary[0]},
+            )
+        else:
+            return ""
 
     # Run
     @app.route("/run/simulation")
@@ -260,15 +279,15 @@ def create_app(configfile=None):
 
         thread_id = request.args.get("id")
         layout = request.args.get("layout")
-        
+
         if os.path.exists(os.path.join("output", thread_id, "result.dat")):
             done = True
-        
+
         page = "run_complete" if done else "run_progress"
         title = _("Simulation complete") if done else _("Simulation in progress...")
-        
-        summary = get_summary(thread_id)    
-        result = 'KO' if (summary is None or len(summary[0].keys()) <= 2) else 'OK'        
+
+        summary = get_summary(thread_id)
+        result = "KO" if (summary is None or len(summary[0].keys()) <= 2) else "OK"
 
         log = ""
         loglines = []
@@ -284,11 +303,13 @@ def create_app(configfile=None):
             action=page,
             data={
                 "breadcrumb": ["Co2mpas", title],
-                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
+                "props": {
+                    "active": {"run": "active", "sync": "", "doc": "", "expert": ""}
+                },
                 "thread_id": thread_id,
                 "log": log,
                 "result": result,
-                "summary": summary[0] if summary is not None else None
+                "summary": summary[0] if summary is not None else None,
             },
         )
 
@@ -333,7 +354,9 @@ def create_app(configfile=None):
             action="view_results",
             data={
                 "breadcrumb": ["Co2mpas", _("View results")],
-                "props": {"active": {"run": "active", "sync": "", "doc": "", "expert": ""}},
+                "props": {
+                    "active": {"run": "active", "sync": "", "doc": "", "expert": ""}
+                },
                 "results": reversed(results),
             },
         )
@@ -370,101 +393,139 @@ def create_app(configfile=None):
         iofile = io.BytesIO(data)
         iofile.seek(0)
         return send_file(iofile, attachment_filename="logfile.txt", as_attachment=True)
-        
+
     @app.route("/sync/template-form")
     def sync_template_form():
-      return render_template(
+        return render_template(
             "layout.html",
             action="synchronisation_template_form",
             data={
                 "breadcrumb": ["Co2mpas", _("Data synchronisation")],
-                "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": ""}},
-                "title": "Data synchronisation"
+                "props": {
+                    "active": {"run": "", "sync": "active", "doc": "", "expert": ""}
+                },
+                "title": "Data synchronisation",
             },
         )
-        
+
     @app.route("/sync/template-download")
     def sync_template_download():
-    
+
         # Parameters from request
         cycle_type = request.args.get("cycle")
         gear_box_type = request.args.get("gearbox")
         wltp_class = request.args.get("wltpclass")
-        
+
         # Output temp file
         output_file = next(tempfile._get_candidate_names()) + ".xlsx"
-        
+
         # Generate template
         import pandas as pd
         from co2mpas.core.model.physical import dsp
-        theoretical = sh.selector(['times', 'velocities'], dsp(inputs=dict(
-            cycle_type=cycle_type.upper(), gear_box_type=gear_box_type,
-            wltp_class=wltp_class, downscale_factor=0
-        ), outputs=['times', 'velocities'], shrink=True))
-        base = dict.fromkeys((
-            'times', 'velocities', 'target gears', 'engine_speeds_out',
-            'engine_coolant_temperatures', 'co2_normalization_references',
-            'alternator_currents', 'battery_currents', 'target fuel_consumptions',
-            'target co2_emissions', 'target engine_powers_out'
-        ), [])
+
+        theoretical = sh.selector(
+            ["times", "velocities"],
+            dsp(
+                inputs=dict(
+                    cycle_type=cycle_type.upper(),
+                    gear_box_type=gear_box_type,
+                    wltp_class=wltp_class,
+                    downscale_factor=0,
+                ),
+                outputs=["times", "velocities"],
+                shrink=True,
+            ),
+        )
+        base = dict.fromkeys(
+            (
+                "times",
+                "velocities",
+                "target gears",
+                "engine_speeds_out",
+                "engine_coolant_temperatures",
+                "co2_normalization_references",
+                "alternator_currents",
+                "battery_currents",
+                "target fuel_consumptions",
+                "target co2_emissions",
+                "target engine_powers_out",
+            ),
+            [],
+        )
         data = dict(theoretical=theoretical, dyno=base, obd=base)
 
         with pd.ExcelWriter(output_file) as writer:
             for k, v in data.items():
                 pd.DataFrame(v).to_excel(writer, k, index=False)
-        
+
         # Read from generated file
         data = None
         with open(output_file, "rb") as xlsx:
             data = xlsx.read()
-            
+
         # Delete files
         os.remove(output_file)
-            
+
         # Output xls file
         iofile = io.BytesIO(data)
         iofile.seek(0)
         return send_file(
-            iofile, attachment_filename='datasync.xlsx', as_attachment=True
+            iofile, attachment_filename="datasync.xlsx", as_attachment=True
         )
-        
+
     @app.route("/sync/synchronisation-form")
     def synchronisation_form():
-        inputs = [f for f in listdir_inputs("sync/input") if isfile(join("sync/input", f))]
+        inputs = [
+            f for f in listdir_inputs("sync/input") if isfile(join("sync/input", f))
+        ]
         return render_template(
             "layout.html",
             action="synchronisation_form",
             data={
                 "breadcrumb": ["Co2mpas", _("Run synchronisation")],
-                "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": ""}},
+                "props": {
+                    "active": {"run": "", "sync": "active", "doc": "", "expert": ""}
+                },
                 "interpolation_methods": [
-                  "linear","nearest","zero","slinear","quadratic","cubic","pchip","akima","integral",
-                  "polynomial0","polynomial1","polynomial2","polynomial3",
-                  "polynomial4","spline5","spline7","spline9"
+                    "linear",
+                    "nearest",
+                    "zero",
+                    "slinear",
+                    "quadratic",
+                    "cubic",
+                    "pchip",
+                    "akima",
+                    "integral",
+                    "polynomial0",
+                    "polynomial1",
+                    "polynomial2",
+                    "polynomial3",
+                    "polynomial4",
+                    "spline5",
+                    "spline7",
+                    "spline9",
                 ],
                 "inputs": inputs,
             },
         )
-        
+
     @app.route("/sync/add-sync-file", methods=["POST"])
     def add_sync_file():
         inputs = [f for f in listdir_inputs("sync") if isfile(join("sync", f))]
-       
+
         for file in inputs:
-          os.remove(os.path.join("sync/input", file))
-        
+            os.remove(os.path.join("sync/input", file))
+
         f = request.files["file"]
         f.save(os.path.join("sync/input", secure_filename(f.filename)))
         files = {"file": f.read()}
         return redirect("/sync/synchronisation-form", code=302)
-        
+
     @app.route("/sync/run-synchronisation", methods=["POST"])
     def run_synchronisation():
-    
+
         # Dedicated logging for this run
-        fileh = logging.FileHandler(
-            "sync/logfile.txt", "w"
-        )
+        fileh = logging.FileHandler("sync/logfile.txt", "w")
         formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
@@ -474,48 +535,56 @@ def create_app(configfile=None):
         for hdlr in log.handlers[:]:
             log.removeHandler(hdlr)
         log.addHandler(fileh)
-    
+
         # Input and output files
         input_file = "sync/input/datasync.xlsx"
         output_file = "sync/output/datasync.sync.xlsx"
-    
+
         # Arguments
         kwargs = {
-            "x_label": request.form.get("x_label") if request.form.get("x_label") else 'times',
-            "y_label": request.form.get("y_label") if request.form.get("y_label") else 'velocities',
+            "x_label": request.form.get("x_label")
+            if request.form.get("x_label")
+            else "times",
+            "y_label": request.form.get("y_label")
+            if request.form.get("y_label")
+            else "velocities",
             "interpolation_method": request.form.get("interpolation_method"),
             "header": request.form.get("header"),
-            "reference_name": request.form.get("reference_name") if request.form.get("reference_name") else 'theoretical',
+            "reference_name": request.form.get("reference_name")
+            if request.form.get("reference_name")
+            else "theoretical",
         }
         kwargs = {k: v for k, v in kwargs.items() if v}
-        
+
         try:
-        
-          # Dispatcher
-          _process = sh.SubDispatch(syncing.dsp, ['written'], output_type='value')
-          ret = _process(dict(input_fpath=input_file, output_fpath=output_file, **kwargs))   
-          return 'OK'
-          
-        except Exception as e:   
-          return 'KO'
-          
+
+            # Dispatcher
+            _process = sh.SubDispatch(syncing.dsp, ["written"], output_type="value")
+            ret = _process(
+                dict(input_fpath=input_file, output_fpath=output_file, **kwargs)
+            )
+            return "OK"
+
+        except Exception as e:
+            return "KO"
+
     @app.route("/sync/delete-file", methods=["GET"])
-    def delete_sync_file():       
+    def delete_sync_file():
         os.remove("sync/input/datasync.xlsx")
         return redirect("/sync/synchronisation-form", code=302)
-        
+
     @app.route("/sync/load-log", methods=["GET"])
-    def load_sync_log():       
+    def load_sync_log():
         log = ""
         loglines = []
         with open("sync/logfile.txt") as f:
-            loglines = f.readlines()              
-            
+            loglines = f.readlines()
+
         for logline in loglines:
-          log += logline
-          
+            log += logline
+
         return log
-        
+
     @app.route("/sync/download-result")
     def sync_download_result():
 
@@ -532,96 +601,110 @@ def create_app(configfile=None):
         return send_file(
             iofile, attachment_filename="datasync.sync.xlsx", as_attachment=True
         )
-        
+
     # Demo/download
-    @app.route('/demo/download')
+    @app.route("/demo/download")
     def demo_download():
-    
-      # Temporary output folder  
-      of = next(tempfile._get_candidate_names())
-      
-      # Input parameters
-      inputs = {'output_folder': of}
 
-      # Dispatcher
-      d = dsp.register()
-      ret = d.dispatch(inputs, ['demo', 'done'])
-      
-      # List of demo files created
-      demofiles = [f for f in listdir(of) if isfile(join(of, f))]
+        # Temporary output folder
+        of = next(tempfile._get_candidate_names())
 
-      # Create zip archive on the fly
-      zip_subdir = of
-      iofile = io.BytesIO()
-      zf = zipfile.ZipFile(iofile, mode='w', compression=zipfile.ZIP_DEFLATED)
-      
-      # Adds demo files to archive
-      for f in demofiles:
-        # Add file, at correct path
-        zf.write(os.path.abspath(os.path.join(of, f)), f)
-      
-      # Close archive
-      zf.close()
-      
-      # Remove temporary files
-      shutil.rmtree(of)
-      
-      # Output zip file
-      iofile.seek(0)
-      return send_file(iofile, attachment_filename='co2mpas-demo.zip', as_attachment=True)
-        
+        # Input parameters
+        inputs = {"output_folder": of}
+
+        # Dispatcher
+        d = dsp.register()
+        ret = d.dispatch(inputs, ["demo", "done"])
+
+        # List of demo files created
+        demofiles = [f for f in listdir(of) if isfile(join(of, f))]
+
+        # Create zip archive on the fly
+        zip_subdir = of
+        iofile = io.BytesIO()
+        zf = zipfile.ZipFile(iofile, mode="w", compression=zipfile.ZIP_DEFLATED)
+
+        # Adds demo files to archive
+        for f in demofiles:
+            # Add file, at correct path
+            zf.write(os.path.abspath(os.path.join(of, f)), f)
+
+        # Close archive
+        zf.close()
+
+        # Remove temporary files
+        shutil.rmtree(of)
+
+        # Output zip file
+        iofile.seek(0)
+        return send_file(
+            iofile, attachment_filename="co2mpas-demo.zip", as_attachment=True
+        )
+
     @app.route("/plot/launched")
     def plot_launched():
-      return render_template(
-          "content.html",
-          action="launch_plot",
-          data={
-              "breadcrumb": ["Co2mpas", "Plot launched"],
-              "props": {"active": {"run": "", "sync": "", "doc": "", "expert": "active"}},
-              "title": "Plot launched"
-          },
-      )
-        
+        return render_template(
+            "content.html",
+            action="launch_plot",
+            data={
+                "breadcrumb": ["Co2mpas", "Plot launched"],
+                "props": {
+                    "active": {"run": "", "sync": "", "doc": "", "expert": "active"}
+                },
+                "title": "Plot launched",
+            },
+        )
+
     @app.route("/plot/model-graph")
     def plot_model_graph():
-      dsp(dict(plot_model=True, cache_folder='cache', host='127.0.0.1', port=4999), ['plot', 'done'])
-      return ''
-      
+        dsp(
+            dict(plot_model=True, cache_folder="cache", host="127.0.0.1", port=4999),
+            ["plot", "done"],
+        )
+        return ""
+
     @app.route("/conf/configuration-form")
     def configuration_form():
-      files = [f for f in listdir_conf(".") if isfile(join(".", f))]
-      return render_template(
+        files = [f for f in listdir_conf(".") if isfile(join(".", f))]
+        return render_template(
             "layout.html",
             action="configuration_form",
             data={
                 "breadcrumb": ["Co2mpas", _("Co2mpas configuration file")],
-                "props": {"active": {"run": "", "sync": "active", "doc": "", "expert": "active"}},
+                "props": {
+                    "active": {
+                        "run": "",
+                        "sync": "active",
+                        "doc": "",
+                        "expert": "active",
+                    }
+                },
                 "title": "Configuration form",
                 "inputs": files,
             },
         )
-        
+
     @app.route("/conf/add-conf-file", methods=["POST"])
     def add_conf_file():
         if os.path.exists("conf.yaml"):
-          os.remove("conf.yaml")
-        
+            os.remove("conf.yaml")
+
         f = request.files["file"]
-        f.save('conf.yaml')
+        f.save("conf.yaml")
         return redirect("/conf/configuration-form", code=302)
-        
+
     @app.route("/conf/delete-file", methods=["GET"])
-    def delete_conf_file():       
+    def delete_conf_file():
         os.remove("conf.yaml")
         return redirect("/conf/configuration-form", code=302)
-        
+
     @app.route("/keys/keys-form")
-    def keys_form():        
-        
+    def keys_form():
+
         enc_keys = [f for f in listdir_enc_keys("keys") if isfile(join("keys", f))]
         key_pass = [f for f in listdir_key_pass("keys") if isfile(join("keys", f))]
         key_sign = [f for f in listdir_key_sign("keys") if isfile(join("keys", f))]
-        
+
         return render_template(
             "layout.html",
             action="keys_form",
@@ -631,43 +714,42 @@ def create_app(configfile=None):
                 "enc_keys": enc_keys,
                 "key_pass": key_pass,
                 "key_sign": key_sign,
-                "texts": co2wui_texts           
+                "texts": co2wui_texts,
             },
-        )        
-    
+        )
+
     @app.route("/keys/add-key-file", methods=["POST"])
     def add_key_file():
-      
+
         upload_type = request.form.get("upload_type")
         filenames = {
-          "enc_keys": "dice.co2mpas.keys",
-          "key_pass": "secret.passwords",
-          "key_sign": "sign.co2mpas.key"
+            "enc_keys": "dice.co2mpas.keys",
+            "key_pass": "secret.passwords",
+            "key_sign": "sign.co2mpas.key",
         }
-            
+
         filename = filenames.get(upload_type)
         if os.path.exists(filename):
-          os.remove(filename)
-        
+            os.remove(filename)
+
         f = request.files["file"]
         f.save(os.path.join("keys", filename))
         return redirect("/keys/keys-form", code=302)
-        
+
     @app.route("/keys/delete-file", methods=["GET"])
-    def delete_key_file():        
-    
+    def delete_key_file():
+
         upload_type = request.args.get("upload_type")
         filenames = {
-          "enc_keys": "dice.co2mpas.keys",
-          "key_pass": "secret.passwords",
-          "key_sign": "sign.co2mpas.key"
-        }     
+            "enc_keys": "dice.co2mpas.keys",
+            "key_pass": "secret.passwords",
+            "key_sign": "sign.co2mpas.key",
+        }
         filename = filenames.get(upload_type)
-            
+
         os.remove(os.path.join("keys", filename))
         return redirect("/keys/keys-form", code=302)
-    
-        
+
     @app.route("/not-implemented")
     def not_implemented():
         return render_template(
@@ -680,56 +762,53 @@ def create_app(configfile=None):
                 "message": "Please refer to future versions of the application or contact xxxxxxx@xxxxxx.europa.eu for information.",
             },
         )
-        
-    @app.route('/conf/generate')
-    def conf_generate():
-    
-      # Conf file name
-      of = 'conf.yaml'
-           
-      # Input parameters
-      inputs = {'output_file': of}
-   
-      # Dispatcher
-      d = dsp.register()
-      ret = d.dispatch(inputs, ['conf', 'done'])
-      
-      return redirect("/conf/configuration-form", code=302)
-     
-        
-    # Demo/download
-    @app.route('/conf/download')
-    def conf_download():
-    
-      # Conf file name
-      of = 'conf.yaml'
-      
-      # Read from file
-      data = None
-      with open(of, "rb") as conf_yaml:
-          data = conf_yaml.read()     
 
-      # Output xls file
-      iofile = io.BytesIO(data)
-      iofile.seek(0)
-      return send_file(
-          iofile,
-          attachment_filename="conf.yaml",
-          as_attachment=True,
-      )
+    @app.route("/conf/generate")
+    def conf_generate():
+
+        # Conf file name
+        of = "conf.yaml"
+
+        # Input parameters
+        inputs = {"output_file": of}
+
+        # Dispatcher
+        d = dsp.register()
+        ret = d.dispatch(inputs, ["conf", "done"])
+
+        return redirect("/conf/configuration-form", code=302)
+
+    # Demo/download
+    @app.route("/conf/download")
+    def conf_download():
+
+        # Conf file name
+        of = "conf.yaml"
+
+        # Read from file
+        data = None
+        with open(of, "rb") as conf_yaml:
+            data = conf_yaml.read()
+
+        # Output xls file
+        iofile = io.BytesIO(data)
+        iofile.seek(0)
+        return send_file(iofile, attachment_filename="conf.yaml", as_attachment=True)
 
     @app.route("/contact-us")
     def contact_us():
-      return render_template(
+        return render_template(
             "layout.html",
             action="contact_us",
             data={
                 "breadcrumb": ["Co2mpas", "Contact us"],
-                "props": {"active": {"run": "", "sync": "", "doc": "active", "expert": ""}},
-                "title": "Contact us",                
+                "props": {
+                    "active": {"run": "", "sync": "", "doc": "active", "expert": ""}
+                },
+                "title": "Contact us",
             },
         )
-        
+
     return app
 
 
