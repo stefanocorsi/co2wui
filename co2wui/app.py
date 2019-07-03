@@ -1,58 +1,56 @@
 import re
 import glob
 from stat import S_ISREG, S_ISDIR, ST_CTIME, ST_MODE
-from os import path
 import webbrowser
 import threading
 import tempfile
-import schedula as sh
-import co2mpas_dice
-from co2mpas import dsp as dsp
-from co2mpas import __version__
-import click
-from flask import Flask, render_template, current_app, url_for, request, send_file
-from flask import Response
-from flask import Flask, redirect
-from flask.cli import FlaskGroup
-from os import listdir
-from os.path import isfile, join
-import requests
-import json
-import io
-import os
-import time
-import os.path as osp
-from werkzeug import secure_filename
 import logging
 import logging.config
-import syncing
+import os
+from os import path
+from os import listdir
+from os.path import isfile, join
+import json
+import io
+import time
 import zipfile
 import shutil
 import pickle
-from babel import Locale
 import gettext
-
-_ = gettext.gettext
+import requests
+from flask import Flask, render_template, current_app, url_for, request, send_file
+from flask import Response
+from flask import redirect
+from flask.cli import FlaskGroup
+from werkzeug import secure_filename
+import click
 from jinja2 import Environment, PackageLoader
+from babel import Locale
 from babel.support import Translations
 from flask_babel import Babel
 import yaml
+import schedula as sh
+import syncing
+from co2mpas import dsp as dsp
+from co2mpas import __version__
+
+_ = gettext.gettext
 
 
 def listdir_inputs(path):
-    """Only allow for excel files as input 
+    """Only allow for excel files as input
     """
     return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
 
 
 def listdir_outputs(path):
-    """Only allow for excel files as output 
+    """Only allow for excel files as output
     """
     return map(lambda x: os.path.basename(x), glob.glob(os.path.join(path, "*.xls*")))
 
 
 def listdir_conf(path):
-    """Only allow for conf.yaml files 
+    """Only allow for conf.yaml files
     """
     return map(
         lambda x: os.path.basename(x), glob.glob(os.path.join(path, "conf.yaml"))
@@ -60,7 +58,7 @@ def listdir_conf(path):
 
 
 def listdir_enc_keys(path):
-    """Only allow for conf.yaml files 
+    """Only allow for conf.yaml files
     """
     return map(
         lambda x: os.path.basename(x),
@@ -69,7 +67,7 @@ def listdir_enc_keys(path):
 
 
 def listdir_key_pass(path):
-    """Only allow for conf.yaml files 
+    """Only allow for conf.yaml files
     """
     return map(
         lambda x: os.path.basename(x), glob.glob(os.path.join(path, "secret.passwords"))
@@ -77,7 +75,7 @@ def listdir_key_pass(path):
 
 
 def listdir_key_sign(path):
-    """Only allow for conf.yaml files 
+    """Only allow for conf.yaml files
     """
     return map(
         lambda x: os.path.basename(x), glob.glob(os.path.join(path, "sign.co2mpas.key"))
