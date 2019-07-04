@@ -71,10 +71,12 @@ function toggle_options() {
 /* Synchronisation form dynamic fields */
 function toggle_wltp_class(el) {
 	
-	if (el.value == 'WLTP') {
+	if (el.value == 'wltp') {
 		$('#wltpclass-group').show();
+		$('#gearbox-type-group').hide();
 	} else {
 		$('#wltpclass-group').hide();
+		$('#gearbox-type-group').show();
 	}
 	
 }
