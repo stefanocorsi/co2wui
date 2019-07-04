@@ -1,37 +1,50 @@
-	
+				
+		
 								<!-- /.box-header -->
 								<div class="box-body">
 									<div class="box-body">               	
-
-										<div class="box-header with-border">
-											<h3 class="box-title">{{ _("Execution summary") }}:</h3>
-										</div>
-										<!-- /.box-header -->
-										<div class="box-body">
-											<table class="table table-bordered table-striped">
-												<tbody><tr>													
-													<th>{{ _("Cycle") }}</th>		
-													<th>{{ _("Phase") }}</th>
-													<th>{{ _("Type") }}</th>
-													<th>{{ _("Type") }}</th>													
-													<th>{{ _("Value") }}</th>
-												</tr>
-												{% for key in data.summary.keys() %}		
-													{% if loop.index > 2 %}
-												<tr>													
-													<td>{{key[0]}}</td>
-													<td>{{key[1]}}</td>
-													<td>{{key[2]}}</td>
-													<td>{{key[3]}}</td>
-													<td>
-															{{data.summary[key]}}
-													</td>
-												</tr>
-													{% endif %}
-												{% endfor %}
-											</tbody></table>
-										</div>
-										<!-- /.box-body -->
 										
+										<div class="nav-tabs-custom">
+										
+											<ul class="nav nav-tabs">
+												{% for summary in data.summaries %}	
+												<li class="{{ "active" if loop.index == 1 }}"><a href="#tab_{{loop.index}}" data-toggle="tab" aria-expanded="true">File {{ summary['id'] }}</a></li>
+												{% endfor %}
+											</ul>
+						
+											<div class="tab-content">
+											{% for summary in data.summaries %}													
+												<div class="tab-pane active" id="tab_{{loop.index}}">
+													<!-- /.box-header -->
+													<div class="box-body">
+														<table class="table table-bordered table-striped">
+															<tbody><tr>													
+																<th>{{ _("Cycle") }}</th>		
+																<th>{{ _("Phase") }}</th>
+																<th>{{ _("Type") }}</th>
+																<th>{{ _("Type") }}</th>													
+																<th>{{ _("Value") }}</th>
+															</tr>
+															{% for key in summary.keys() %}		
+																{% if loop.index > 2 %}
+															<tr>													
+																<td>{{key[0]}}</td>
+																<td>{{key[1]}}</td>
+																<td>{{key[2]}}</td>
+																<td>{{key[3]}}</td>
+																<td>
+																		{{summary[key]}}
+																</td>
+															</tr>
+																{% endif %}
+															{% endfor %}
+														</tbody></table>
+													</div>
+													<!-- /.box-body -->
+												</div>
+											{% endfor %}
+											</div>
+										</div>
+											
 									</div>									
 								</div>

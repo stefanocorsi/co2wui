@@ -248,14 +248,14 @@ def create_app(configfile=None):
         """Show a modal dialog with a execution's summary formatted in a table
         """
 
-        summary = get_summary(runid)
+        summaries = get_summary(runid)
 
-        if summary is not None:
+        if summaries is not None:
             return render_template(
                 "ajax.html",
                 action="summary",
                 title=_("Summary of your Co2mpas execution"),
-                data={"summary": summary[0]},
+                data={"summaries": summaries},
             )
         else:
             return ""
