@@ -14,33 +14,60 @@
 						
 											<div class="tab-content">
 											{% for summary in data.summaries %}													
-												<div class="tab-pane active" id="tab_{{loop.index}}">
+												<div class="tab-pane {{ "active" if loop.index == 1 }}" id="tab_{{loop.index}}">
+												
+												{% for method in ('nedc', 'wltp') %}		
+													
+													<!-- NEDC -->
 													<!-- /.box-header -->
 													<div class="box-body">
-														<table class="table table-bordered table-striped">
-															<tbody><tr>													
-																<th>{{ _("Cycle") }}</th>		
-																<th>{{ _("Phase") }}</th>
-																<th>{{ _("Type") }}</th>
-																<th>{{ _("Type") }}</th>													
-																<th>{{ _("Value") }}</th>
-															</tr>
-															{% for key in summary.keys() %}		
-																{% if loop.index > 2 %}
+														<table class="summary table table-bordered table-striped">
+															<tbody>
+															
 															<tr>													
-																<td>{{key[0]}}</td>
-																<td>{{key[1]}}</td>
-																<td>{{key[2]}}</td>
-																<td>{{key[3]}}</td>
-																<td>
-																		{{summary[key]}}
-																</td>
+																<th rowspan="4">&nbsp;</th>		
+																<th colspan="12"> {{ method.upper() }}</th>																											
+															</tr>		
+															<tr>
+																{% for cycle in ('Low', 'High') %}																
+																<th colspan="6">{{cycle}}</th>																
+																{% endfor %}	
 															</tr>
-																{% endif %}
+															<tr>
+																{% for cycle in ('Low', 'High') %}
+																	{% for phase in ('prediction', 'calibration') %}
+																<th colspan="3">{{phase.capitalize()}}</th>																
+																	{% endfor %}
+																{% endfor %}																														
+															</tr>	
+															<tr>
+																{% for cycle in ('Low', 'High') %}
+																	{% for phase in ('prediction', 'calibration') %}
+																		{% for outcome in ('input', 'output', 'target') %}																
+																<th>{{outcome.capitalize()}}</th>
+																		{% endfor %}
+																	{% endfor %}
+																{% endfor %}																		
+															</tr>
+															
+															{% set readable = humanised(summary) %}
+															{% for key in readable["params"].keys() %}																		
+															<tr>													
+																<td>{{key[0:40].replace("_", " ").capitalize()}}</td>
+																{% for cycle in (method + '_l', method + '_h') %}
+																	{% for phase in ('prediction', 'calibration') %}
+																		{% for outcome in ('input', 'output', 'target') %}
+																<th>{{readable["params"][key][cycle + "." + phase + "." + outcome + "." + key]}}</th>																
+																		{% endfor %}	
+																	{% endfor %}	
+																{% endfor %}																
+															</tr>
 															{% endfor %}
 														</tbody></table>
 													</div>
-													<!-- /.box-body -->
+													
+												{% endfor %}
+																																							
 												</div>
 											{% endfor %}
 											</div>

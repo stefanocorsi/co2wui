@@ -28,3 +28,7 @@ h2 {
 .color-ko {
 	color: red;
 }
+
+table.summary th {
+	text-align: center;
+}

@@ -97,6 +97,23 @@ def get_summary(runid):
     return summary
 
 
+def humanised(summary):
+
+    formatted = {"params": {}}
+    for k in summary.keys():
+        if k not in ("base", "id"):
+            try:
+                formatted["params"][k[3]][".".join(k)] = (
+                    round(summary[k], 3)
+                    if isinstance(summary[k], float)
+                    else summary[k]
+                )
+            except:
+                formatted["params"][k[3]] = {}
+
+    return formatted
+
+
 def create_app(configfile=None):
 
     log_file_path = path.join(path.dirname(path.abspath(__file__)), "../logging.conf")
@@ -106,6 +123,8 @@ def create_app(configfile=None):
     app = Flask(__name__)
     babel = Babel(app)
     CO2MPAS_VERSION = "3"
+
+    app.jinja_env.globals.update(humanised=humanised)
 
     with open("locale/texts-en.yaml", "r") as stream:
         co2wui_texts = yaml.safe_load(stream)
