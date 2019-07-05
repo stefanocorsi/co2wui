@@ -248,7 +248,7 @@ def create_app(configfile=None):
             "hard_validation": bool(args.get("hard_validation")),
             "declaration_mode": bool(args.get("declaration_mode")),
             "encryption_keys": "keys/dice.co2mpas.keys"
-            if os.path.exists("dice.co2mpas.keys")
+            if os.path.exists("keys/dice.co2mpas.keys")
             else "",
             "sign_key": "keys/sign.co2mpas.key"
             if os.path.exists("keys/sign.co2mpas.key")
