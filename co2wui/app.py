@@ -7,6 +7,7 @@ import tempfile
 import logging
 import logging.config
 import time
+import io
 import os
 from os import path
 from os import listdir
@@ -19,6 +20,8 @@ import schedula as sh
 import syncing
 import gettext
 import pickle
+import zipfile
+import shutil
 from babel import Locale
 from babel.support import Translations
 from co2mpas import __version__, dsp
