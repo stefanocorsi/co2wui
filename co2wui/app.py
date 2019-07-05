@@ -394,8 +394,15 @@ def create_app(configfile=None):
                 for f in listdir_outputs(osp.join("output", dirname))
                 if osp.isfile(osp.join("output", dirname, f))
             ]
+            summary = get_summary(dirname)
+            outcome = "KO" if (summary is None or len(summary[0].keys()) <= 2) else "OK"
             results.append(
-                {"datetime": time.ctime(cdate), "name": dirname, "files": output_files}
+                {
+                    "datetime": time.ctime(cdate),
+                    "name": dirname,
+                    "files": output_files,
+                    "outcome": outcome,
+                }
             )
 
         return render_template(

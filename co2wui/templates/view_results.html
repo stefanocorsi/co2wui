@@ -28,7 +28,7 @@
                   <td>
                     {{result.datetime}}
                   </td>
-                  <td class="text-success">Ok</td>
+                  <td class="text-{{ "success" if result.outcome == "OK" else "danger" }}"><b>{{ result.outcome }}</b></td>
 									<td class="text-success"><a href="#" onclick="load_summary('{{result.name}}'); return false;"><i class="fa fa-eye"></i> {{ _("View") }} </a></td>
 									<td><a href="/run/download-log/{{result.name}}"><i class="fa fa-newspaper-o"></i> </a></td>
                   <td style="list-style-type:none;">
