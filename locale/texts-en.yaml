@@ -9,6 +9,8 @@ run:
     download template: In this section, it is possible to retrieve the latest CO2MPAS input template, by pressing the <b>download</b> button.
     run co2mpas: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
+    hints:
+        why ta disabled: "TA mode could be disabled for various reasons: check that the encryption and signature keys are uploaded and that there are no advanced options selected that are in contrast with TA mode."
             
 sync:
     synchronise data: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used.

@@ -21,7 +21,7 @@
 								<div class="box-header pull-left">
 									<a href="/run/download-template">{{ _("Haven't done it yet?") }} <i class="fa fa-download fa-download"></i> {{ _("Download Co<sub>2</sub>mpas input template?") }}</a>
 								</div>
-								<div class="box-header pull-right">
+								<div id="advanced_link" class="box-header pull-right">
 									<a href="#" onclick="toggle_options(); return false;"><i class="fa fa-cogs"></i> {{ _("Advanced options") }}</a>
 								</div>
 								<div id="advanced_options" class="row" style="display: none;">
@@ -133,9 +133,13 @@
 										<input type="hidden" name="only_summary" id="only_summary" value="">
 										<div class="row">										
 											<div class="col-xs-12 col-md-6">
-												<label class="pull-right">                    
+												<label class="pull-right">
+													{% if not data.ta_enabled %}
+													{{ _("Type approval mode (disabled)") }} <i data-toggle="tooltip" data-placement="top" class="fa fa-question-circle co2-help" title="{{ data.texts['run']['hints']['why ta disabled'] | safe }}"></i></h2>
+													{% else %}
 													{{ _("Type approval mode") }}
-													<input id="tamode" name="tamode" type="checkbox" data-toggle="toggle">												
+													{% endif %}
+													<input onchange="check_ta_mode();" {% if not data.ta_enabled %}{{ "disabled=true " | safe }}{% endif %}id="tamode" name="tamode" type="checkbox" data-toggle="toggle">
 												</label>
 											</div>
 											<div class="col-xs-12 col-md-6">

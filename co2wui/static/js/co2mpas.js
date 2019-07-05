@@ -180,3 +180,12 @@ function load_summary(result_name) {
 	$('#modal-content').load('/run/view-summary/' + result_name);
 	$('#modal-default').modal('show');
 }
+
+function check_ta_mode() {
+	if ($('#tamode').prop('checked')) {
+		$('#advanced_options').toggle();
+		$('#advanced_link').hide();
+	} else {
+		$('#advanced_link').show();
+	}
+}

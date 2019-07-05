@@ -121,6 +121,18 @@ def humanised(summary):
     return formatted
 
 
+def ta_enabled():
+    """Return true if all conditions for TA mode are met
+    """
+    if not os.path.exists("keys/dice.co2mpas.keys"):
+        return False
+
+    if not os.path.exists("keys/sign.co2mpas.key"):
+        return False
+
+    return True
+
+
 def create_app(configfile=None):
 
     log_file_path = osp.join(osp.dirname(osp.abspath(__file__)), "../logging.conf")
@@ -211,6 +223,8 @@ def create_app(configfile=None):
                     "active": {"run": "active", "sync": "", "doc": "", "expert": ""}
                 },
                 "inputs": inputs,
+                "ta_enabled": ta_enabled(),
+                "texts": co2wui_texts,
             },
         )
 
