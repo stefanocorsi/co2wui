@@ -18,6 +18,7 @@ import requests
 import schedula as sh
 import syncing
 import gettext
+import pickle
 from babel import Locale
 from babel.support import Translations
 from co2mpas import __version__, dsp
