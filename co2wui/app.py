@@ -659,7 +659,7 @@ def create_app(configfile=None):
         ret = d.dispatch(inputs, ["demo", "done"])
 
         # List of demo files created
-        demofiles = [f for f in listdir(of) if osp.isfile(join(of, f))]
+        demofiles = [f for f in listdir(of) if osp.isfile(osp.join(of, f))]
 
         # Create zip archive on the fly
         zip_subdir = of
