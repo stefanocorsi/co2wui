@@ -509,7 +509,9 @@ def create_app(configfile=None):
     @app.route("/sync/synchronisation-form")
     def synchronisation_form():
         inputs = [
-            f for f in listdir_inputs("sync/input") if osp.isfile(join("sync/input", f))
+            f
+            for f in listdir_inputs("sync/input")
+            if osp.isfile(osp.join("sync/input", f))
         ]
         return render_template(
             "layout.html",
@@ -734,9 +736,15 @@ def create_app(configfile=None):
     @app.route("/keys/keys-form")
     def keys_form():
 
-        enc_keys = [f for f in listdir_enc_keys("keys") if osp.isfile(join("keys", f))]
-        key_pass = [f for f in listdir_key_pass("keys") if osp.isfile(join("keys", f))]
-        key_sign = [f for f in listdir_key_sign("keys") if osp.isfile(join("keys", f))]
+        enc_keys = [
+            f for f in listdir_enc_keys("keys") if osp.isfile(osp.join("keys", f))
+        ]
+        key_pass = [
+            f for f in listdir_key_pass("keys") if osp.isfile(osp.join("keys", f))
+        ]
+        key_sign = [
+            f for f in listdir_key_sign("keys") if osp.isfile(osp.join("keys", f))
+        ]
 
         return render_template(
             "layout.html",
