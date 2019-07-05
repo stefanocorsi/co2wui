@@ -183,7 +183,7 @@ function load_summary(result_name) {
 
 function check_ta_mode() {
 	if ($('#tamode').prop('checked')) {
-		$('#advanced_options').toggle();
+		$('#advanced_options').hide();
 		$('#advanced_link').hide();
 	} else {
 		$('#advanced_link').show();
