@@ -327,7 +327,7 @@ def create_app(configfile=None):
             output_files = [
                 f
                 for f in listdir_outputs(os.path.join("output", thread_id))
-                if isfile(os.path.join("output", thread_id, f))
+                if osp.isfile(os.path.join("output", thread_id, f))
             ]
             results.append({"name": thread_id, "files": output_files})
 
