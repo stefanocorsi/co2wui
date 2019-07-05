@@ -238,8 +238,12 @@ def create_app(configfile=None):
             "only_summary": bool(args.get("only_summary")),
             "hard_validation": bool(args.get("hard_validation")),
             "declaration_mode": bool(args.get("declaration_mode")),
-            "encryption_keys": "",
-            "sign_key": "",
+            "encryption_keys": "keys/dice.co2mpas.keys"
+            if os.path.exists("dice.co2mpas.keys")
+            else "",
+            "sign_key": "keys/sign.co2mpas.key"
+            if os.path.exists("keys/sign.co2mpas.key")
+            else "",
             "encryption_keys_passwords": "",
             "enable_selector": False,
             "type_approval_mode": bool(args.get("tamode")),
