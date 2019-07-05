@@ -43,6 +43,9 @@ from werkzeug.utils import secure_filename
 
 _ = gettext.gettext
 
+log = logging.getLogger("werkzeug")
+log.setLevel(logging.ERROR)
+
 
 def listdir_inputs(path):
     """Only allow for excel files as input
@@ -134,10 +137,6 @@ def ta_enabled():
 
 
 def create_app(configfile=None):
-
-    log_file_path = osp.join(osp.dirname(osp.abspath(__file__)), "../logging.conf")
-    logging.config.fileConfig(log_file_path)
-    log = logging.getLogger(__name__)
 
     app = Flask(__name__)
     babel = Babel(app)
@@ -245,15 +244,11 @@ def create_app(configfile=None):
         fileh = logging.FileHandler(
             osp.join("output", str(thread.ident), "logfile.txt"), "a"
         )
-        formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
-        fileh.setFormatter(formatter)
-        log = logging.getLogger()
-        log.setLevel(logging.DEBUG)
-        for hdlr in log.handlers[:]:
-            log.removeHandler(hdlr)
-        log.addHandler(fileh)
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
+        frmt = "%(asctime)-15s:%(levelname)5.5s:%(name)s:%(message)s"
+        logging.basicConfig(level=logging.INFO, format=frmt)
+        logger.addHandler(fileh)
 
         # Input parameters
         kwargs = {
@@ -582,15 +577,11 @@ def create_app(configfile=None):
 
         # Dedicated logging for this run
         fileh = logging.FileHandler("sync/logfile.txt", "w")
-        formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
-        fileh.setFormatter(formatter)
-        log = logging.getLogger()
-        log.setLevel(logging.DEBUG)
-        for hdlr in log.handlers[:]:
-            log.removeHandler(hdlr)
-        log.addHandler(fileh)
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
+        frmt = "%(asctime)-15s:%(levelname)5.5s:%(name)s:%(message)s"
+        logging.basicConfig(level=logging.INFO, format=frmt)
+        logger.addHandler(fileh)
 
         # Input and output files
         input_file = "sync/input/datasync.xlsx"
