@@ -53,7 +53,10 @@ def listdir_inputs(path):
 def listdir_outputs(path):
     """Only allow for excel files as output
     """
-    return map(lambda x: os.path.basename(x), glob.glob(osp.join(path, "*.xls*")))
+    return map(
+        lambda x: os.path.basename(x),
+        glob.glob(osp.join(path, "*.xls*")) + glob.glob(osp.join(path, "*.zip*")),
+    )
 
 
 def listdir_conf(path):
@@ -406,8 +409,8 @@ def create_app(configfile=None):
 
         # Read from file
         data = None
-        with open(rf, "rb") as xlsx:
-            data = xlsx.read()
+        with open(rf, "rb") as result:
+            data = result.read()
 
         # Output xls file
         iofile = io.BytesIO(data)
