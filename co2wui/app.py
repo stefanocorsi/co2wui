@@ -6,6 +6,7 @@ import threading
 import tempfile
 import logging
 import logging.config
+import time
 import os
 from os import path
 from os import listdir
@@ -16,6 +17,7 @@ import click
 import requests
 import schedula as sh
 import syncing
+import gettext
 from babel import Locale
 from babel.support import Translations
 from co2mpas import __version__, dsp
