@@ -400,7 +400,9 @@ def create_app(configfile=None):
     @app.route("/run/delete-file", methods=["GET"])
     def delete_file():
         fn = request.args.get("fn")
-        inputs = [f for f in listdir_inputs("input") if osp.isfile(join("input", f))]
+        inputs = [
+            f for f in listdir_inputs("input") if osp.isfile(osp.join("input", f))
+        ]
         os.remove(osp.join("input", inputs[int(fn) - 1]))
         return redirect("/run/simulation-form", code=302)
 
@@ -599,7 +601,7 @@ def create_app(configfile=None):
 
     @app.route("/sync/add-sync-file", methods=["POST"])
     def add_sync_file():
-        inputs = [f for f in listdir_inputs("sync") if osp.isfile(join("sync", f))]
+        inputs = [f for f in listdir_inputs("sync") if osp.isfile(osp.join("sync", f))]
 
         for file in inputs:
             os.remove(osp.join("sync/input", file))
@@ -749,7 +751,7 @@ def create_app(configfile=None):
 
     @app.route("/conf/configuration-form")
     def configuration_form():
-        files = [f for f in listdir_conf(".") if osp.isfile(join(".", f))]
+        files = [f for f in listdir_conf(".") if osp.isfile(osp.join(".", f))]
         return render_template(
             "layout.html",
             action="configuration_form",
