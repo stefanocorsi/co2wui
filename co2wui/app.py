@@ -267,6 +267,11 @@ def create_app(configfile=None):
             "type_approval_mode": bool(args.get("tamode")),
         }
 
+        with open(
+            osp.join("output", str(thread.ident), "header.dat"), "wb"
+        ) as header_file:
+            pickle.dump(kwargs, header_file)
+
         inputs = dict(
             plot_workflow=False,
             host="127.0.0.1",
@@ -289,6 +294,14 @@ def create_app(configfile=None):
         """Show a modal dialog with a execution's summary formatted in a table
         """
 
+        # Read the header containing run information
+        header = {}
+        with open(osp.join("output", runid, "header.dat"), "rb") as header_file:
+            try:
+                header = pickle.load(header_file)
+            except:
+                return None
+
         summaries = get_summary(runid)
 
         if summaries is not None:
@@ -296,7 +309,7 @@ def create_app(configfile=None):
                 "ajax.html",
                 action="summary",
                 title=_("Summary of your Co2mpas execution"),
-                data={"summaries": summaries},
+                data={"thread_id": runid, "summaries": summaries, "header": header},
             )
         else:
             return ""
@@ -319,15 +332,27 @@ def create_app(configfile=None):
         thread_id = request.args.get("id")
         layout = request.args.get("layout")
 
+        # Done if there's a result file
         if os.path.exists(osp.join("output", thread_id, "result.dat")):
             done = True
 
+        # See if done or still running
         page = "run_complete" if done else "run_progress"
         title = _("Simulation complete") if done else _("Simulation in progress...")
 
+        # Read the header containing run information
+        header = {}
+        with open(osp.join("output", thread_id, "header.dat"), "rb") as header_file:
+            try:
+                header = pickle.load(header_file)
+            except:
+                return None
+
+        # Get the summary of the execution (if ready)
         summary = get_summary(thread_id)
         result = "KO" if (summary is None or len(summary[0].keys()) <= 2) else "OK"
 
+        # Get the log ile
         log = ""
         loglines = []
         with open(osp.join("output", thread_id, "logfile.txt")) as f:
@@ -337,6 +362,7 @@ def create_app(configfile=None):
             if not re.search("- INFO -", logline):
                 log += logline
 
+        # Collect result files
         results = []
         if not (summary is None or len(summary[0].keys()) <= 2):
             output_files = [
@@ -346,6 +372,7 @@ def create_app(configfile=None):
             ]
             results.append({"name": thread_id, "files": output_files})
 
+        # Render page progress/complete
         return render_template(
             "layout.html" if layout == "layout" else "ajax.html",
             action=page,
@@ -359,6 +386,7 @@ def create_app(configfile=None):
                 "result": result,
                 "summary": summary[0] if summary is not None else None,
                 "results": results if results is not None else None,
+                "header": header,
             },
         )
 

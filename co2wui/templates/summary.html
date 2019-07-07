@@ -2,22 +2,25 @@
 		
 								<!-- /.box-header -->
 								<div class="box-body">
-									<div class="box-body">               	
-										
+
+									<h3>Simulation summary</h3>
+
+									<div class="box-body">
+
 										<div class="nav-tabs-custom">
 										
 											<ul class="nav nav-tabs">
 												{% for summary in data.summaries %}	
 												<li class="{{ "active" if loop.index == 1 }}"><a href="#tab_{{loop.index}}" data-toggle="tab" aria-expanded="true">File {{ summary['id'] }}</a></li>
 												{% endfor %}
+												<li><a href="#tab_parameters" data-toggle="tab" aria-expanded="true">Parameters</a></li>
 											</ul>
 						
 											<div class="tab-content">
 											{% for summary in data.summaries %}													
 												<div class="tab-pane {{ "active" if loop.index == 1 }}" id="tab_{{loop.index}}">
-												
-												{% for method in ('nedc', 'wltp') %}		
-													
+
+												{% for method in ('nedc', 'wltp') %}
 													<!-- NEDC -->
 													<!-- /.box-header -->
 													<div class="box-body">
@@ -65,10 +68,16 @@
 															{% endfor %}
 														</tbody></table>
 													</div>
-													
 												{% endfor %}
 																																							
 												</div>
+
+												<div class="tab-pane" id="tab_parameters">
+													<div class="tab-pane" id="tab_{{loop.index}}">
+														{% include "simulation_header.html" -%}
+													</div>
+												</div>
+
 											{% endfor %}
 											</div>
 										</div>
