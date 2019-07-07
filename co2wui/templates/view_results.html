@@ -2,7 +2,7 @@
 				
 					<h1>{{ data.breadcrumb[-1] }}</h1>
 					
-					<p>The log of your past simulations is shown here below. You can retrieve your previous simulation results by clicking the Links in the table.</p>
+					<p>{{ data.texts["run"]["view results"] | safe }}</p>
 					
 					<div class="box">
             <div class="box-header with-border">

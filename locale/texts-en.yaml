@@ -7,13 +7,19 @@ home:
                 Press Confirm to proceed.
 run:
     download template: In this section, it is possible to retrieve the latest CO2MPAS input template, by pressing the <b>download</b> button.
-    run co2mpas: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
+    run co2mpas: To execute CO2MPAS press the button Run simulation.     
     hints:
         why ta disabled: "TA mode could be disabled for various reasons: check that the encryption and signature keys are uploaded and that there are no advanced options selected that are in contrast with TA mode."
-            
+    intro: In this section, Co<sub>2</sub>mpas is executed. Begin to <b>choose one or more files</b> to use as input for your CO2MPAS simulation. Press <b>Run simulation</b> to proceed. 
+    view results: The log of your past simulations is shown here below. You can retrieve your previous simulation results by clicking the links in the table.
 sync:
-    synchronise data: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used.
-                
+    synchronise data: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used. 
+    description: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used. 
+    prompt: Start to load your input file by <b>Choosing an input file</b> datasync file. Then click <b>Synchronise data</b>.   
 keys:
     load keys: "For TA and TS use only: upload the provided key files to encrypt the output of the CO2MPAS simulation and send it to the DICE3 server, as EU regulation XXX."
+conf:
+    description: A precompiled file to overwrite the input variables of the physical model can be generated and downloaded.
+    usage: You can use the configuration file only in engineering mode. Choose and upload a new configuration file for the Run Co2mpas procedure.
+contact:
+    intro: To report a problem, contact us at jrc-co2mpas@ec.europa.eu.

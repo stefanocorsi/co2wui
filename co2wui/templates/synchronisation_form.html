@@ -7,6 +7,8 @@
 							<h1>{{ data.breadcrumb[-1] }}</h1>
 							
 							<h2>{{ _("Upload your data synchronisation input file") }}</h2>
+							<p>{{ data.texts["sync"]["description"] | safe }}</p>
+							<p>{{ data.texts["sync"]["prompt"] | safe }}</p>
 							</div>
 								
 						</section>        
@@ -113,9 +115,9 @@
 								
 								<div id="sync-result" class="box-body" style="display: none;">
 									<div class="box-header">
-										<p><i class="fa fa-check fa-3" style="color: green;"></i> {{ _("Synchronisation complete") }}</p>
+										<p><i class="fa fa-check fa-3" style="color: green;"></i> {{ _("Your synchronisation is complete") }}</p>
 										<p><strong>1</strong> {{ _("file has been processed") }}</p>
-										<p><a href="/sync/download-result">{{ _("Download synchronised file") }} <i class="fa fa-file-excel-o"></i></a>
+										<p>Click the following link to <a href="/sync/download-result">{{ _("download synchronised file") }} <i class="fa fa-file-excel-o"></i></a>
 									</div>								
 								</div>
 								

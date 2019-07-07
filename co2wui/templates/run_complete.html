@@ -5,13 +5,13 @@
 		<div class="small-box bg-green">
 			<div class="inner">
 				<h3><i class="fa fa-check"></i></h3>
-				<p>Simulation complete</p>
+				<p>{{ _("Your simulation is complete") }}</p>
 			</div>
 			<div class="icon">
 				<i class="ion ion-stats-bars"></i>
 			</div>
 			<a href="#" class="small-box-footer">
-				Please check the list of result files below
+				Please review the list of result files below and click on a link to download the result files or display the summary of your simulation. 
 			</a>			
 		</div>
 		{% else %}
@@ -56,7 +56,7 @@
 							<td>{{loop.index}}.</td>
 							<td>{{result.name}}</td>
 							<td class="text-success">Ok</td>
-							<td class="text-success"><a href="#" onclick="load_summary('{{result.name}}'); return false;"><i class="fa fa-eye"></i> {{ _("View") }} </a></td>
+							<td class="text-success"><a href="#" onclick="load_summary('{{result.name}}'); return false;"><i class="fa fa-eye"></i> {{ _("View summary") }} </a></td>
 							<td><a href="/run/download-log/{{result.name}}"><i class="fa fa-newspaper-o"></i> </a></td>
 							<td style="list-style-type:none;">
 									{% for file in result.files %}
@@ -69,8 +69,7 @@
 				</div>
 			</div>								
 		</div>
-		
-		{% include "summary.html" -%}
+
 	</section>
 	{% endif %}
 	

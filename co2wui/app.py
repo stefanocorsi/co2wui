@@ -442,6 +442,7 @@ def create_app(configfile=None):
                     "active": {"run": "active", "sync": "", "doc": "", "expert": ""}
                 },
                 "results": reversed(results),
+                "texts": co2wui_texts,
             },
         )
 
@@ -592,6 +593,7 @@ def create_app(configfile=None):
                     "spline9",
                 ],
                 "inputs": inputs,
+                "texts": co2wui_texts,
             },
         )
 
@@ -763,6 +765,7 @@ def create_app(configfile=None):
                 },
                 "title": "Configuration form",
                 "inputs": files,
+                "texts": co2wui_texts,
             },
         )
 
@@ -894,6 +897,7 @@ def create_app(configfile=None):
                     "active": {"run": "", "sync": "", "doc": "active", "expert": ""}
                 },
                 "title": "Contact us",
+                "texts": co2wui_texts,
             },
         )
 
