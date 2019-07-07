@@ -28,6 +28,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 co2wui-[0-9].[0-9].dev*
+*.ipynb
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
