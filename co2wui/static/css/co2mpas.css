@@ -32,3 +32,8 @@ h2 {
 table.summary th {
 	text-align: center;
 }
+
+.badge-warning {
+  background-color: #f39c12 !important;
+	color: white !important;
+}

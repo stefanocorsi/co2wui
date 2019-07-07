@@ -57,8 +57,10 @@ $(function() {
 	$('#tamode').change(function() {
 		if ($(this).prop('checked')) {
 			$('#simulation-mode').text('Type approval mode');
+			$('#ta-label').show();
 		} else {
 			$('#simulation-mode').text('Scientific mode');
+			$('#ta-label').hide();
 		}
 	})
 })

@@ -5,8 +5,8 @@
 		<div class="small-box bg-aqua">
 			<div class="inner">
 				<h3><i class="fa fa-spin fa-refresh"></i></h3>
-
 				<p>Simulation in progress</p>
+				{% if data.header.type_approval_mode %}<span id="ta-label" class="badge badge-warning"><i class="fa fa-warning"></i> TYPE APPROVAL MODE</span>{% endif %}
 			</div>
 			<div class="icon">
 				<i class="ion ion-stats-bars"></i>
