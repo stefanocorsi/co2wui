@@ -466,6 +466,16 @@ def create_app(configfile=None):
             iofile, attachment_filename=files[int(fnum) - 1], as_attachment=True
         )
 
+    @app.route("/run/delete-results", methods=["POST"])
+    def delete_results():
+
+        for k in request.form.keys():
+            if re.match(r"select-[0-9]+", k):
+                runid = k.rpartition("-")[2]
+                shutil.rmtree(osp.join("output", runid))
+
+        return redirect("/run/view-results", code=302)
+
     @app.route("/run/download-log/<runid>")
     def download_log(runid):
 

@@ -191,3 +191,11 @@ function check_ta_mode() {
 		$('#advanced_link').show();
 	}
 }
+
+function check_boxes() {
+	if ($('#select-all').prop("checked")) {
+		$(".run-delete").prop( "checked", true);
+	} else {
+		$(".run-delete").prop( "checked", false);
+	}
+}

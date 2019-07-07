@@ -5,6 +5,7 @@
 					<p>{{ data.texts["run"]["view results"] | safe }}</p>
 					
 					<div class="box">
+					<form action="/run/delete-results" method="post">
             <div class="box-header with-border">
               <h3 class="box-title">Your Co<sub>2</sub>mpas past results</h3>
             </div>
@@ -19,7 +20,7 @@
 									<th style="width: 40px">{{ _("Summary") }}</th>
 									<th style="width: 40px">{{ _("Log") }}</th>
                   <th style="width: 40px">{{ _("Link") }}</th>
-									<th style="width: 40px; text-align: center;">{{ _("Select all") }} &nbsp;<input type="checkbox" name="select-all"></th>
+									<th style="width: 40px; text-align: center;">{{ _("Select all") }} &nbsp;<input type="checkbox" id="select-all" name="select-all" onchange="check_boxes();"></th>
                 </tr>
 								{% for result in data.results %}
                 <tr>
@@ -36,7 +37,7 @@
 											<li><a href="/run/download-result/{{result.name}}/{{loop.index}}">{{file}}</a></li>									
 											{% endfor %}
 									</td>
-									<td style="text-align: center;"><input type="checkbox" name="select-{{result.name}}"></td>
+									<td style="text-align: center;"><input type="checkbox" class="run-delete" name="select-{{result.name}}"></td>
                 </tr>
                 {% endfor %}
               </table>
@@ -44,6 +45,7 @@
 						<div class="box-footer">
 							<button id="delete-selected" class="btn btn-sm btn-danger pull-right"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete selected") }}</button>
 						</div>
+					</form>
           </div>
           <!-- /.box -->
 					
