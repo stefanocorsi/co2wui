@@ -1,3 +1,4 @@
+
 # Co2mpas Web UI
 
 A flask UI for running co2mpas.
@@ -11,23 +12,30 @@ A flask UI for running co2mpas.
 
    and **activate it** afterwards,
 
-2. install recent co2mpas from sources in *develop mode* with:
+2. clone the following repositories:
 
-       git clone ... <some-folder>
+	 - git clone https://github.com/vinci1it2000/co2mpas.git (branch dev)
+	 - git clone https://github.com/vinci1it2000/syncing.git
+	 - git clone https://github.com/JRCSTU/DICE.git
+
+3. Install the above packages in development mode:
+
        pip install -e <some-folder>
 
-3. (optional) Install all pinned versions in `requirements.txt` with::
+   for each of the packages
+
+4. (optional) Install all pinned versions in `requirements.txt` with::
 
        pip install -r ./requirements.txt
 
    assuming you want to reproduce the exact environment, OR just...
 
-4. install this project in *develop mode* along with all its development-dependencies
+6. install this project in *develop mode* along with all its development-dependencies
    with:
 
        pip install .[dev]
 
-5. enable [*pre-commit* hooks][1] for [black-formatting][2] python code with::
+7. enable [*pre-commit* hooks][1] for [black-formatting][2] python code with::
 
        pre-commit install
 
@@ -36,6 +44,11 @@ A flask UI for running co2mpas.
 ```shell
 co2wui
 ```
+or
+```shell
+python co2wui/app.py
+```
 
 [1]: https://ljvmiranda921.github.io/notebook/2018/06/21/precommits-using-black-and-flake8/
 [2]: https://black.readthedocs.io/
+
