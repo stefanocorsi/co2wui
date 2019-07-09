@@ -766,7 +766,7 @@ def create_app(configfile=None):
             "layout.html",
             action="configuration_form",
             data={
-                "breadcrumb": ["Co2mpas", _("Co2mpas configuration file")],
+                "breadcrumb": ["Co2mpas", _("Configuration file")],
                 "props": {
                     "active": {
                         "run": "",
