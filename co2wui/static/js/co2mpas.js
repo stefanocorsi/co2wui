@@ -153,6 +153,9 @@ function run_synchronisation() {
 	}).done(function(msg) {
 		if (msg == 'OK') {
 			$('#logarea').load('/sync/load-log');
+			if ($('#logarea').val() == '') {
+				$('#log-section').hide();
+			}
 			$('#synchronise-button').html("<i class=\"fa fa-refresh\"></i> Synchronise data...");
 			$('#synchronise-button').hide();
 			$('#file-list').hide();
