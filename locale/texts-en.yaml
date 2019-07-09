@@ -6,7 +6,7 @@ home:
                 Begin to choose one or more files to use as input for your CO2MPAS simulation. 
                 Press Confirm to proceed.
 run:
-    download template: In this section, it is possible to retrieve the latest CO2MPAS input template, by pressing the <b>download</b> button.
+    download template: Press <b>download</b> to retrieve the latest CO2MPAS input template.
     run co2mpas: To execute CO2MPAS press the button Run simulation.     
     hints:
         why ta disabled: "TA mode could be disabled for various reasons: check that the encryption and signature keys are uploaded and that there are no advanced options selected that are in contrast with TA mode."
