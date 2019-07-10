@@ -22,16 +22,12 @@ class TestCo2mpasWui(unittest.TestCase):
             options=opts, executable_path="C:/Apps/geckodriver/geckodriver.exe"
         )
 
-    def test_010_remove_hints(self):
+        self.driver.get("http://localhost:5000")
 
-        driver = self.driver
-        print("Removing hints")
-        driver.get("http://localhost:5000")
-
-        elem = driver.find_element_by_id("do-not-show")
+        elem = self.driver.find_element_by_id("do-not-show")
         elem.click()
 
-        elem = driver.find_element_by_id("close-hints")
+        elem = self.driver.find_element_by_id("close-hints")
         elem.click()
 
     def test_100_datasync_form(self):
