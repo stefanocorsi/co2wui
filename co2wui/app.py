@@ -633,8 +633,13 @@ def create_app(configfile=None):
         logger.addHandler(fileh)
 
         # Input and output files
-        input_file = "sync/input/datasync.xlsx"
-        output_file = "sync/output/datasync.sync.xlsx"
+        inputs = [
+            f
+            for f in listdir_inputs("sync/input")
+            if osp.isfile(osp.join("sync/input", f))
+        ]
+        input_file = osp.join("sync", "input", inputs[0])
+        output_file = osp.join("sync", "output", "datasync.sync.xlsx")
 
         # Arguments
         kwargs = {
@@ -666,7 +671,15 @@ def create_app(configfile=None):
 
     @app.route("/sync/delete-file", methods=["GET"])
     def delete_sync_file():
-        os.remove("sync/input/datasync.xlsx")
+        inputs = [
+            f
+            for f in listdir_inputs("sync/input")
+            if osp.isfile(osp.join("sync/input", f))
+        ]
+
+        for file in inputs:
+            os.remove(osp.join("sync/input", file))
+
         return redirect("/sync/synchronisation-form", code=302)
 
     @app.route("/sync/load-log", methods=["GET"])
