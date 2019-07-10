@@ -8,7 +8,7 @@
 						{% if (loop.index == 1) %}
 							<li class="breadcrumb-item"><a href="/"> {{ item }}</a></li>
 						{% else %}
-							<li class="breadcrumb-item"><a href="{{ request.url_rule }}">{{ item }}</b></li>
+							<li class="breadcrumb-item"><a href="{{ request.url_rule }}">{{ item }}</a></li>
 						{% endif %}
 				{% endfor %}
         </ol>
