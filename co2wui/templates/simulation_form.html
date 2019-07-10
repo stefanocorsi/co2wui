@@ -91,7 +91,7 @@
 														<td>
 															<form action="/run/delete-file" method="get">
 																<input type="hidden" name="fn" value="{{loop.index}}">
-																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
+																<button id="delete-button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
 															</form>
 														</td>
 													</tr>										
@@ -108,7 +108,7 @@
 								<div class="box-footer"> 
 									<!-- <a href="#" class="btn btn-primary pull-right">Confirm</a> -->
 									<div class="form-group col-md-5 pull-right">
-										<form action="/run/add-file" enctype="multipart/form-data" method="post">
+										<form id="add-file-form" action="/run/add-file" enctype="multipart/form-data" method="post">
 											<div>
 													<div class="input-group">
 															<input type="text" name="file" id="file_path" class="form-control" placeholder="Browse...">

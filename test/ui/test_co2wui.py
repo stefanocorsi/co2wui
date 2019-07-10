@@ -5,6 +5,7 @@ import warnings
 
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
@@ -294,6 +295,54 @@ class TestCo2mpasWui(unittest.TestCase):
 
         text_found = re.search(r"Delete", src)
         self.assertNotEqual(text_found, None)
+
+    def test_300_simulation_delete_and_upload(self):
+
+        driver = self.driver
+
+        print("Starting delete and upload simulation test")
+        driver.get("http://localhost:5000/run/simulation-form")
+
+        src = driver.page_source
+        text_found = re.search(r"co2mpas_demo-0.xlsx", src)
+        self.assertNotEqual(text_found, None)
+
+        elem = driver.find_element_by_id("delete-button")
+        elem.click()
+
+        src = driver.page_source
+        text_found = re.search(r"No input files have been uploaded", src)
+        self.assertNotEqual(text_found, None)
+
+        try:
+            elem = driver.find_element_by_id("delete-button")
+            assert False
+        except NoSuchElementException:
+            assert True
+
+        elem = driver.find_element_by_id("file")
+        elem.send_keys(os.path.join(os.getcwd(), "test", "co2mpas_demo-0.xlsx"))
+
+        elem = driver.find_element_by_id("add-file-form").submit()
+
+        wait = WebDriverWait(driver, 10)
+        cond = wait.until(EC.visibility_of_element_located((By.ID, "delete-button")))
+
+    def test_310_run_simulation(self):
+
+        driver = self.driver
+
+        print("Starting run simulation test")
+        driver.get("http://localhost:5000/run/simulation-form")
+
+        elem = driver.find_element_by_id("run-simulation")
+        elem.click()
+
+        WebDriverWait(self.driver, 100).until(
+            EC.text_to_be_present_in_element(
+                (By.ID, "sim-result"), "Simulation results"
+            )
+        )
 
     def tearDown(self):
         self.driver.quit()
