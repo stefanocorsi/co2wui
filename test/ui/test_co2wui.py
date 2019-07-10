@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 
 
 class TestCo2mpasWui(unittest.TestCase):
@@ -20,6 +21,18 @@ class TestCo2mpasWui(unittest.TestCase):
         self.driver = webdriver.Firefox(
             options=opts, executable_path="C:/Apps/geckodriver/geckodriver.exe"
         )
+
+    def test_010_remove_hints(self):
+
+        driver = self.driver
+        print("Removing hints")
+        driver.get("http://localhost:5000")
+
+        elem = driver.find_element_by_id("do-not-show")
+        elem.click()
+
+        elem = driver.find_element_by_id("close-hints")
+        elem.click()
 
     def test_100_datasync_form(self):
 
@@ -39,6 +52,10 @@ class TestCo2mpasWui(unittest.TestCase):
         elem = driver.find_element_by_id("wltpclass")
         self.assertEqual(elem.text, "Class 1\nClass 2\nClass 3a\nClass 3b")
 
+        # Change to wltp, gearbox should be present
+        elem = driver.find_element_by_id("cycle")
+        select_element = Select(elem)
+        select_element.select_by_value("nedc")
         elem = driver.find_element_by_id("gearbox")
         self.assertEqual(elem.text, "Automatic\nManual")
 
@@ -50,16 +67,12 @@ class TestCo2mpasWui(unittest.TestCase):
         driver.get("http://localhost:5000/conf/configuration-form")
 
         elem = driver.find_element_by_tag_name("h1")
-        self.assertEqual(elem.text, "Co2mpas configuration file")
-
-        elem = driver.find_element_by_tag_name("h2")
-        self.assertEqual(
-            elem.text, "Upload and download your Co2mpas configuration file"
-        )
+        self.assertEqual(elem.text, "Configuration file")
 
         src = driver.page_source
         text_found = re.search(
-            r"Do you want to generate a blank configuration file", src
+            r"A precompiled file to overwrite the input variables of the physical model can be generated and downloaded.",
+            src,
         )
         self.assertNotEqual(text_found, None)
 
