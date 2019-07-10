@@ -103,7 +103,7 @@
 														<td>{{data.inputs[0]}}</td>														
 														<td>
 															<form action="/sync/delete-file" method="get">																
-																<button class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
+																<button id="delete-button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> {{ _("Delete") }}</button>
 															</form>
 														</td>
 													</tr>																							
@@ -116,7 +116,7 @@
 								<div id="sync-result" class="box-body" style="display: none;">
 									<div class="box-header">
 										<p><i class="fa fa-check fa-3" style="color: green;"></i> {{ _("Your synchronisation is complete") }}</p>
-										<p><strong>1</strong> {{ _("file has been processed") }}</p>
+										<p id="sync-feedback"><strong>1</strong> {{ _("file has been processed") }}</p>
 										<p>Click the following link to <a href="/sync/download-result">{{ _("download synchronised file") }} <i class="fa fa-file-excel-o"></i></a>
 									</div>								
 								</div>
@@ -137,7 +137,7 @@
 								<div id="file-chooser" class="box-footer"> 
 									<!-- <a href="#" class="btn btn-primary pull-right">Confirm</a> -->
 									<div class="form-group col-md-5 pull-right">
-										<form action="/sync/add-sync-file" enctype="multipart/form-data" method="post">
+										<form id="add-sync-file-form" action="/sync/add-sync-file" enctype="multipart/form-data" method="post">
 											<div>
 													<div class="input-group">
 															<input type="text" name="file" id="file_path" class="form-control" placeholder="Browse...">
