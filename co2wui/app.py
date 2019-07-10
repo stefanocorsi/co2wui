@@ -664,9 +664,14 @@ def create_app(configfile=None):
             ret = _process(
                 dict(input_fpath=input_file, output_fpath=output_file, **kwargs)
             )
+            fileh.close()
+            logger.removeHandler(fileh)
             return "OK"
 
         except Exception as e:
+            logger.error(_("Synchronisation failed: ") + str(e))
+            fileh.close()
+            logger.removeHandler(fileh)
             return "KO"
 
     @app.route("/sync/delete-file", methods=["GET"])

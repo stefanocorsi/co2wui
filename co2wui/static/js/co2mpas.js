@@ -166,7 +166,15 @@ function run_synchronisation() {
 			$('#result-toolbar').show();
 			$('#sync-result').show();
 		} else {
-			alert("error");
+			$('#result-toolbar').show();
+			$('#logarea').load('/sync/load-log', function() {
+				if ($('#logarea').val() == '') {
+					$('#log-section').hide();
+				} else {
+					$('#logarea').prepend("There was an error during the synchronisation\n")
+				}
+			})
+			$('#synchronise-button').hide();
 		}
 	});
 }
