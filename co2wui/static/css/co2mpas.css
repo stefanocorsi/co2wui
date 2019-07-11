@@ -3,6 +3,12 @@ p {
 	text-align: justify;
 }
 
+img.co2mpas-logo-big {
+	display:block;
+	width:100%;
+	max-width:600px;
+}
+
 .co2-help {
 	color: rgb(60, 141, 188);
 	font-size: 0.7em;
