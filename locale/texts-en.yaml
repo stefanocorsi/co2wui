@@ -1,13 +1,13 @@
 home:
-    welcome: CO2MPAS is a simulation tool, developed  by the European Commission's Joint Research Centre for supporting EU Regulations 1152 and 1153/2017 introduced by Directorate General for Climate Action (DG CLIMA). 
-             It is a backward-looking longitudinal-dynamics CO2 and fuel-consumption simulator for light-duty M1 & N1 vehicles (cars and vans), specially crafted to estimate the CO2 emissions of vehicles over the NEDC testing procedure based on the emissions and vehicle operation data measured over the WLTP test procedure during vehicle type-approval. CO2MPAS is open source and licensed under the European Union Public Licence.
+    welcome: Co<sub>2</sub>mpas is a simulation tool, developed  by the European Commission's Joint Research Centre for supporting EU Regulations 1152 and 1153/2017 introduced by Directorate General for Climate Action (DG CLIMA). 
+             It is a backward-looking longitudinal-dynamics CO2 and fuel-consumption simulator for light-duty M1 & N1 vehicles (cars and vans), specially crafted to estimate the CO2 emissions of vehicles over the NEDC testing procedure based on the emissions and vehicle operation data measured over the WLTP test procedure during vehicle type-approval. Co<sub>2</sub>mpas is open source and licensed under the European Union Public Licence.
     hints: 
-        run co2mpas: In this section, CO2MPAS is executed. 
-                Begin to choose one or more files to use as input for your CO2MPAS simulation. 
+        run co2mpas: In this section, Co<sub>2</sub>mpas is executed. 
+                Begin to choose one or more files to use as input for your Co<sub>2</sub>mpas simulation. 
                 Press Confirm to proceed.
 run:
-    download template: Press <b>download</b> to retrieve the latest CO2MPAS input template.
-    run co2mpas: To execute CO2MPAS press the button <b>Run simulation</b>.
+    download template: Press <b>download</b> to retrieve the latest Co<sub>2</sub>mpas input template.
+    run co2mpas: To execute Co<sub>2</sub>mpas press the button <b>Run simulation</b>.
     hints:
         why ta disabled: "TA mode could be disabled for various reasons: check that the encryption and signature keys are uploaded and that there are no advanced options selected that are in contrast with TA mode."
     intro: In this section, Co<sub>2</sub>mpas is executed. Choose one or more input file(s). Press <b>Run simulation</b> to proceed. 
@@ -17,7 +17,7 @@ sync:
     description: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used. 
     prompt: Load your datasync input file. Then click <b>Synchronise data</b>.   
 keys:
-    load keys: "<b>For TA and TS use only</b>: upload the provided key files to encrypt the output of the CO2MPAS simulation and send it to the DICE3 server, as EU regulations 1152 and 1153/2017."
+    load keys: "<b>For TA and TS use only</b>: upload the provided key files to encrypt the output of the Co<sub>2</sub>mpas simulation and send it to the DICE3 server, as EU regulations 1152 and 1153/2017."
 conf:
     description: A precompiled file to overwrite the input variables of the physical model can be generated and downloaded.
     usage: You can use the configuration file only in engineering mode. Choose and upload a new configuration file for the Run Co2mpas procedure.
