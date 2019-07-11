@@ -32,19 +32,19 @@
 																<th colspan="12"> {{ method.upper() }}</th>																											
 															</tr>		
 															<tr>
-																{% for cycle in ('Low', 'High') %}																
+																{% for cycle in ('High', 'Low') %}																
 																<th colspan="6">{{cycle}}</th>																
 																{% endfor %}	
 															</tr>
 															<tr>
-																{% for cycle in ('Low', 'High') %}
+																{% for cycle in ('High', 'Low') %}
 																	{% for phase in ('prediction', 'calibration') %}
 																<th colspan="3">{{phase.capitalize()}}</th>																
 																	{% endfor %}
 																{% endfor %}																														
 															</tr>	
 															<tr>
-																{% for cycle in ('Low', 'High') %}
+																{% for cycle in ('High', 'Low') %}
 																	{% for phase in ('prediction', 'calibration') %}
 																		{% for outcome in ('input', 'output', 'target') %}																
 																<th>{{outcome.capitalize()}}</th>
@@ -57,7 +57,7 @@
 															{% for key in readable["params"].keys() %}																		
 															<tr>													
 																<td>{{key[0:40].replace("_", " ").capitalize()}}</td>
-																{% for cycle in (method + '_l', method + '_h') %}
+																{% for cycle in (method + '_h', method + '_l') %}
 																	{% for phase in ('prediction', 'calibration') %}
 																		{% for outcome in ('input', 'output', 'target') %}
 																<th>{{readable["params"][key][cycle + "." + phase + "." + outcome + "." + key]}}</th>																
