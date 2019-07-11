@@ -210,3 +210,5 @@ function check_boxes() {
 		$(".run-delete").prop( "checked", false);
 	}
 }
+
+$('.sidebar-menu').tree({accordion: false});

@@ -831,7 +831,9 @@ def create_app(configfile=None):
             action="keys_form",
             data={
                 "breadcrumb": ["Co2mpas", _("Load keys")],
-                "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
+                "props": {
+                    "active": {"run": "", "sync": "", "doc": "", "expert": "active"}
+                },
                 "enc_keys": enc_keys,
                 "key_pass": key_pass,
                 "key_sign": key_sign,

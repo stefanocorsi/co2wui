@@ -47,3 +47,12 @@ table.summary th {
   background-color: #f39c12 !important;
 	color: white !important;
 }
+
+ul.treeview-menu {
+	background-color: #3c8dbc !important;
+}
+
+ul.treeview-menu > li > a {
+	color: white !important;
+}
+

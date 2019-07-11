@@ -5,10 +5,9 @@
     <section class="sidebar">
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header"><a href="/"><i class="fa fa-home"></i> <span>{{ _("Home") }}</span></a></li>
-        <li class="treeview {{data.props.active.run}}">
+        <li class="treeview active">
           <a href="#">
-            <span>{{ _("Run co<sub>2</sub>mpas") }}</span>
+            <i class="fa fa-bolt"></i> <span>{{ _("Run co<sub>2</sub>mpas") }}</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-down pull-right"></i>
             </span>
@@ -17,11 +16,12 @@
             <li><a href="/run/download-template-form"><i class="fa fa-download"></i> {{ _("Download input template") }}</a></li>
             <li><a href="/run/simulation-form"><i class="fa fa-car"></i> {{ _("Run simulation") }}</a></li>
             <li><a href="/run/view-results"><i class="fa fa-bars"></i> {{ _("View results") }}</a></li>
+						<li><a href="/demo/download"><i class="fa fa-download"></i> {{ _("Demo file") }}</a></li>
           </ul>
         </li>
-        <li class="treeview {{data.props.active.sync}}">
+        <li class="treeview active">
 					<a href="#">
-            <span>Synchronize data</span>
+            <i class="fa fa-random"></i> <span>Synchronize data</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-down pull-right"></i>
             </span>
@@ -31,22 +31,9 @@
             <li><a href="/sync/synchronisation-form"><i class="fa fa-refresh"></i> {{ _("Synchronize data") }}</a></li>            
           </ul>              
         </li>
-        <li onclick="location.href='/demo/download';" class="active treeview">
-          <a href="#">
-            <span><i class="fa fa-download"></i> {{ _("Demo file") }}</span>
-            <span class="pull-left-container"></span>            
-          </a>          
-        </li>
-        <li onclick="location.href='/keys/keys-form';" class="active treeview">
-          <a href="#">
-            <span><i class="fa fa-key"></i> {{ _("Load keys") }}</span>
-            <span class="pull-right-container"></span>
-          </a>          
-        </li>
-        
         <li class="treeview {{data.props.active.expert}}">
           <a href="#">
-            <span><i class="fa fa-flask"></i> {{ _("Expert functionalities") }}</span>
+            <i class="fa fa-flask"></i> <span>{{ _("Expert functionalities") }}</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-down pull-right"></i>
             </span>
@@ -54,12 +41,12 @@
           <ul class="treeview-menu">
             <li><a href="#" onclick="launch_plot(); return false;"><i class="fa fa-download"></i> {{ _("Show model graph") }}</a></li>
             <li><a href="/conf/configuration-form"><i class="fa fa-upload"></i> {{ _("Co2mpas configuration") }}</a></li>
+						<li><a href="/keys/keys-form"><i class="fa fa-key"></i> {{ _("Load keys") }}</a></li>
           </ul>
-        </li>       
-        
-        <li class="treeview {{data.props.active.doc}}">
+        </li>
+        <li class="treeview active">
           <a href="#">
-            <span>{{ _("Support & docs") }}</span>
+            <i class="fa fa-bookmark"></i> <span>{{ _("Support & docs") }}</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-down pull-right"></i>
             </span>
