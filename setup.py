@@ -9,7 +9,7 @@ def read(fpath):
 test_deps = ["pytest", "selenium"]
 setup(
     name="co2wui",
-    version="0.0.1.dev1",
+    version="0.0.1.dev2",
     packages=["co2wui"],
     license="European Union Public Licence 1.1 or later (EUPL 1.1+)",
     description="WebUI for co2mpas",
