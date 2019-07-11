@@ -15,7 +15,7 @@ run:
 sync:
     synchronise data: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used.
     description: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used. 
-    prompt: Start to load your input file by <b>Choosing an input file</b> datasync file. Then click <b>Synchronise data</b>.   
+    prompt: Load your datasync input file. Then click <b>Synchronise data</b>.   
 keys:
     load keys: "For TA and TS use only: upload the provided key files to encrypt the output of the CO2MPAS simulation and send it to the DICE3 server, as EU regulation XXX."
 conf:
