@@ -29,30 +29,30 @@
 						<div title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua">
 							<h2>{{ _("Run Co<sub>2</sub>mpas") }}</h2>
 						</div>
-						<i class="fa fa-car fa-5x pull-left"></i>
-						<p>{{ data.texts["run"]["run co2mpas"] | safe }}</p><br style="clear: both; margin-bottom: 15px;"/>
-													
+						<i class="fa fa-car fa-4x pull-left"></i>
 						<div class="text-left">            
 							<a id="run-button" href="/run/simulation-form" class="btn btn-lg btn-success"><i class="fa fa-car fa-lg"></i> Run simulation</a>								
 						</div>
-						<br style = “line-height:100;”>
-						<p>
+						<br style="clear: both;">
+
+						<p>{{ data.texts["run"]["run co2mpas"] | safe }}</p>
 								<a href="/run/download-template">Haven't done it yet? <i class="fa fa-download fa-download"></i> Download Co<sub>2</sub>mpas input template?</a>
 						</p>					 
 					</div>
-					
+
 					<div class="col-md-12 quarter">
 						<div title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua">
 							<h2>{{ _("Synchronize data") }}</h2>
 						</div>
-						<i class="fa fa-refresh fa-5x pull-left"></i>
-						<p>{{ data.texts["sync"]["synchronise data"] | safe }}</p><br style="clear: both; margin-bottom: 15px;"/>
-						
+						<i class="fa fa-refresh fa-4x pull-left"></i>
 						<div class="text-left">            
 								<form action="/sync/template-form">
 										<button id="synchronize-button" ref="synchronize-choose-data.html" class="btn btn-lg btn-warning"><i class="fa fa-refresh" aria-hidden="true"></i> Synchronize data</button>	
 								</form>          
-						</div>							
+						</div>
+						<br style="clear: both;">
+						<p>{{ data.texts["sync"]["synchronise data"] | safe }}</p>
+
 					</div>
 					
         </section>
