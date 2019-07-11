@@ -1,4 +1,8 @@
 /* Co2mpas help system */
+p {
+	text-align: justify;
+}
+
 .co2-help {
 	color: rgb(60, 141, 188);
 	font-size: 0.7em;
