@@ -17,7 +17,7 @@ sync:
     description: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used. 
     prompt: Load your datasync input file. Then click <b>Synchronise data</b>.   
 keys:
-    load keys: "For TA and TS use only: upload the provided key files to encrypt the output of the CO2MPAS simulation and send it to the DICE3 server, as EU regulation XXX."
+    load keys: "<b>For TA and TS use only</b>: upload the provided key files to encrypt the output of the CO2MPAS simulation and send it to the DICE3 server, as EU regulations 1152 and 1153/2017."
 conf:
     description: A precompiled file to overwrite the input variables of the physical model can be generated and downloaded.
     usage: You can use the configuration file only in engineering mode. Choose and upload a new configuration file for the Run Co2mpas procedure.
