@@ -10,7 +10,7 @@ run:
     run co2mpas: To execute CO2MPAS press the button Run simulation.     
     hints:
         why ta disabled: "TA mode could be disabled for various reasons: check that the encryption and signature keys are uploaded and that there are no advanced options selected that are in contrast with TA mode."
-    intro: In this section, Co<sub>2</sub>mpas is executed. Begin to <b>choose one or more files</b> to use as input for your CO2MPAS simulation. Press <b>Run simulation</b> to proceed. 
+    intro: In this section, Co<sub>2</sub>mpas is executed. Choose one or more input file(s). Press <b>Run simulation</b> to proceed. 
     view results: The log of your past simulations is shown here below. You can retrieve your previous simulation results by clicking the links in the table.
 sync:
     synchronise data: Synchronization should be performed if time-series signals are time-shifted and/or recorded with different sampling rates. To synchronize and re-sample time series, library syncing is used.
