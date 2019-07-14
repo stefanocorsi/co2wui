@@ -19,9 +19,7 @@ class TestCo2mpasWui(unittest.TestCase):
         opts = Options()
         opts.headless = True
 
-        self.driver = webdriver.Firefox(
-            options=opts, executable_path="C:/Apps/geckodriver/geckodriver.exe"
-        )
+        self.driver = webdriver.Firefox(options=opts)
 
         self.driver.get("http://localhost:5000")
 
