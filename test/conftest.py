@@ -54,15 +54,23 @@ def live_server(request, app, pytestconfig):
     return server
 
 
+@pytest.fixture(scope="session")
+def url_for(live_server):
+    def _url_for(page=""):
+        return f"http://localhost:{live_server.port}/{page}"
+
+    return _url_for
+
+
 ## See https://github.com/pytest-dev/pytest-selenium/issues/59
 @pytest.fixture(scope="session")
-def driver(app, live_server):
+def driver(app, live_server, url_for):
     opts = Options()
     opts.headless = True
 
     driver = webdriver.Firefox(options=opts)
     driver.implicitly_wait(10)
-    driver.get("http://localhost:5000")
+    driver.get(url_for())
     elem = driver.find_element_by_id("do-not-show")
     elem.click()
 
