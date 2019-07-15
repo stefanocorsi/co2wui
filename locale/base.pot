@@ -1,3 +1,4 @@
+# !!NOT USED YET!!
 # Translations template for PROJECT.
 # Copyright (C) 2019 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
