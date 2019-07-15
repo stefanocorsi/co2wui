@@ -1,3 +1,5 @@
+import itertools
+import functools
 import re
 import glob
 from stat import S_ISREG, S_ISDIR, ST_CTIME, ST_MODE
@@ -10,11 +12,10 @@ import time
 import io
 import os
 from importlib import resources
-from os import path
-from os import listdir
 from os import path as osp
 from pathlib import Path
 from stat import S_ISDIR, S_ISREG, ST_CTIME, ST_MODE
+from typing import Union, List
 
 import click
 import requests
@@ -60,56 +61,67 @@ def ensure_working_folders():
         Path(*p).mkdir(parents=True, exist_ok=True)
 
 
-def listdir_inputs(path):
-    """Only allow for excel files as input
-    """
-    return map(lambda x: os.path.basename(x), glob.glob(osp.join(path, "*.xls*")))
+def _listdir_io(*path: Union[Path, str], patterns=("*",)) -> List[Path]:
+    """Only allow for excel files as input """
+    folder = Path(*path)
+    files = itertools.chain.from_iterable(folder.glob(pat) for pat in patterns)
+    return [f for f in files if f.is_file()]
 
 
-def listdir_outputs(path):
-    """Only allow for excel files as output
-    """
-    return map(
-        lambda x: os.path.basename(x),
-        glob.glob(osp.join(path, "*.xls*")) + glob.glob(osp.join(path, "*.zip*")),
-    )
+def listdir_inputs(*path: Union[Path, str], patterns=("*.xls*",)) -> List[Path]:
+    """Only allow for excel files as input """
+    return _listdir_io(*path, patterns=patterns)
 
 
-def listdir_conf(path):
-    """Only allow for conf.yaml files
-    """
-    return map(lambda x: os.path.basename(x), glob.glob(osp.join(path, "conf.yaml")))
+def input_fpath(*path: Union[Path, str]) -> Path:
+    return Path(*path)
 
 
-def listdir_enc_keys(path):
-    """Only allow for conf.yaml files
-    """
-    return map(
-        lambda x: os.path.basename(x), glob.glob(osp.join(path, "dice.co2mpas.keys"))
-    )
+def listdir_outputs(
+    *path: Union[Path, str], patterns=("*.xls*", "*.zip")
+) -> List[Path]:
+    """Only allow for excel files as output """
+    return _listdir_io(*path, patterns=patterns)
 
 
-def listdir_key_pass(path):
-    """Only allow for conf.yaml files
-    """
-    return map(
-        lambda x: os.path.basename(x), glob.glob(osp.join(path, "secret.passwords"))
-    )
+def output_fpath(*path: Union[Path, str]) -> Path:
+    return Path(*path)
 
 
-def listdir_key_sign(path):
-    """Only allow for conf.yaml files
-    """
-    return map(
-        lambda x: os.path.basename(x), glob.glob(osp.join(path, "sign.co2mpas.key"))
-    )
+def _home_fpath() -> Path:
+
+    if "CO2WUI_HOME" in os.environ:
+        home = Path(os.environ["CO2WUI_HOME"])
+    else:
+        home = Path.home() / ".co2wui"
+    return home
+
+
+@functools.lru_cache()
+def conf_fpath() -> Path:
+    return _home_fpath() / "conf.yaml"
+
+
+@functools.lru_cache()
+def enc_keys_fpath() -> Path:
+    return _home_fpath() / "dice.co2mpas.keys"
+
+
+@functools.lru_cache()
+def key_pass_fpath() -> Path:
+    return _home_fpath() / "secret.passwords"
+
+
+@functools.lru_cache()
+def key_sign_fpath() -> Path:
+    return _home_fpath() / "sign.co2mpas.key"
 
 
 def get_summary(runid):
     """Read a summary saved file and returns it as a dict
     """
     summary = None
-    if os.path.exists(osp.join("output", runid, "result.dat")):
+    if osp.exists(osp.join("output", runid, "result.dat")):
 
         with open(osp.join("output", runid, "result.dat"), "rb") as summary_file:
             try:
@@ -138,15 +150,8 @@ def humanised(summary):
 
 
 def ta_enabled():
-    """Return true if all conditions for TA mode are met
-    """
-    if not os.path.exists("keys/dice.co2mpas.keys"):
-        return False
-
-    if not os.path.exists("keys/sign.co2mpas.key"):
-        return False
-
-    return True
+    """Return true if all conditions for TA mode are met """
+    return enc_keys_fpath().exists() and key_sign_fpath().exists()
 
 
 def create_app(configfile=None):
@@ -226,9 +231,7 @@ def create_app(configfile=None):
 
     @app.route("/run/simulation-form")
     def simulation_form():
-        inputs = [
-            f for f in listdir_inputs("input") if osp.isfile(osp.join("input", f))
-        ]
+        inputs = [f.name for f in listdir_inputs("input")]
         return render_template(
             "layout.html",
             action="simulation_form",
@@ -246,11 +249,7 @@ def create_app(configfile=None):
     def run_process(args):
 
         thread = threading.current_thread()
-        files = [
-            osp.join("input", f)
-            for f in listdir_inputs("input")
-            if osp.isfile(osp.join("input", f))
-        ]
+        files = listdir_inputs("input")
 
         # Create output directory for this execution
         output_folder = osp.join("output", str(thread.ident))
@@ -272,12 +271,10 @@ def create_app(configfile=None):
             "only_summary": bool(args.get("only_summary")),
             "hard_validation": bool(args.get("hard_validation")),
             "declaration_mode": bool(args.get("declaration_mode")),
-            "encryption_keys": "keys/dice.co2mpas.keys"
-            if os.path.exists("keys/dice.co2mpas.keys")
+            "encryption_keys": str(enc_keys_fpath())
+            if enc_keys_fpath().exists()
             else "",
-            "sign_key": "keys/sign.co2mpas.key"
-            if os.path.exists("keys/sign.co2mpas.key")
-            else "",
+            "sign_key": str(key_sign_fpath()) if key_sign_fpath().exists() else "",
             "encryption_keys_passwords": "",
             "enable_selector": False,
             "type_approval_mode": bool(args.get("tamode")),
@@ -293,7 +290,7 @@ def create_app(configfile=None):
             host="127.0.0.1",
             port=4999,
             cmd_flags=kwargs,
-            input_files=files,
+            input_files=[str(f) for f in files],
         )
 
         # Dispatcher
@@ -349,7 +346,7 @@ def create_app(configfile=None):
         layout = request.args.get("layout")
 
         # Done if there's a result file
-        if os.path.exists(osp.join("output", thread_id, "result.dat")):
+        if osp.exists(osp.join("output", thread_id, "result.dat")):
             done = True
 
         # See if done or still running
@@ -381,11 +378,7 @@ def create_app(configfile=None):
         # Collect result files
         results = []
         if not (summary is None or len(summary[0].keys()) <= 2):
-            output_files = [
-                f
-                for f in listdir_outputs(os.path.join("output", thread_id))
-                if osp.isfile(os.path.join("output", thread_id, f))
-            ]
+            output_files = [f.name for f in listdir_outputs("output", thread_id)]
             results.append({"name": thread_id, "files": output_files})
 
         # Render page progress/complete
@@ -416,16 +409,14 @@ def create_app(configfile=None):
     @app.route("/run/delete-file", methods=["GET"])
     def delete_file():
         fn = request.args.get("fn")
-        inputs = [
-            f for f in listdir_inputs("input") if osp.isfile(osp.join("input", f))
-        ]
-        os.remove(osp.join("input", inputs[int(fn) - 1]))
+        inputs = listdir_inputs("input")
+        inputs[int(fn) - 1].unlink()
         return redirect("/run/simulation-form", code=302)
 
     @app.route("/run/view-results")
     def view_results():
 
-        dirpath = r"output"
+        dirpath = "output"
         entries = (osp.join(dirpath, fn) for fn in os.listdir(dirpath))
         entries = ((os.stat(path), path) for path in entries)
         entries = (
@@ -434,12 +425,8 @@ def create_app(configfile=None):
 
         results = []
         for cdate, path in sorted(entries):
-            dirname = os.path.basename(path)
-            output_files = [
-                f
-                for f in listdir_outputs(osp.join("output", dirname))
-                if osp.isfile(osp.join("output", dirname, f))
-            ]
+            dirname = osp.basename(path)
+            output_files = [f.name for f in listdir_outputs("output", dirname)]
             summary = get_summary(dirname)
             outcome = "KO" if (summary is None or len(summary[0].keys()) <= 2) else "OK"
             results.append(
@@ -467,8 +454,8 @@ def create_app(configfile=None):
     @app.route("/run/download-result/<runid>/<fnum>")
     def download_result(runid, fnum):
 
-        files = list(listdir_outputs(osp.join("output", runid)))
-        rf = osp.join("output", runid, files[int(fnum) - 1])
+        files = listdir_outputs("output", runid)
+        rf = files[int(fnum) - 1]
 
         # Read from file
         data = None
@@ -479,7 +466,7 @@ def create_app(configfile=None):
         iofile = io.BytesIO(data)
         iofile.seek(0)
         return send_file(
-            iofile, attachment_filename=files[int(fnum) - 1], as_attachment=True
+            iofile, attachment_filename=files[int(fnum) - 1].name, as_attachment=True
         )
 
     @app.route("/run/delete-results", methods=["POST"])
@@ -588,11 +575,7 @@ def create_app(configfile=None):
 
     @app.route("/sync/synchronisation-form")
     def synchronisation_form():
-        inputs = [
-            f
-            for f in listdir_inputs("sync/input")
-            if osp.isfile(osp.join("sync/input", f))
-        ]
+        inputs = [f.name for f in listdir_inputs("sync", "input")]
         return render_template(
             "layout.html",
             action="synchronisation_form",
@@ -627,14 +610,11 @@ def create_app(configfile=None):
 
     @app.route("/sync/add-sync-file", methods=["POST"])
     def add_sync_file():
-        inputs = [f for f in listdir_inputs("sync") if osp.isfile(osp.join("sync", f))]
-
-        for file in inputs:
-            os.remove(osp.join("sync/input", file))
+        for f in listdir_inputs("sync", "input"):
+            f.unlink()
 
         f = request.files["file"]
-        f.save(osp.join("sync/input", secure_filename(f.filename)))
-        files = {"file": f.read()}
+        f.save(str(input_fpath("sync") / secure_filename(f.filename)))
         return redirect("/sync/synchronisation-form", code=302)
 
     @app.route("/sync/run-synchronisation", methods=["POST"])
@@ -649,13 +629,9 @@ def create_app(configfile=None):
         logger.addHandler(fileh)
 
         # Input and output files
-        inputs = [
-            f
-            for f in listdir_inputs("sync/input")
-            if osp.isfile(osp.join("sync/input", f))
-        ]
-        input_file = osp.join("sync", "input", inputs[0])
-        output_file = osp.join("sync", "output", "datasync.sync.xlsx")
+        inputs = listdir_inputs("sync", "input")
+        input_file = inputs[0]
+        output_file = Path("sync", "output", "datasync.sync.xlsx")
 
         # Arguments
         kwargs = {
@@ -678,7 +654,7 @@ def create_app(configfile=None):
             # Dispatcher
             _process = sh.SubDispatch(syncing.dsp, ["written"], output_type="value")
             ret = _process(
-                dict(input_fpath=input_file, output_fpath=output_file, **kwargs)
+                dict(input_fpath=input_file, output_fpath=str(output_file), **kwargs)
             )
             fileh.close()
             logger.removeHandler(fileh)
@@ -692,44 +668,21 @@ def create_app(configfile=None):
 
     @app.route("/sync/delete-file", methods=["GET"])
     def delete_sync_file():
-        inputs = [
-            f
-            for f in listdir_inputs("sync/input")
-            if osp.isfile(osp.join("sync/input", f))
-        ]
-
-        for file in inputs:
-            os.remove(osp.join("sync/input", file))
+        for f in listdir_inputs("sync", "input"):
+            f.unlink()
 
         return redirect("/sync/synchronisation-form", code=302)
 
     @app.route("/sync/load-log", methods=["GET"])
     def load_sync_log():
-        log = ""
-        loglines = []
-        with open("sync/logfile.txt") as f:
-            loglines = f.readlines()
-
-        for logline in loglines:
-            log += logline
-
-        return log
+        fpath = Path.cwd() / "sync" / "logfile.txt"
+        return send_file(fpath)
 
     @app.route("/sync/download-result")
     def sync_download_result():
-
-        resfile = "sync/output/datasync.sync.xlsx"
-
-        # Read from file
-        data = None
-        with open(resfile, "rb") as xlsx:
-            data = xlsx.read()
-
-        # Output xls file
-        iofile = io.BytesIO(data)
-        iofile.seek(0)
+        fpath = Path("sync", "output", "datasync.sync.xlsx")
         return send_file(
-            iofile, attachment_filename="datasync.sync.xlsx", as_attachment=True
+            fpath, attachment_filename="datasync.sync.xlsx", as_attachment=True
         )
 
     # Demo/download
@@ -747,7 +700,7 @@ def create_app(configfile=None):
         ret = d.dispatch(inputs, ["demo", "done"])
 
         # List of demo files created
-        demofiles = [f for f in listdir(of) if osp.isfile(osp.join(of, f))]
+        demofiles = [f for f in os.listdir(of) if osp.isfile(osp.join(of, f))]
 
         # Create zip archive on the fly
         zip_subdir = of
@@ -757,7 +710,7 @@ def create_app(configfile=None):
         # Adds demo files to archive
         for f in demofiles:
             # Add file, at correct path
-            zf.write(os.path.abspath(osp.join(of, f)), f)
+            zf.write(osp.abspath(osp.join(of, f)), f)
 
         # Close archive
         zf.close()
@@ -795,7 +748,7 @@ def create_app(configfile=None):
 
     @app.route("/conf/configuration-form")
     def configuration_form():
-        files = [f for f in listdir_conf(".") if osp.isfile(osp.join(".", f))]
+        files = [conf_fpath().name]
         return render_template(
             "layout.html",
             action="configuration_form",
@@ -817,30 +770,26 @@ def create_app(configfile=None):
 
     @app.route("/conf/add-conf-file", methods=["POST"])
     def add_conf_file():
-        if os.path.exists("conf.yaml"):
-            os.remove("conf.yaml")
+        fpath = conf_fpath()
+        if fpath.exists():
+            fpath.unlink()
 
         f = request.files["file"]
-        f.save("conf.yaml")
+        f.save(str(fpath))
         return redirect("/conf/configuration-form", code=302)
 
     @app.route("/conf/delete-file", methods=["GET"])
     def delete_conf_file():
-        os.remove("conf.yaml")
+        fpath = conf_fpath()
+        fpath.unlink()
         return redirect("/conf/configuration-form", code=302)
 
     @app.route("/keys/keys-form")
     def keys_form():
 
-        enc_keys = [
-            f for f in listdir_enc_keys("keys") if osp.isfile(osp.join("keys", f))
-        ]
-        key_pass = [
-            f for f in listdir_key_pass("keys") if osp.isfile(osp.join("keys", f))
-        ]
-        key_sign = [
-            f for f in listdir_key_sign("keys") if osp.isfile(osp.join("keys", f))
-        ]
+        enc_keys = [enc_keys_fpath().name]
+        key_pass = [key_pass_fpath().name]
+        key_sign = [key_sign_fpath().name]
 
         return render_template(
             "layout.html",
@@ -861,32 +810,31 @@ def create_app(configfile=None):
     def add_key_file():
 
         upload_type = request.form.get("upload_type")
-        filenames = {
-            "enc_keys": "dice.co2mpas.keys",
-            "key_pass": "secret.passwords",
-            "key_sign": "sign.co2mpas.key",
+        filepaths = {
+            "enc_keys": enc_keys_fpath(),
+            "key_pass": key_pass_fpath(),
+            "key_sign": key_sign_fpath(),
         }
 
-        filename = filenames.get(upload_type)
-        if os.path.exists(filename):
-            os.remove(filename)
+        fpath = filepaths.get(upload_type)
+        if fpath.exists():
+            fpath.unlink()
 
         f = request.files["file"]
-        f.save(osp.join("keys", filename))
+        f.save(str(fpath))
         return redirect("/keys/keys-form", code=302)
 
     @app.route("/keys/delete-file", methods=["GET"])
     def delete_key_file():
 
         upload_type = request.args.get("upload_type")
-        filenames = {
-            "enc_keys": "dice.co2mpas.keys",
-            "key_pass": "secret.passwords",
-            "key_sign": "sign.co2mpas.key",
+        filepaths = {
+            "enc_keys": enc_keys_fpath(),
+            "key_pass": key_pass_fpath(),
+            "key_sign": key_sign_fpath(),
         }
-        filename = filenames.get(upload_type)
-
-        os.remove(osp.join("keys", filename))
+        fpath = filepaths.get(upload_type)
+        fpath.unlink()
         return redirect("/keys/keys-form", code=302)
 
     @app.route("/not-implemented")
@@ -906,10 +854,10 @@ def create_app(configfile=None):
     def conf_generate():
 
         # Conf file name
-        of = "conf.yaml"
+        of = conf_fpath()
 
         # Input parameters
-        inputs = {"output_file": of}
+        inputs = {"output_file": of.name}
 
         # Dispatcher
         d = dsp.register()
@@ -920,19 +868,9 @@ def create_app(configfile=None):
     # Demo/download
     @app.route("/conf/download")
     def conf_download():
+        of = conf_fpath()
 
-        # Conf file name
-        of = "conf.yaml"
-
-        # Read from file
-        data = None
-        with open(of, "rb") as conf_yaml:
-            data = conf_yaml.read()
-
-        # Output xls file
-        iofile = io.BytesIO(data)
-        iofile.seek(0)
-        return send_file(iofile, attachment_filename="conf.yaml", as_attachment=True)
+        return send_file(of.open("rb"), attachment_filename=of.name, as_attachment=True)
 
     @app.route("/contact-us")
     def contact_us():
