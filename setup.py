@@ -6,7 +6,7 @@ def read(fpath):
         return fp.read()
 
 
-test_deps = ["pytest", "selenium"]
+test_deps = ["pytest", "pytest-flask", "selenium"]
 setup(
     name="co2wui",
     version="0.0.1.dev2",
