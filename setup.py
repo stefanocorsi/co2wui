@@ -32,6 +32,7 @@ setup(
         "syncing",
     ],
     extras_require={
+        "ta": ["co2mpas_dice"],
         "test": test_deps,
         "dev": test_deps
         + [
