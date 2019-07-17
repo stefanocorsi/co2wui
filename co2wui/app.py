@@ -13,6 +13,7 @@ from importlib import resources
 from os import path
 from os import listdir
 from os import path as osp
+from pathlib import Path
 from stat import S_ISDIR, S_ISREG, ST_CTIME, ST_MODE
 
 import click
@@ -46,6 +47,17 @@ _ = gettext.gettext
 
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
+
+
+def ensure_working_folders():
+    for p in (
+        ("keys",),
+        ("input",),
+        ("output",),
+        ("sync", "input"),
+        ("sync", "output"),
+    ):
+        Path(*p).mkdir(parents=True, exist_ok=True)
 
 
 def listdir_inputs(path):
@@ -148,6 +160,8 @@ def create_app(configfile=None):
 
     with resources.open_text(locale, "texts-en.yaml") as stream:
         co2wui_texts = yaml.safe_load(stream)
+
+    ensure_working_folders()
 
     @app.route("/")
     def index():
