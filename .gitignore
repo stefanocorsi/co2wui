@@ -141,8 +141,11 @@ test/ui/geckodriver.log
 test/geckodriver.log
 geckodriver.log
 
-# Log file
+# IO uploaded files
+# TODO: delete these if moved to user/tmp dirs.
+/sync
+/input
+/output
+/keys
 logfile.log
-
-# Config file
 conf.yaml
