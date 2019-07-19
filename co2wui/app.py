@@ -957,7 +957,7 @@ def cli():
     """Management script for the Co2gui application."""
     # FIXME: read port from cli/configs
     # TODO: option for the user to skip opening browser
-    webbrowser.open("http:localhost:5000")
+    webbrowser.open("http://localhost:5000")
 
 
 if __name__ == "__main__":
