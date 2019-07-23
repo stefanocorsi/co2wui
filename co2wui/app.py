@@ -1,7 +1,6 @@
 import itertools
 import functools
 import re
-import glob
 from stat import S_ISREG, S_ISDIR, ST_CTIME, ST_MODE
 import webbrowser
 import threading
@@ -68,7 +67,9 @@ def _listdir_io(*path: Union[Path, str], patterns=("*",)) -> List[Path]:
     return [f for f in files if f.is_file()]
 
 
-def listdir_inputs(*path: Union[Path, str], patterns=("*.xls*",)) -> List[Path]:
+def listdir_inputs(
+    *path: Union[Path, str], patterns=("*.[xX][lL][sS]*",)
+) -> List[Path]:
     """Only allow for excel files as input """
     return _listdir_io(*path, patterns=patterns)
 
@@ -78,7 +79,7 @@ def input_fpath(*path: Union[Path, str]) -> Path:
 
 
 def listdir_outputs(
-    *path: Union[Path, str], patterns=("*.xls*", "*.zip")
+    *path: Union[Path, str], patterns=("*.[xX][lL][sS]*", "*.[zZ][iI][pP]")
 ) -> List[Path]:
     """Only allow for excel files as output """
     return _listdir_io(*path, patterns=patterns)
