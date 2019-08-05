@@ -25,7 +25,6 @@ click-log==0.3.2
 -e git+https://github.com/JRCSTU/co2wui.git@7e3f9e3370cbe0c9437e7413abad0e7f48ea71a0#egg=co2wui
 colorama==0.4.1
 comtypes==1.1.7
-conda==4.5.12
 contextlib2==0.5.5
 contextvars==2.4
 coverage==4.5.3
@@ -87,7 +86,6 @@ Mako==1.0.8
 MarkupSafe==1.1.0
 matplotlib==3.0.2
 mccabe==0.6.1
-menuinst==1.4.14
 mistune==0.8.4
 monotonic==1.5
 mysql-connector-python==8.0.16
