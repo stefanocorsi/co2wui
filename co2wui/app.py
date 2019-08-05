@@ -150,7 +150,7 @@ def ta_enabled():
 
 
 def create_app(configfile=None):
-    from . import locale
+    from . import i18n
 
     app = Flask(__name__)
     babel = Babel(app)
@@ -158,7 +158,7 @@ def create_app(configfile=None):
 
     app.jinja_env.globals.update(humanised=humanised)
 
-    with resources.open_text(locale, "texts-en.yaml") as stream:
+    with resources.open_text(i18n, "texts-en.yaml") as stream:
         co2wui_texts = yaml.safe_load(stream)
 
     ensure_working_folders()
