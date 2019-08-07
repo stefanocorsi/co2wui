@@ -148,6 +148,7 @@ def get_summary(runid):
 
 
 def humanised(summary):
+    """Return a more readable format of the summary data structure"""
 
     formatted = {"params": {}}
     for k in summary.keys():
@@ -170,6 +171,8 @@ def ta_enabled():
 
 
 def create_app(configfile=None):
+    """Main flask app"""
+
     from . import i18n
 
     app = Flask(__name__)
@@ -262,7 +265,7 @@ def create_app(configfile=None):
         )
 
     def log_phases(dsp):
-      """Creates a callback in order to log the main phases of the Co2mpas simulation"""
+      """Create a callback in order to log the main phases of the Co2mpas simulation"""
 
       def createLambda(ph, *args):
         dsp.get_node('CO2MPAS model', node_attr=None)[0]['logger'].info(ph + ": done")
@@ -309,6 +312,7 @@ def create_app(configfile=None):
       return d
 
     def run_process(args):
+        """Run the simulation process in a thread"""
 
         thread = threading.current_thread()
         files = listdir_inputs("input")
