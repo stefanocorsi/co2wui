@@ -48,6 +48,20 @@ _ = gettext.gettext
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
 
+# The various steps of the progress bar
+progress_bar = {
+  'open_input_file': 10,
+  'parse_excel_file': 13,
+  'output.precondition.wltp_p': 15,
+  'output.calibration.wltp_h': 30,
+  'output.calibration.wltp_l': 50,
+  'output.prediction.nedc_h': 60,
+  'output.prediction.nedc_l': 75,
+  'output.prediction.wltp_h': 85,
+  'output.prediction.wltp_l': 90,
+  'format_report_output_data': 95,
+  'write_to_excel': 99
+}
 
 def ensure_working_folders():
     for p in (
@@ -376,6 +390,9 @@ def create_app(configfile=None):
             if not re.search("- INFO -", logline):
                 log += logline
 
+        # Collect data related to execution phases
+        phases = [logline.replace(': done', '').rstrip() for logline in loglines if ": done" in logline]
+
         # Collect result files
         results = []
         if not (summary is None or len(summary[0].keys()) <= 2):
@@ -394,6 +411,7 @@ def create_app(configfile=None):
                 "thread_id": thread_id,
                 "log": log,
                 "result": result,
+                "progress": progress_bar[phases[len(phases)-1]] if (len(phases)) > 0 else 0,
                 "summary": summary[0] if summary is not None else None,
                 "results": results if results is not None else None,
                 "header": header,

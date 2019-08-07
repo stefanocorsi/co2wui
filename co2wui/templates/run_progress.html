@@ -15,6 +15,13 @@
 				Please wait for the process to complete
 			</a>
 		</div>
+
+		<div class="progress">
+			<div class="progress-bar progress-bar-primary progress-bar-striped active" role="progressbar" aria-valuenow="{{data.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{data.progress}}%">
+				<span class="sr-only">{{data.progress}}% Complete</span>
+			</div>
+		</div>
+
 	</section>
 	
 	{% include "simulation_header.html" -%}
