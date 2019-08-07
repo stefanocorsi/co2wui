@@ -320,12 +320,19 @@ def create_app(configfile=None):
     def run_process(args):
         """Run the simulation process in a thread"""
 
+        # Pick current thread
         thread = threading.current_thread()
-        files = listdir_inputs("input")
 
         # Create output directory for this execution
         output_folder = osp.join("output", str(thread.ident))
         os.makedirs(output_folder or ".", exist_ok=True)
+
+        # File list
+        files = listdir_inputs("input")
+        with open(
+            osp.join("output", str(thread.ident), "files.dat"), "wb"
+        ) as files_list:
+            pickle.dump(files, files_list)
 
         # Dedicated logging for this run
         fileh = logging.FileHandler(
@@ -422,9 +429,18 @@ def create_app(configfile=None):
     def run_progress():
 
         done = False
+        processed = 0
 
         thread_id = request.args.get("id")
         layout = request.args.get("layout")
+
+        # Read the list of files
+        files = []
+        with open(osp.join("output", thread_id, "files.dat"), "rb") as files_list:
+            try:
+                files = pickle.load(files_list)
+            except:
+                return None
 
         # Done if there's a result file
         if osp.exists(osp.join("output", thread_id, "result.dat")):
@@ -454,6 +470,8 @@ def create_app(configfile=None):
 
         # Collect log and exclude web server info
         for logline in loglines:
+            if (logline.startswith('CO2MPAS output written into')):
+                processed += 1
             if not re.search("- INFO -", logline):
                 log += colorize(logline)
 
@@ -478,7 +496,11 @@ def create_app(configfile=None):
                 "thread_id": thread_id,
                 "log": log,
                 "result": result,
-                "progress": progress_bar[phases[len(phases)-1]] if (len(phases)) > 0 else 0,
+                "progress":
+                  (
+                    (processed * (100 / int(round(len(files)))))
+                    + int(round((progress_bar[phases[len(phases)-1]] / len(files))))
+                  ) if (len(phases)) > 0 else 0,
                 "summary": summary[0] if summary is not None else None,
                 "results": results if results is not None else None,
                 "header": header,
