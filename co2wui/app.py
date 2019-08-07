@@ -170,6 +170,12 @@ def ta_enabled():
     return enc_keys_fpath().exists() and key_sign_fpath().exists()
 
 
+def colorize(str):
+    str += '<br/>'
+    str = str.replace(": done", ': <span style="color: green; font-weight: bold;">done</span>')
+    str = re.sub(r"(CO2MPAS output written into) \((.+?)\)", r"\1 (<b>\2</b>)", str)
+    return str
+
 def create_app(configfile=None):
     """Main flask app"""
 
@@ -449,7 +455,7 @@ def create_app(configfile=None):
         # Collect log and exclude web server info
         for logline in loglines:
             if not re.search("- INFO -", logline):
-                log += logline
+                log += colorize(logline)
 
         # Collect data related to execution phases
         phases = [logline.replace(': done', '').rstrip() for logline in loglines if ": done" in logline]
