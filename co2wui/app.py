@@ -261,6 +261,53 @@ def create_app(configfile=None):
             },
         )
 
+    def log_phases(dsp):
+      """Creates a callback in order to log the main phases of the Co2mpas simulation"""
+
+      def createLambda(ph, *args):
+        dsp.get_node('CO2MPAS model', node_attr=None)[0]['logger'].info(ph + ": done")
+
+      co2mpas_model = dsp.get_node('CO2MPAS model')[0]
+      for k, v in co2mpas_model.dsp.data_nodes.items():
+        if k.startswith('output.'):
+            v['callback'] = functools.partial(createLambda,k)
+
+      additional_phase = dsp.get_node('load_inputs', 'open_input_file', node_attr=None)[0]
+      additional_phase['callback'] = lambda x: additional_phase['logger'].info('open_input_file: done')
+
+      additional_phase = dsp.get_node('load_inputs', 'parse_excel_file', node_attr=None)[0]
+      additional_phase['callback'] = lambda x: additional_phase['logger'].info('parse_excel_file: done')
+
+      additional_phase = dsp.get_node('make_report', 'format_report_output_data', node_attr=None)[0]
+      additional_phase['callback'] = lambda x: additional_phase['logger'].info('format_report_output_data: done')
+
+      additional_phase = dsp.get_node('write', 'write_to_excel', node_attr=None)[0]
+      additional_phase['callback'] = lambda x: additional_phase['logger'].info('write_to_excel: done')
+
+      return dsp
+
+    def register_logger(kw):
+      """Record the simulation logger into the dispatcher"""
+
+      d, logger = kw['register_core'], kw['pass_logger']
+
+      # Logger for CO2MPAS model
+      n = d.get_node('CO2MPAS model', node_attr=None)[0]
+      n['logger'] = logger
+
+      for model, phase in [
+        ['load_inputs', 'open_input_file'],
+        ['load_inputs', 'parse_excel_file'],
+        ['make_report', 'format_report_output_data'],
+        ['write', 'write_to_excel']
+      ]:
+
+        # Logger for open_input_file
+        n = d.get_node(model, phase, node_attr=None)[0]
+        n['logger'] = logger
+
+      return d
+
     def run_process(args):
 
         thread = threading.current_thread()
@@ -301,6 +348,7 @@ def create_app(configfile=None):
             pickle.dump(kwargs, header_file)
 
         inputs = dict(
+            logger=logger,
             plot_workflow=False,
             host="127.0.0.1",
             port=4999,
@@ -310,7 +358,15 @@ def create_app(configfile=None):
 
         # Dispatcher
         d = dsp.register()
-        ret = d.dispatch(inputs, ["done", "run"])
+
+        d.add_function('pass_logger', sh.bypass, inputs=['logger'], outputs=['core_model'])
+        d.add_data('core_model', function=register_logger, wait_inputs=True) 
+
+        n = d.get_node('register_core', node_attr=None)[0]
+        n['filters'] = n.get('filters', [])
+        n['filters'].append(log_phases)
+
+        ret = d.dispatch(inputs, ["done", "run", "core_model"])
         with open(
             osp.join("output", str(thread.ident), "result.dat"), "wb"
         ) as summary_file:
