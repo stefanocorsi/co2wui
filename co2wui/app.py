@@ -380,13 +380,14 @@ def create_app(configfile=None):
         summary = get_summary(thread_id)
         result = "KO" if (summary is None or len(summary[0].keys()) <= 2) else "OK"
 
-        # Get the log ile
+        # Get the log file
         log = ""
         loglines = []
         with open(osp.join("output", thread_id, "logfile.txt")) as f:
             loglines = f.readlines()
 
-        for logline in reversed(loglines):
+        # Collect log and exclude web server info
+        for logline in loglines:
             if not re.search("- INFO -", logline):
                 log += logline
 
