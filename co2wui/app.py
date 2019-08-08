@@ -793,7 +793,14 @@ def create_app(configfile=None):
     @app.route("/sync/load-log", methods=["GET"])
     def load_sync_log():
         fpath = Path.cwd() / "sync" / "logfile.txt"
-        return send_file(fpath)
+        with open(fpath) as f:
+            loglines = f.readlines()
+
+        log = ""
+        for logline in loglines:
+            log += logline
+
+        return log
 
     @app.route("/sync/download-result/<timestr>")
     def sync_download_result(timestr):
