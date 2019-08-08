@@ -736,10 +736,18 @@ def create_app(configfile=None):
         logging.basicConfig(level=logging.INFO, format=frmt)
         logger.addHandler(fileh)
 
-        # Input and output files
+        # Input file
         inputs = listdir_inputs("sync", "input")
         input_file = str(inputs[0])
-        output_file = Path("sync", "output", "datasync.sync.xlsx")
+
+        # Output file
+        output_name = os.path.splitext(os.path.basename(input_file))[0]
+        output_file = Path("sync", "output", output_name + ".sync.xlsx")
+
+        # Remove old output files
+        previous = listdir_outputs("sync", "output")
+        for f in previous:
+          os.remove(str(f))
 
         # Arguments
         kwargs = {
@@ -788,9 +796,10 @@ def create_app(configfile=None):
 
     @app.route("/sync/download-result")
     def sync_download_result():
-        fpath = Path("sync", "output", "datasync.sync.xlsx")
+        synced = str(listdir_outputs("sync", "output")[0])
+        synced_name = os.path.basename(synced)
         return send_file(
-            fpath, attachment_filename="datasync.sync.xlsx", as_attachment=True
+            "../" + synced, attachment_filename=synced_name, as_attachment=True
         )
 
     # Demo/download
