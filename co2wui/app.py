@@ -722,7 +722,7 @@ def create_app(configfile=None):
             f.unlink()
 
         f = request.files["file"]
-        f.save(str(input_fpath("sync") / secure_filename(f.filename)))
+        f.save(str(input_fpath("sync", "input") / secure_filename(f.filename)))
         return redirect("/sync/synchronisation-form", code=302)
 
     @app.route("/sync/run-synchronisation", methods=["POST"])
