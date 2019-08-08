@@ -71,12 +71,12 @@ def ensure_working_folders():
         ("sync", "input"),
         ("sync", "output"),
     ):
-        Path(*p).mkdir(parents=True, exist_ok=True)
+        co2wui_fpath(*p).mkdir(parents=True, exist_ok=True)
 
 
 def _listdir_io(*path: Union[Path, str], patterns=("*",)) -> List[Path]:
     """Only allow for excel files as input """
-    folder = Path(*path)
+    folder = co2wui_fpath(*path)
     files = itertools.chain.from_iterable(folder.glob(pat) for pat in patterns)
     return [f for f in files if f.is_file()]
 
@@ -89,7 +89,7 @@ def listdir_inputs(
 
 
 def input_fpath(*path: Union[Path, str]) -> Path:
-    return Path(*path)
+    return co2wui_fpath(*path)
 
 
 def listdir_outputs(
@@ -100,7 +100,7 @@ def listdir_outputs(
 
 
 def output_fpath(*path: Union[Path, str]) -> Path:
-    return Path(*path)
+    return co2wui_fpath(*path)
 
 
 def _home_fpath() -> Path:
@@ -111,6 +111,8 @@ def _home_fpath() -> Path:
         home = Path.home() / ".co2wui"
     return home
 
+def co2wui_fpath(*path: Union[Path, str]) -> Path:
+    return Path(_home_fpath(), *path)
 
 @functools.lru_cache()
 def conf_fpath() -> Path:
@@ -119,26 +121,26 @@ def conf_fpath() -> Path:
 
 @functools.lru_cache()
 def enc_keys_fpath() -> Path:
-    return _home_fpath() / "dice.co2mpas.keys"
+    return co2wui_fpath("keys") / "dice.co2mpas.keys"
 
 
 @functools.lru_cache()
 def key_pass_fpath() -> Path:
-    return _home_fpath() / "secret.passwords"
+    return co2wui_fpath("keys") / "secret.passwords"
 
 
 @functools.lru_cache()
 def key_sign_fpath() -> Path:
-    return _home_fpath() / "sign.co2mpas.key"
+    return co2wui_fpath("keys") / "sign.co2mpas.key"
 
 
 def get_summary(runid):
     """Read a summary saved file and returns it as a dict
     """
     summary = None
-    if osp.exists(osp.join("output", runid, "result.dat")):
+    if osp.exists(co2wui_fpath("output", runid, "result.dat")):
 
-        with open(osp.join("output", runid, "result.dat"), "rb") as summary_file:
+        with open(co2wui_fpath("output", runid, "result.dat"), "rb") as summary_file:
             try:
                 summary = pickle.load(summary_file)
             except:
@@ -324,19 +326,19 @@ def create_app(configfile=None):
         thread = threading.current_thread()
 
         # Create output directory for this execution
-        output_folder = osp.join("output", str(thread.ident))
+        output_folder = co2wui_fpath("output", str(thread.ident))
         os.makedirs(output_folder or ".", exist_ok=True)
 
         # File list
         files = listdir_inputs("input")
         with open(
-            osp.join("output", str(thread.ident), "files.dat"), "wb"
+            co2wui_fpath("output", str(thread.ident), "files.dat"), "wb"
         ) as files_list:
             pickle.dump(files, files_list)
 
         # Dedicated logging for this run
         fileh = logging.FileHandler(
-            osp.join("output", str(thread.ident), "logfile.txt"), "a"
+            co2wui_fpath("output", str(thread.ident), "logfile.txt"), "a"
         )
         logger = logging.getLogger()
         logger.setLevel(logging.INFO)
@@ -360,7 +362,7 @@ def create_app(configfile=None):
         }
 
         with open(
-            osp.join("output", str(thread.ident), "header.dat"), "wb"
+            co2wui_fpath("output", str(thread.ident), "header.dat"), "wb"
         ) as header_file:
             pickle.dump(kwargs, header_file)
 
@@ -385,7 +387,7 @@ def create_app(configfile=None):
 
         ret = d.dispatch(inputs, ["done", "run", "core_model"])
         with open(
-            osp.join("output", str(thread.ident), "result.dat"), "wb"
+            co2wui_fpath("output", str(thread.ident), "result.dat"), "wb"
         ) as summary_file:
             pickle.dump(ret["summary"], summary_file)
         return ""
@@ -397,7 +399,7 @@ def create_app(configfile=None):
 
         # Read the header containing run information
         header = {}
-        with open(osp.join("output", runid, "header.dat"), "rb") as header_file:
+        with open(co2wui_fpath("output", runid, "header.dat"), "rb") as header_file:
             try:
                 header = pickle.load(header_file)
             except:
@@ -436,14 +438,14 @@ def create_app(configfile=None):
 
         # Read the list of files
         files = []
-        with open(osp.join("output", thread_id, "files.dat"), "rb") as files_list:
+        with open(co2wui_fpath("output", thread_id, "files.dat"), "rb") as files_list:
             try:
                 files = pickle.load(files_list)
             except:
                 return None
 
         # Done if there's a result file
-        if osp.exists(osp.join("output", thread_id, "result.dat")):
+        if osp.exists(co2wui_fpath("output", thread_id, "result.dat")):
             done = True
 
         # See if done or still running
@@ -452,7 +454,7 @@ def create_app(configfile=None):
 
         # Read the header containing run information
         header = {}
-        with open(osp.join("output", thread_id, "header.dat"), "rb") as header_file:
+        with open(co2wui_fpath("output", thread_id, "header.dat"), "rb") as header_file:
             try:
                 header = pickle.load(header_file)
             except:
@@ -465,7 +467,7 @@ def create_app(configfile=None):
         # Get the log file
         log = ""
         loglines = []
-        with open(osp.join("output", thread_id, "logfile.txt")) as f:
+        with open(co2wui_fpath("output", thread_id, "logfile.txt")) as f:
             loglines = f.readlines()
 
         # Collect log and exclude web server info
@@ -510,7 +512,7 @@ def create_app(configfile=None):
     @app.route("/run/add-file", methods=["POST"])
     def add_file():
         f = request.files["file"]
-        f.save(osp.join("input", secure_filename(f.filename)))
+        f.save(str(co2wui_fpath("input", secure_filename(f.filename))))
         files = {"file": f.read()}
         return redirect("/run/simulation-form", code=302)
 
@@ -525,7 +527,7 @@ def create_app(configfile=None):
     def view_results():
 
         dirpath = "output"
-        entries = (osp.join(dirpath, fn) for fn in os.listdir(dirpath))
+        entries = (co2wui_fpath(dirpath, fn) for fn in os.listdir(co2wui_fpath(dirpath)))
         entries = ((os.stat(path), path) for path in entries)
         entries = (
             (stat[ST_CTIME], path) for stat, path in entries if S_ISDIR(stat[ST_MODE])
@@ -583,14 +585,14 @@ def create_app(configfile=None):
         for k in request.form.keys():
             if re.match(r"select-[0-9]+", k):
                 runid = k.rpartition("-")[2]
-                shutil.rmtree(osp.join("output", runid))
+                shutil.rmtree(co2wui_fpath("output", runid))
 
         return redirect("/run/view-results", code=302)
 
     @app.route("/run/download-log/<runid>")
     def download_log(runid):
 
-        rf = osp.join("output", runid, "logfile.txt")
+        rf = co2wui_fpath("output", runid, "logfile.txt")
 
         # Read from file
         data = None
@@ -743,7 +745,7 @@ def create_app(configfile=None):
 
         # Output file
         output_name = os.path.splitext(os.path.basename(input_file))[0]
-        output_file = Path("sync", "output", output_name + ".sync.xlsx")
+        output_file = co2wui_fpath("sync", "output", output_name + ".sync.xlsx")
 
         # Remove old output files
         previous = listdir_outputs("sync", "output")
@@ -807,7 +809,7 @@ def create_app(configfile=None):
         synced = str(listdir_outputs("sync", "output")[0])
         synced_name = os.path.basename(synced)
         return send_file(
-            "../" + synced, attachment_filename=synced_name, as_attachment=True
+            synced, attachment_filename=synced_name, as_attachment=True
         )
 
     # Demo/download
