@@ -738,7 +738,7 @@ def create_app(configfile=None):
 
         # Input and output files
         inputs = listdir_inputs("sync", "input")
-        input_file = inputs[0]
+        input_file = str(inputs[0])
         output_file = Path("sync", "output", "datasync.sync.xlsx")
 
         # Arguments
