@@ -711,6 +711,7 @@ def create_app(configfile=None):
                     "spline7",
                     "spline9",
                 ],
+                "timestamp": time.time(),
                 "inputs": inputs,
                 "texts": co2wui_texts,
             },
@@ -794,8 +795,8 @@ def create_app(configfile=None):
         fpath = Path.cwd() / "sync" / "logfile.txt"
         return send_file(fpath)
 
-    @app.route("/sync/download-result")
-    def sync_download_result():
+    @app.route("/sync/download-result/<timestr>")
+    def sync_download_result(timestr):
         synced = str(listdir_outputs("sync", "output")[0])
         synced_name = os.path.basename(synced)
         return send_file(
