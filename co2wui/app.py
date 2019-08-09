@@ -503,7 +503,7 @@ def create_app(configfile=None):
         else:
           loglines = ['Waiting for data...']
 
-        # Collect log and exclude web server info
+        # Collect log, exclude web server info and colorize
         for logline in loglines:
             if (logline.startswith('CO2MPAS output written into')):
                 num_processed += 1
