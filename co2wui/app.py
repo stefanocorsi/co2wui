@@ -562,6 +562,7 @@ def create_app(configfile=None):
                 "result": result,
                 "stopped": stopped,
                 "counter": counter,
+                "texts": co2wui_texts,
                 "progress":
                   (
                     (num_processed * (100 / int(round(len(files)))))
@@ -689,6 +690,7 @@ def create_app(configfile=None):
                 "props": {
                     "active": {"run": "", "sync": "active", "doc": "", "expert": ""}
                 },
+                "texts": co2wui_texts,
                 "title": "Data synchronisation",
             },
         )
@@ -937,6 +939,7 @@ def create_app(configfile=None):
                     "active": {"run": "", "sync": "", "doc": "", "expert": "active"}
                 },
                 "title": "Plot launched",
+                "texts": co2wui_texts,
             },
         )
 
@@ -1049,6 +1052,7 @@ def create_app(configfile=None):
                 "props": {"active": {"run": "", "sync": "", "doc": "", "expert": ""}},
                 "title": "Feature not implemented",
                 "message": "Please refer to future versions of the application or contact xxxxxxx@xxxxxx.europa.eu for information.",
+                "texts": co2wui_texts,
             },
         )
 
