@@ -1,3 +1,4 @@
 include co2wui/locale/*
 recursive-include co2wui/static *
 recursive-include co2wui/templates *.html
+include VERSION

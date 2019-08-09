@@ -327,6 +327,10 @@ def create_app(configfile=None):
 
     ensure_working_folders()
 
+    with open(os.path.join(app.root_path, '..', 'VERSION')) as version_file:
+      version = version_file.read().strip()
+      co2wui_texts["version"] = version
+
     @app.route("/")
     def index():
 
