@@ -39,6 +39,6 @@
 
 <script>
 setTimeout(function(){
-	$('#main-content').load('/run/progress?layout=ajax&id=' + {{data.thread_id}});
+	$('#main-content').load('/run/progress?layout=ajax&counter={{data.counter}}&id=' + {{data.process_id}});
 }, 5000);
 </script>

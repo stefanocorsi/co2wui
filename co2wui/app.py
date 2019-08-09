@@ -3,7 +3,7 @@ import functools
 import re
 from stat import S_ISREG, S_ISDIR, ST_CTIME, ST_MODE
 import webbrowser
-import threading
+import multiprocessing
 import tempfile
 import logging
 import logging.config
@@ -178,6 +178,127 @@ def colorize(str):
     str = re.sub(r"(CO2MPAS output written into) \((.+?)\)", r"\1 (<b>\2</b>)", str)
     return str
 
+# Multi process related functions
+def log_phases(dsp):
+    """Create a callback in order to log the main phases of the Co2mpas simulation"""
+
+    def createLambda(ph, *args):
+      dsp.get_node('CO2MPAS model', node_attr=None)[0]['logger'].info(ph + ": done")
+
+    co2mpas_model = dsp.get_node('CO2MPAS model')[0]
+    for k, v in co2mpas_model.dsp.data_nodes.items():
+      if k.startswith('output.'):
+          v['callback'] = functools.partial(createLambda,k)
+
+    additional_phase = dsp.get_node('load_inputs', 'open_input_file', node_attr=None)[0]
+    additional_phase['callback'] = lambda x: additional_phase['logger'].info('open_input_file: done')
+
+    additional_phase = dsp.get_node('load_inputs', 'parse_excel_file', node_attr=None)[0]
+    additional_phase['callback'] = lambda x: additional_phase['logger'].info('parse_excel_file: done')
+
+    additional_phase = dsp.get_node('make_report', 'format_report_output_data', node_attr=None)[0]
+    additional_phase['callback'] = lambda x: additional_phase['logger'].info('format_report_output_data: done')
+
+    additional_phase = dsp.get_node('write', 'write_to_excel', node_attr=None)[0]
+    additional_phase['callback'] = lambda x: additional_phase['logger'].info('write_to_excel: done')
+
+    return dsp
+
+def register_logger(kw):
+    """Record the simulation logger into the dispatcher"""
+
+    d, logger = kw['register_core'], kw['pass_logger']
+
+    # Logger for CO2MPAS model
+    n = d.get_node('CO2MPAS model', node_attr=None)[0]
+    n['logger'] = logger
+
+    for model, phase in [
+      ['load_inputs', 'open_input_file'],
+      ['load_inputs', 'parse_excel_file'],
+      ['make_report', 'format_report_output_data'],
+      ['write', 'write_to_excel']
+    ]:
+
+      # Logger for open_input_file
+      n = d.get_node(model, phase, node_attr=None)[0]
+      n['logger'] = logger
+
+    return d
+
+def run_process(args):
+    """Run the simulation process in a thread"""
+
+    # Pick current thread
+    process = multiprocessing.current_process()
+
+    # Create output directory for this execution
+    output_folder = co2wui_fpath("output", str(process.pid))
+    os.makedirs(output_folder or ".", exist_ok=True)
+
+    # File list
+    files = listdir_inputs("input")
+    with open(
+        co2wui_fpath("output", str(process.pid), "files.dat"), "wb"
+    ) as files_list:
+        pickle.dump(files, files_list)
+
+    # Dedicated logging for this run
+    fileh = logging.FileHandler(
+        co2wui_fpath("output", str(process.pid), "logfile.txt"), "a"
+    )
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    frmt = "%(asctime)-15s:%(levelname)5.5s:%(name)s:%(message)s"
+    logging.basicConfig(level=logging.INFO, format=frmt)
+    logger.addHandler(fileh)
+
+    # Input parameters
+    kwargs = {
+        "output_folder": output_folder,
+        "only_summary": bool(args.get("only_summary")),
+        "hard_validation": bool(args.get("hard_validation")),
+        "declaration_mode": bool(args.get("declaration_mode")),
+        "encryption_keys": str(enc_keys_fpath())
+        if enc_keys_fpath().exists()
+        else "",
+        "sign_key": str(key_sign_fpath()) if key_sign_fpath().exists() else "",
+        "encryption_keys_passwords": "",
+        "enable_selector": False,
+        "type_approval_mode": bool(args.get("tamode")),
+    }
+
+    with open(
+        co2wui_fpath("output", str(process.pid), "header.dat"), "wb"
+    ) as header_file:
+        pickle.dump(kwargs, header_file)
+
+    inputs = dict(
+        logger=logger,
+        plot_workflow=False,
+        host="127.0.0.1",
+        port=4999,
+        cmd_flags=kwargs,
+        input_files=[str(f) for f in files],
+    )
+
+    # Dispatcher
+    d = dsp.register()
+
+    d.add_function('pass_logger', sh.bypass, inputs=['logger'], outputs=['core_model'])
+    d.add_data('core_model', function=register_logger, wait_inputs=True)
+
+    n = d.get_node('register_core', node_attr=None)[0]
+    n['filters'] = n.get('filters', [])
+    n['filters'].append(log_phases)
+
+    ret = d.dispatch(inputs, ["done", "run", "core_model"])
+    with open(
+        co2wui_fpath("output", str(process.pid), "result.dat"), "wb"
+    ) as summary_file:
+        pickle.dump(ret["summary"], summary_file)
+    return ""
+
 def create_app(configfile=None):
     """Main flask app"""
 
@@ -272,126 +393,6 @@ def create_app(configfile=None):
             },
         )
 
-    def log_phases(dsp):
-      """Create a callback in order to log the main phases of the Co2mpas simulation"""
-
-      def createLambda(ph, *args):
-        dsp.get_node('CO2MPAS model', node_attr=None)[0]['logger'].info(ph + ": done")
-
-      co2mpas_model = dsp.get_node('CO2MPAS model')[0]
-      for k, v in co2mpas_model.dsp.data_nodes.items():
-        if k.startswith('output.'):
-            v['callback'] = functools.partial(createLambda,k)
-
-      additional_phase = dsp.get_node('load_inputs', 'open_input_file', node_attr=None)[0]
-      additional_phase['callback'] = lambda x: additional_phase['logger'].info('open_input_file: done')
-
-      additional_phase = dsp.get_node('load_inputs', 'parse_excel_file', node_attr=None)[0]
-      additional_phase['callback'] = lambda x: additional_phase['logger'].info('parse_excel_file: done')
-
-      additional_phase = dsp.get_node('make_report', 'format_report_output_data', node_attr=None)[0]
-      additional_phase['callback'] = lambda x: additional_phase['logger'].info('format_report_output_data: done')
-
-      additional_phase = dsp.get_node('write', 'write_to_excel', node_attr=None)[0]
-      additional_phase['callback'] = lambda x: additional_phase['logger'].info('write_to_excel: done')
-
-      return dsp
-
-    def register_logger(kw):
-      """Record the simulation logger into the dispatcher"""
-
-      d, logger = kw['register_core'], kw['pass_logger']
-
-      # Logger for CO2MPAS model
-      n = d.get_node('CO2MPAS model', node_attr=None)[0]
-      n['logger'] = logger
-
-      for model, phase in [
-        ['load_inputs', 'open_input_file'],
-        ['load_inputs', 'parse_excel_file'],
-        ['make_report', 'format_report_output_data'],
-        ['write', 'write_to_excel']
-      ]:
-
-        # Logger for open_input_file
-        n = d.get_node(model, phase, node_attr=None)[0]
-        n['logger'] = logger
-
-      return d
-
-    def run_process(args):
-        """Run the simulation process in a thread"""
-
-        # Pick current thread
-        thread = threading.current_thread()
-
-        # Create output directory for this execution
-        output_folder = co2wui_fpath("output", str(thread.ident))
-        os.makedirs(output_folder or ".", exist_ok=True)
-
-        # File list
-        files = listdir_inputs("input")
-        with open(
-            co2wui_fpath("output", str(thread.ident), "files.dat"), "wb"
-        ) as files_list:
-            pickle.dump(files, files_list)
-
-        # Dedicated logging for this run
-        fileh = logging.FileHandler(
-            co2wui_fpath("output", str(thread.ident), "logfile.txt"), "a"
-        )
-        logger = logging.getLogger()
-        logger.setLevel(logging.INFO)
-        frmt = "%(asctime)-15s:%(levelname)5.5s:%(name)s:%(message)s"
-        logging.basicConfig(level=logging.INFO, format=frmt)
-        logger.addHandler(fileh)
-
-        # Input parameters
-        kwargs = {
-            "output_folder": output_folder,
-            "only_summary": bool(args.get("only_summary")),
-            "hard_validation": bool(args.get("hard_validation")),
-            "declaration_mode": bool(args.get("declaration_mode")),
-            "encryption_keys": str(enc_keys_fpath())
-            if enc_keys_fpath().exists()
-            else "",
-            "sign_key": str(key_sign_fpath()) if key_sign_fpath().exists() else "",
-            "encryption_keys_passwords": "",
-            "enable_selector": False,
-            "type_approval_mode": bool(args.get("tamode")),
-        }
-
-        with open(
-            co2wui_fpath("output", str(thread.ident), "header.dat"), "wb"
-        ) as header_file:
-            pickle.dump(kwargs, header_file)
-
-        inputs = dict(
-            logger=logger,
-            plot_workflow=False,
-            host="127.0.0.1",
-            port=4999,
-            cmd_flags=kwargs,
-            input_files=[str(f) for f in files],
-        )
-
-        # Dispatcher
-        d = dsp.register()
-
-        d.add_function('pass_logger', sh.bypass, inputs=['logger'], outputs=['core_model'])
-        d.add_data('core_model', function=register_logger, wait_inputs=True) 
-
-        n = d.get_node('register_core', node_attr=None)[0]
-        n['filters'] = n.get('filters', [])
-        n['filters'].append(log_phases)
-
-        ret = d.dispatch(inputs, ["done", "run", "core_model"])
-        with open(
-            co2wui_fpath("output", str(thread.ident), "result.dat"), "wb"
-        ) as summary_file:
-            pickle.dump(ret["summary"], summary_file)
-        return ""
-
     @app.route("/run/view-summary/<runid>")
     def view_summary(runid):
         """Show a modal dialog with a execution's summary formatted in a table
@@ -421,59 +422,91 @@ def create_app(configfile=None):
     @app.route("/run/simulation")
     def run_simulation():
 
-        thread = threading.Thread(target=run_process, args=(request.args,))
-        thread.daemon = False
-        thread.start()
-        id = thread.ident
-        return redirect("/run/progress?layout=layout&id=" + str(thread.ident), code=302)
+        process = multiprocessing.Process(target=run_process, args=(request.args,))
+        process.start()
+        id = process.pid
+        return redirect("/run/progress?layout=layout&counter=0&id=" + str(process.pid), code=302)
 
     @app.route("/run/progress")
     def run_progress():
 
+        # Flags
+        started = False
         done = False
-        processed = 0
 
-        thread_id = request.args.get("id")
+        # Num of files processed up to now
+        num_processed = 0
+
+        # Process id
+        process_id = request.args.get("id")
+
+        # Wait counter... if not started after X then error.
+        # This is required due to a latency when launching a new
+        # process
+        counter = request.args.get("counter")
+        counter = int(counter) + 1
         layout = request.args.get("layout")
 
-        # Read the list of files
+        # Read the list of input files
         files = []
-        with open(co2wui_fpath("output", thread_id, "files.dat"), "rb") as files_list:
-            try:
-                files = pickle.load(files_list)
-            except:
-                return None
-
-        # Done if there's a result file
-        if osp.exists(co2wui_fpath("output", thread_id, "result.dat")):
-            done = True
-
-        # See if done or still running
-        page = "run_complete" if done else "run_progress"
-        title = _("Simulation complete") if done else _("Simulation in progress...")
+        if osp.exists(co2wui_fpath("output", process_id, "files.dat")):
+          started = True
+          with open(co2wui_fpath("output", process_id, "files.dat"), "rb") as files_list:
+              try:
+                  files = pickle.load(files_list)
+              except:
+                  return None
 
         # Read the header containing run information
         header = {}
-        with open(co2wui_fpath("output", thread_id, "header.dat"), "rb") as header_file:
-            try:
-                header = pickle.load(header_file)
-            except:
-                return None
+        if osp.exists(co2wui_fpath("output", process_id, "header.dat")):
+          with open(co2wui_fpath("output", process_id, "header.dat"), "rb") as header_file:
+              try:
+                  header = pickle.load(header_file)
+              except:
+                  return None
+
+        # Default page status
+        page = "run_progress"
+
+        # Simulation is "done" if there's a result file
+        if osp.exists(co2wui_fpath("output", process_id, "result.dat")):
+            done = True
+            page = "run_complete"
 
         # Get the summary of the execution (if ready)
-        summary = get_summary(thread_id)
+        summary = get_summary(process_id)
         result = "KO" if (summary is None or len(summary[0].keys()) <= 2) else "OK"
+
+        # Result is KO if not started and counter > 1
+        if (not started and counter > 1):
+          result = "KO"
+          page = "run_complete"
+
+        # Check that the process is still running
+        active_processes =  multiprocessing.active_children()
+        alive = False
+        for p in active_processes:
+          if (str(p.pid) == process_id):
+            alive = True
+
+        if not done and not alive:
+            result = "KO"
+            page = "run_complete"
 
         # Get the log file
         log = ""
         loglines = []
-        with open(co2wui_fpath("output", thread_id, "logfile.txt")) as f:
-            loglines = f.readlines()
+        if osp.exists(co2wui_fpath("output", process_id, "logfile.txt")):
+          with open(co2wui_fpath("output", process_id, "logfile.txt")) as f:
+              loglines = f.readlines()
+        else:
+          loglines = ['Waiting for data...']
 
         # Collect log and exclude web server info
         for logline in loglines:
             if (logline.startswith('CO2MPAS output written into')):
-                processed += 1
+                num_processed += 1
             if not re.search("- INFO -", logline):
                 log += colorize(logline)
 
@@ -483,24 +516,25 @@ def create_app(configfile=None):
         # Collect result files
         results = []
         if not (summary is None or len(summary[0].keys()) <= 2):
-            output_files = [f.name for f in listdir_outputs("output", thread_id)]
-            results.append({"name": thread_id, "files": output_files})
+            output_files = [f.name for f in listdir_outputs("output", process_id)]
+            results.append({"name": process_id, "files": output_files})
 
         # Render page progress/complete
         return render_template(
             "layout.html" if layout == "layout" else "ajax.html",
             action=page,
             data={
-                "breadcrumb": ["Co2mpas", title],
+                "breadcrumb": ["Co2mpas", _("Run simulation")],
                 "props": {
                     "active": {"run": "active", "sync": "", "doc": "", "expert": ""}
                 },
-                "thread_id": thread_id,
+                "process_id": process_id,
                 "log": log,
                 "result": result,
+                "counter": counter,
                 "progress":
                   (
-                    (processed * (100 / int(round(len(files)))))
+                    (num_processed * (100 / int(round(len(files)))))
                     + int(round((progress_bar[phases[len(phases)-1]] / len(files))))
                   ) if (len(phases)) > 0 else 0,
                 "summary": summary[0] if summary is not None else None,
