@@ -433,6 +433,7 @@ def create_app(configfile=None):
         # Flags
         started = False
         done = False
+        stopped = True if request.args.get("stopped") else False
 
         # Num of files processed up to now
         num_processed = 0
@@ -510,6 +511,10 @@ def create_app(configfile=None):
             if not re.search("- INFO -", logline):
                 log += colorize(logline)
 
+        # If simulation is stopped the log is not interesting
+        if (stopped):
+          loglines = ['Simulation stopped.']
+
         # Collect data related to execution phases
         phases = [logline.replace(': done', '').rstrip() for logline in loglines if ": done" in logline]
 
@@ -531,6 +536,7 @@ def create_app(configfile=None):
                 "process_id": process_id,
                 "log": log,
                 "result": result,
+                "stopped": stopped,
                 "counter": counter,
                 "progress":
                   (
@@ -542,6 +548,17 @@ def create_app(configfile=None):
                 "header": header,
             },
         )
+
+    @app.route("/run/stop-simulation/<process_id>", methods=["GET"])
+    def stop_simulation(process_id):
+        # Check that the process is still running
+        active_processes =  multiprocessing.active_children()
+        for p in active_processes:
+          if (str(p.pid) == process_id):
+            p.terminate()
+            time.sleep(1)
+
+        return redirect("/run/progress?layout=layout&stopped=1&counter=999&id=" + str(process_id), code=302)
 
     @app.route("/run/add-file", methods=["POST"])
     def add_file():

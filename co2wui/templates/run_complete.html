@@ -18,13 +18,13 @@
 		<div class="small-box bg-red">
 			<div class="inner">
 				<h3><i class="fa fa-exclamation-triangle"></i></h3>
-				<p style="text-align: center;">Simulation terminated with some errors</p>
+				<p style="text-align: center;">Simulation terminated {% if not data.stopped %} with some errors {% else %} at user's request {% endif %}</p>
 			</div>
 			<div class="icon">
 				<i class="ion ion-stats-bars"></i>
 			</div>
 			<a href="#" class="small-box-footer">
-				Please check the logs for further information
+				{% if not data.stopped %} Please check the logs for further information {% endif %}
 			</a>			
 		</div>
 		{% endif %}

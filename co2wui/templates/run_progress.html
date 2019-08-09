@@ -6,6 +6,7 @@
 			<div class="inner">
 				<h3><i class="fa fa-spin fa-refresh"></i></h3>
 				<p style="text-align: center;">Simulation in progress</p>
+				<button class="btn btn-sm btn-danger" onclick="window.location.href = '/run/stop-simulation/{{data.process_id}}';"><i class="fa fa-stop-circle"></i>&nbsp; Stop simulation</button>
 				{% if data.header.type_approval_mode %}<span id="ta-label" class="badge badge-warning"><i class="fa fa-warning"></i> TYPE APPROVAL MODE</span>{% endif %}
 			</div>
 			<div class="icon">
