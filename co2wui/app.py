@@ -22,6 +22,7 @@ import schedula as sh
 import syncing
 import gettext
 import pickle
+import random
 import zipfile
 import shutil
 from babel import Locale
@@ -35,8 +36,10 @@ from flask import (
     render_template,
     request,
     send_file,
+    session,
     url_for,
 )
+from flask_session import Session
 from flask.cli import FlaskGroup
 from flask_babel import Babel
 from jinja2 import Environment, PackageLoader
@@ -305,8 +308,17 @@ def create_app(configfile=None):
     from . import i18n
 
     app = Flask(__name__)
+    sess = Session()
+
     babel = Babel(app)
     CO2MPAS_VERSION = "3"
+
+    hash = random.getrandbits(128)
+
+    app.secret_key = ("%032x" % hash)
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+    sess.init_app(app)
 
     app.jinja_env.globals.update(humanised=humanised)
 
@@ -378,6 +390,10 @@ def create_app(configfile=None):
 
     @app.route("/run/simulation-form")
     def simulation_form():
+
+        if ('active_pid' in session) and (session['active_pid'] is not None):
+          return redirect("/run/progress?layout=layout&counter=999&id=" + str(session['active_pid']), code=302)
+
         inputs = [f.name for f in listdir_inputs("input")]
         return render_template(
             "layout.html",
@@ -425,6 +441,7 @@ def create_app(configfile=None):
         process = multiprocessing.Process(target=run_process, args=(request.args,))
         process.start()
         id = process.pid
+        session['active_pid'] = str(id)
         return redirect("/run/progress?layout=layout&counter=0&id=" + str(process.pid), code=302)
 
     @app.route("/run/progress")
@@ -474,6 +491,7 @@ def create_app(configfile=None):
         if osp.exists(co2wui_fpath("output", process_id, "result.dat")):
             done = True
             page = "run_complete"
+            session['active_pid'] = None
 
         # Get the summary of the execution (if ready)
         summary = get_summary(process_id)
@@ -483,6 +501,7 @@ def create_app(configfile=None):
         if (not started and counter > 1):
           result = "KO"
           page = "run_complete"
+          session['active_pid'] = None
 
         # Check that the process is still running
         active_processes =  multiprocessing.active_children()
@@ -494,6 +513,7 @@ def create_app(configfile=None):
         if not done and not alive:
             result = "KO"
             page = "run_complete"
+            session['active_pid'] = None
 
         # Get the log file
         log = ""
